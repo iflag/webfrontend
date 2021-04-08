@@ -14,7 +14,6 @@ button {
   background-color: transparent;
   margin-bottom: 2rem;
   box-sizing: border-box;
-  padding: 0 4rem 0 7rem;
 }
 
 .header-main {
@@ -154,7 +153,6 @@ button {
   .header {
     height: 7.5rem;
     margin-bottom: 1rem;
-    padding: 0 1rem;
   }
   .header-main {
     flex-wrap: wrap;
@@ -163,7 +161,7 @@ button {
   .header-logo {
     order: 1;
     height: 2.5rem;
-    margin: 0 1rem;
+    margin: 0 1rem 0 0;
   }
   .header-search {
     order: 3;
@@ -177,6 +175,7 @@ button {
   .header-logoutButton {
     order: 2;
     height: 2rem;
+    width: 4.5rem;
     margin: 0.2rem;
   }
   .header-recentSearch {

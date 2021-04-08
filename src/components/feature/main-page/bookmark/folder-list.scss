@@ -5,6 +5,7 @@
 }
 
 .folderList-addButton {
+  box-sizing: border-box;
   margin: 0.5rem;
   width: 4.5rem;
   height: 4.5rem;
@@ -17,6 +18,7 @@
     0px 0px 1px rgba(0, 0, 0, 0.04);
   color: #8bb7ee;
   font-size: 1.5rem;
+  padding: 0.2rem;
   &:before {
     content: "";
     width: 50%;
@@ -136,13 +138,15 @@
   }
 
   .folderList-addButton {
+    width: 4rem;
+    height: 4rem;
     &:before {
       height: 0.5rem;
-      top: -0.8rem;
+      top: -0.75rem;
     }
   }
 
   .folderList-content {
-    padding: 1.2rem 0.5rem;
+    padding: 1.5rem 0.5rem;
   }
 }

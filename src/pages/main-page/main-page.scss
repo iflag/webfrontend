@@ -1,6 +1,4 @@
 .mainpage {
-  box-sizing: border-box;
-  padding: 1rem 5rem 0 2rem;
   display: flex;
   height: calc(100% - 8rem);
 }
@@ -8,7 +6,6 @@
 @media screen and (max-width: 768px) {
   .mainpage {
     flex-direction: column;
-    padding: 0.4rem 0.4rem 0 0.4rem;
     height: calc(100% - 9.5rem);
   }
 }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import "components/feature/main-page/bookmark/favicon.scss";
 import React, { useState, useEffect } from "react";
 import { Bookmark, FolderInfo } from "./bookmark";
 
@@ -58,11 +59,18 @@ const Favicon = ({ content }: Props) => {
               width="30"
               height="30"
               alt="icon"
+              className="favicon"
             />
           </>
         ) : (
           <>
-            <img src={favicon} width="30" height="30" alt="icon" />
+            <img
+              src={favicon}
+              width="30"
+              height="30"
+              alt="icon"
+              className="favicon"
+            />
           </>
         )
       ) : (
@@ -72,6 +80,7 @@ const Favicon = ({ content }: Props) => {
             width="30"
             height="30"
             alt="icon"
+            className="favicon"
           />
         </>
       )}

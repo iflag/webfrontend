@@ -194,15 +194,18 @@
 }
 
 @media screen and (max-width: 768px) {
-  .folderItem-bookmark {
-    width: 3.5rem;
-    height: 3.5rem;
+  .folderItem-bookmark,
+  .folderItem {
+    width: 4rem;
+    height: 4rem;
   }
 
   .folderItem-folder {
+    width: 4rem;
+    height: 4rem;
     &:before {
       height: 0.5rem;
-      top: -0.8rem;
+      top: -0.75rem;
     }
   }
 }

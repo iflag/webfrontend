@@ -1,6 +1,4 @@
 .bookmark {
-  box-sizing: border-box;
-  padding-left: 6rem;
   width: 80%;
 }
 
@@ -177,6 +175,9 @@
     width: 100%;
     height: 60%;
     min-height: 13rem;
-    padding: 0;
+  }
+
+  .bookmark-form {
+    min-width: 17rem;
   }
 }
