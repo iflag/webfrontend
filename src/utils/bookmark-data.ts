@@ -1,8 +1,10 @@
-import axios, { AxiosResponse } from "axios";
-import { Folder } from "components/feature/main-page/bookmark/bookmark";
+import axios from "axios";
+import {
+  BookmarkInfo,
+  Folder,
+} from "components/feature/main-page/bookmark/bookmark";
 import API_URL, { API_HOST } from "utils/api";
 import { getStorageItem, storageKey } from "utils/local-storage";
-import AuthService, { AuthServiceInterface } from "utils/auth-service";
 
 class BookmarkData {
   private base;
@@ -57,7 +59,7 @@ class BookmarkData {
     };
 
     const response = await this.base.get(categories, config);
-    return response.data;
+    return response;
   }
 
   async addFolder(title: string) {
@@ -94,13 +96,10 @@ class BookmarkData {
     return response;
   }
 
-  async changeBookmarkName(id: number, title: string) {
+  async editBookmarkInfo(id: number, info: BookmarkInfo) {
     const { bookmarks } = this.bookmarkUrl;
     const url = `${bookmarks}${id}`;
 
-    const data = {
-      title,
-    };
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
@@ -108,7 +107,7 @@ class BookmarkData {
       },
     };
 
-    const response = await this.base.put(url, data, config);
+    const response = await this.base.put(url, info, config);
     return response;
   }
 
@@ -145,6 +144,21 @@ class BookmarkData {
   async getAllBookmarksInFolder(id: number) {
     const { categories } = this.bookmarkUrl;
     const url = `${categories}${id}`;
+
+    const token = getStorageItem(storageKey, "");
+    const config = {
+      headers: {
+        Authorization: `X-JWT ${token}`,
+      },
+    };
+
+    const response = await this.base.get(url, config);
+    return response;
+  }
+
+  async searchBookmark(name: string) {
+    const { search } = this.bookmarkUrl;
+    const url = `${search}?q=${name}`;
 
     const token = getStorageItem(storageKey, "");
     const config = {

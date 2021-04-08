@@ -19,11 +19,13 @@ const Header = ({ userData, authService }: Props) => {
 
   // const [logined, setLogined] = useState(false);
   const [toggleButtonList, setToggleButtonList] = useState(false);
-  const [selectedSearchEngine, setSelectedSearchEngine] = useState("G");
+  const [selectedSearchEngine, setSelectedSearchEngine] = useState("Google");
   const [searchEngines, setSearchEngines] = useState([
     "Google",
     "Naver",
     "DDG",
+    "Github",
+    "WA",
   ]);
   const [searchContent, setSearchContent] = useState("");
   const [showSelectedForm, setShowSelectedForm] = useState<SelectedForm>(
@@ -36,22 +38,37 @@ const Header = ({ userData, authService }: Props) => {
       .then((response) => console.log(response));
   }, [selectedSearchEngine]);
 
+  useEffect(() => {
+    if (!userData.onLogin()) {
+      setShowSelectedForm("login");
+    }
+  }, [userState.onLogin]);
+
   const browseInNewTab = () => {
-    if (selectedSearchEngine === "G") {
+    if (selectedSearchEngine === "Google") {
       window.open(
-        `https://www.google.com/search?source=hp&ei=9HQ3YLeMDITm-AaykJMg&iflsig=AINFCbYAAAAAYDeDBInJy8wJ_7BBAIk45MkSrQd0P_ta&q=${searchContent}`,
+        `https://duckduckgo.com/?q=!google+${searchContent}`,
         "_blank"
       );
     }
-    if (selectedSearchEngine === "N") {
+    if (selectedSearchEngine === "Naver") {
       window.open(
-        `https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=${searchContent}`,
+        `https://duckduckgo.com/?q=!naver+${searchContent}`,
 
         "_blank"
       );
     }
-    if (selectedSearchEngine === "D") {
+    if (selectedSearchEngine === "DDG") {
       window.open(`https://duckduckgo.com/?q=${searchContent}`, "_blank");
+    }
+    if (selectedSearchEngine === "Github") {
+      window.open(
+        `https://duckduckgo.com/?q=!github+${searchContent}`,
+        "_blank"
+      );
+    }
+    if (selectedSearchEngine === "WA") {
+      window.open(`https://duckduckgo.com/?q=!wa+${searchContent}`, "_blank");
     }
   };
 
@@ -72,18 +89,22 @@ const Header = ({ userData, authService }: Props) => {
                 <li key={idx} className="header-buttonItem">
                   <button
                     className={`header-searchEngine ${
-                      toggleButtonList ||
-                      selectedSearchEngine === searchEngine.charAt(0)
+                      toggleButtonList || selectedSearchEngine === searchEngine
                         ? "visible"
                         : ""
                     }`}
                     onClick={() => {
                       setToggleButtonList((prev) => !prev);
-                      setSelectedSearchEngine(searchEngine.charAt(0));
+                      setSelectedSearchEngine(searchEngine);
                       searchEngines.splice(idx, 1);
                       searchEngines.unshift(searchEngine);
                     }}
                   >
+                    <img
+                      src="webfrontend/src/assets/images/google.svg"
+                      alt="engine-logo"
+                      className="header-engineLogo"
+                    />
                     {searchEngine}
                   </button>
                 </li>
@@ -131,11 +152,11 @@ const Header = ({ userData, authService }: Props) => {
         )}
       </div>
 
-      <div className="header-recentSearch">
+      {/* <div className="header-recentSearch">
         <p>Recently</p>
-        {/* 최근 검색어는 배열을 받아와서 map으로 보이게하고 클릭하면 검색되도록 */}
+        최근 검색어는 배열을 받아와서 map으로 보이게하고 클릭하면 검색되도록
         <p>iflag</p>
-      </div>
+      </div> */}
       {showSelectedForm !== "close" && (
         <Auth
           authService={authService}

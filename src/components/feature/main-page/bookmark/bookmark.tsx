@@ -7,20 +7,8 @@ import {
 } from "react-icons/ai";
 import FolderList from "components/feature/main-page/bookmark/folder-list";
 import BookmarkData from "utils/bookmark-data";
-import styled from "styled-components";
-
-const AddBookmarkForm = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  z-index: 2;
-  background-color: transparent;
-`;
+import { DarkModalSection } from "components/feature/header/auth/auth";
+import { useUserState } from "contexts/user-context";
 
 type Props = {
   bookmarkData: BookmarkData;
@@ -32,6 +20,12 @@ export type Bookmark = {
   description: string;
   id: number;
   title: string;
+  url: string;
+};
+
+export type BookmarkInfo = {
+  title: string;
+  description: string;
   url: string;
 };
 
@@ -49,6 +43,8 @@ export type FolderInfo = {
 };
 
 const Bookmark = ({ bookmarkData }: Props) => {
+  const userState = useUserState();
+
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
@@ -59,35 +55,77 @@ const Bookmark = ({ bookmarkData }: Props) => {
   const [rootBookmarks, setRootBookmarks] = useState<Bookmark[]>([]);
 
   const getAllRootBookmarks = async () => {
-    const response = await bookmarkData.getAllBookmarks();
-    const newRootBookmarks = await response.data[0].bookmarks;
-    setRootBookmarks(newRootBookmarks);
+    try {
+      const response = await bookmarkData.getAllBookmarks();
+      const newRootBookmarks = await response.data[0].bookmarks;
+      setRootBookmarks(newRootBookmarks);
+    } catch (error) {
+      setRootBookmarks([]);
+    }
   };
 
   const [folderInfoList, setFolderInfoList] = useState<FolderInfo[]>([]);
   const [folderNameList, setFolderNameList] = useState<string[]>([""]);
 
   const getAllFolder = async () => {
-    const response = await bookmarkData.getAllFolderInfo();
-    setFolderInfoList(response);
-    const newFolderNameList = response.map((info: FolderInfo) => info.title);
-    setFolderNameList(["", ...newFolderNameList]);
+    try {
+      const response = await bookmarkData.getAllFolderInfo();
+      setFolderInfoList(response.data);
+      const newFolderNameList = response.data.map(
+        (info: FolderInfo) => info.title
+      );
+      setFolderNameList(["", ...newFolderNameList]);
+    } catch (error) {
+      setFolderInfoList([]);
+      setFolderNameList([]);
+    }
   };
+
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     getAllFolder();
   }, []);
 
+  useEffect(() => {
+    getAllRootBookmarks();
+    getAllFolder();
+  }, [userState.onLogin]);
+
   return (
     <div className="bookmark">
       <div className="bookmark-header">
+        <p className="bookmark-header-title">Bookmark</p>
         <form
           className="bookmark-searchForm"
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
+            if (searchInput === "") {
+              getAllRootBookmarks();
+              getAllFolder();
+            } else {
+              bookmarkData.searchBookmark(searchInput).then((response) => {
+                if (response.status === 200) {
+                  console.log(response.data[0].bookmarks);
+                  if (response.data[0].bookmarks.length === 0) {
+                    alert("원하는 북마크를 찾을 수 없습니다.");
+                  } else {
+                    setRootBookmarks(response.data[0].bookmarks);
+                    setFolderInfoList([]);
+                  }
+                }
+              });
+            }
           }}
         >
-          <input className="bookmark-searchInput" placeholder="Search" />
+          <input
+            className="bookmark-searchInput"
+            placeholder="Search"
+            value={searchInput}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setSearchInput(e.target.value);
+            }}
+          />
           <button className="bookmark-searchButton" type="submit">
             <AiOutlineSearch />
           </button>
@@ -100,7 +138,7 @@ const Bookmark = ({ bookmarkData }: Props) => {
         </button>
       </div>
       {showAddBookmarkForm && (
-        <AddBookmarkForm>
+        <DarkModalSection>
           <form
             className="bookmark-form"
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
@@ -186,7 +224,7 @@ const Bookmark = ({ bookmarkData }: Props) => {
               </button>
             </section>
           </form>
-        </AddBookmarkForm>
+        </DarkModalSection>
       )}
       <FolderList
         bookmarkData={bookmarkData}

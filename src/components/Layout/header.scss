@@ -11,8 +11,10 @@ button {
 .header {
   width: 100%;
   height: 4rem;
-  background-color: white;
+  background-color: transparent;
   margin-bottom: 2rem;
+  box-sizing: border-box;
+  padding: 0 4rem 0 7rem;
 }
 
 .header-main {
@@ -29,7 +31,7 @@ button {
   flex: 0 0 auto;
   min-height: 2rem;
   margin: 0 2rem;
-  background-image: url("../../assets/images/IFlag.png");
+  background-image: url("../../assets/images/iflag-logo.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -43,6 +45,7 @@ button {
   max-width: 80%;
   box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.06), 0px 2px 6px rgba(0, 0, 0, 0.04),
     0px 0px 1px rgba(0, 0, 0, 0.04);
+  background-color: white;
   border-radius: 10px;
 }
 
@@ -57,11 +60,16 @@ button {
   margin: 0.5rem 0;
 }
 
+.header-engineLogo {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
 .header-buttonItem {
   position: relative;
   top: -0.5rem;
   z-index: 1;
-  background-color: white;
+  background-color: transparent;
 }
 
 .header-searchEngine {
@@ -70,7 +78,7 @@ button {
   width: 90%;
   border: none;
   margin-left: auto;
-  background-color: transparent;
+  background-color: white;
   color: #8c8c8c;
 }
 
@@ -146,6 +154,7 @@ button {
   .header {
     height: 7.5rem;
     margin-bottom: 1rem;
+    padding: 0 1rem;
   }
   .header-main {
     flex-wrap: wrap;

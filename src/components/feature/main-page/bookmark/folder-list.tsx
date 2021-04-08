@@ -1,26 +1,13 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "components/feature/main-page/bookmark/folder-list.scss";
 import FolderItem from "components/feature/main-page/bookmark/folder-item";
 import BookmarkData from "utils/bookmark-data";
-import { AiOutlineClose } from "react-icons/ai";
-import styled from "styled-components";
+import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
 import {
   Bookmark,
   FolderInfo,
 } from "components/feature/main-page/bookmark/bookmark";
-
-const AddFolderForm = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  z-index: 2;
-  background-color: transparent;
-`;
+import { DarkModalSection } from "components/feature/header/auth/auth";
 
 type Props = {
   bookmarkData: BookmarkData;
@@ -49,13 +36,12 @@ const FolderList = ({
   }, []);
   return (
     <div className="folderList">
-      <p className="folderList-title">Bookmarks</p>
       <div className="folderList-content">
         <button
           className="folderList-addButton"
           onClick={() => setShowAddFolderForm(true)}
         >
-          Add
+          <AiOutlinePlus />
         </button>
         {folderInfoList.map((folderInfo: FolderInfo, idx: number) => {
           return (
@@ -81,7 +67,7 @@ const FolderList = ({
         ))}
       </div>
       {showAddFolderForm && (
-        <AddFolderForm>
+        <DarkModalSection>
           <form
             className="folderList-form"
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
@@ -121,7 +107,7 @@ const FolderList = ({
               </button>
             </section>
           </form>
-        </AddFolderForm>
+        </DarkModalSection>
       )}
     </div>
   );

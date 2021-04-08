@@ -6,7 +6,7 @@ import Register from "./register";
 import AuthService from "utils/auth-service";
 import { SelectedForm } from "components/Layout/header";
 
-const AuthForm = styled.div`
+export const DarkModalSection = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -16,7 +16,7 @@ const AuthForm = styled.div`
   width: 100vw;
   height: 100vh;
   z-index: 2;
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.6);
 `;
 
 type Props = {
@@ -31,7 +31,7 @@ const Auth = ({
   setShowSelectedForm,
 }: Props) => {
   return (
-    <AuthForm>
+    <DarkModalSection>
       {showSelectedForm === "login" && (
         <Login
           authService={authService}
@@ -44,7 +44,7 @@ const Auth = ({
           setShowSelectedForm={setShowSelectedForm}
         />
       )}
-    </AuthForm>
+    </DarkModalSection>
   );
 };
 

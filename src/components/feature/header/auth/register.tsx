@@ -56,7 +56,7 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
     return (
       <form
         className="register-form"
-        onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
           setLoaded(false);
           authService.verification(email).then((response) => {

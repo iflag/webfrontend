@@ -4,17 +4,19 @@ import Layout from "components/Layout";
 import "pages/main-page/main-page.scss";
 import React from "react";
 import BookmarkData from "utils/bookmark-data";
+import NoteData from "utils/note-data";
 
 type Props = {
   bookmarkData: BookmarkData;
+  noteData: NoteData;
 };
 
-const MainPage = ({ bookmarkData }: Props) => {
+const MainPage = ({ bookmarkData, noteData }: Props) => {
   return (
     <Layout>
       <div className="mainpage">
         <Bookmark bookmarkData={bookmarkData} />
-        <Note />
+        <Note noteData={noteData} />
       </div>
     </Layout>
   );

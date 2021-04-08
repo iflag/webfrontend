@@ -10,6 +10,7 @@
 
 .folderItem-bookmark {
   box-sizing: border-box;
+  padding: 0.2rem;
   width: 4.5rem;
   height: 4.5rem;
   font-size: 0.8rem;
@@ -46,8 +47,9 @@
   }
 }
 
-.folderItem-title {
+.folderItem-icon {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow-x: hidden;
@@ -57,7 +59,7 @@
   padding: 0;
 }
 
-.folderItem-edit {
+.folderItem-setting {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,15 +68,29 @@
   height: 100%;
 }
 
+.folderItem-edit {
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  height: 0.9rem;
+  border: none;
+  outline: none;
+  background-color: white;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #8bb7ee;
+  padding: 0;
+}
+
 .folderItem-delete {
   position: absolute;
   top: 0.2rem;
   right: 0.2rem;
-  height: 0.8rem;
+  height: 0.9rem;
   border: none;
   outline: none;
   background-color: white;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: bold;
   color: #8bb7ee;
   padding: 0;
@@ -84,6 +100,97 @@
   width: 90%;
   outline: none;
   border: 1px solid #8bb7ee;
+}
+
+.folderItem-form {
+  width: 30%;
+  min-width: 18rem;
+  height: 50%;
+  min-height: 20rem;
+  max-height: 30rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 12px;
+  background-color: white;
+  border: 1px solid #8bb7ee;
+}
+
+.folderItem-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 1.5rem;
+  width: 100%;
+  height: 20%;
+}
+
+.folderItem-form-title {
+  margin: 0;
+  font-weight: bold;
+  color: #8bb7ee;
+}
+
+.folderItem-form-close {
+  height: 1.1rem;
+  border: none;
+  outline: none;
+  background-color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #8bb7ee;
+  padding: 0;
+}
+
+.folderItem-form-input {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.folderItem-form-folderItemTitle,
+.folderItem-form-url,
+.folderItem-form-description {
+  box-sizing: border-box;
+  width: 75%;
+  height: 2rem;
+  padding: 0 1rem;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #8bb7ee;
+}
+
+.folderItem-form-categoryTitle {
+  width: 50%;
+  height: 1.5rem;
+  outline: none;
+}
+
+.folderItem-form-buttons {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.folderItem-form-submit {
+  outline: none;
+  border: 1px solid #8bb7ee;
+  color: #8bb7ee;
+  background-color: white;
+  width: 4.5rem;
+  height: 2rem;
+  transition: all 300ms ease;
+  &:hover {
+    color: white;
+    background-color: #8bb7ee;
+  }
 }
 
 @media screen and (max-width: 768px) {

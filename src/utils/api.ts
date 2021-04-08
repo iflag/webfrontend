@@ -15,6 +15,10 @@ const API_URL = {
   bookmarks: {
     bookmarks: "/bookmarks/",
     categories: "/bookmarks/categories/",
+    search: "/bookmarks/search",
+  },
+  notes: {
+    notes: "/notes/",
   },
 };
 

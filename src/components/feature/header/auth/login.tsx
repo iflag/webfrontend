@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "components/feature/header/auth/login.scss";
-import { AiOutlineClose } from "react-icons/ai";
 import AuthService from "utils/auth-service";
 import { storageKey, setStorageItem } from "utils/local-storage";
 import { SelectedForm } from "components/Layout/header";
@@ -33,15 +32,6 @@ const Login = ({ authService, setShowSelectedForm }: Props) => {
     >
       <div className="login-header">
         <p className="login-title">Login</p>
-        <button
-          className="login-close"
-          onClick={() => {
-            setShowSelectedForm("close");
-          }}
-          type="button"
-        >
-          <AiOutlineClose />
-        </button>
       </div>
       <section className="login-input">
         <input
