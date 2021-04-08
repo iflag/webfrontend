@@ -1,0 +1,66 @@
+.memoList {
+  height: 50%;
+  min-height: 2rem;
+}
+
+.memoList-header {
+  box-sizing: border-box;
+  padding: 0 0.5rem;
+  height: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #8bb7ee;
+}
+
+.memoList-title {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #8bb7ee;
+}
+
+.memoList-addButton {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
+
+.memoList-buttonImage {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  background-image: url("../../../../assets/images/note-add.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.memoList-main {
+  height: calc(100% - 1.5rem);
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.memoList-contents {
+  box-sizing: border-box;
+  padding: 0.4rem;
+  width: 100%;
+  white-space: pre-line;
+  margin: 0.4rem 0;
+  font-size: 0.8rem;
+  box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.06), 0px 2px 6px rgba(0, 0, 0, 0.04),
+    0px 0px 1px rgba(0, 0, 0, 0.04);
+}
+
+@media screen and (max-width: 768px) {
+  .memoList {
+    width: 48%;
+    height: 100%;
+  }
+}

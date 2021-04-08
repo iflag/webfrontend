@@ -1,0 +1,79 @@
+.todoList {
+  height: 50%;
+  min-height: 4rem;
+}
+
+.todoList-header {
+  box-sizing: border-box;
+  padding: 0 0.5rem;
+  height: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #8bb7ee;
+}
+
+.todoList-title {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #8bb7ee;
+}
+
+.todoList-addButton {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
+
+.todoList-buttonImage {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  background-image: url("../../../../assets/images/note-add.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.todoList-main {
+  height: calc(100% - 1.5rem);
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.todoList-todoItem {
+  display: flex;
+  box-sizing: border-box;
+  padding: 0.2rem;
+  align-items: center;
+  margin: 0.4rem 0;
+  font-size: 0.8rem;
+  box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.06), 0px 2px 6px rgba(0, 0, 0, 0.04),
+    0px 0px 1px rgba(0, 0, 0, 0.04);
+}
+
+.todoList-contents {
+  flex: 1 1 auto;
+  white-space: pre-line;
+}
+
+.todoList-checkbox {
+  flex: 0 0 auto;
+  border: none;
+  outline: none;
+  width: 1rem;
+  height: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .todoList {
+    width: 48%;
+    height: 100%;
+  }
+}

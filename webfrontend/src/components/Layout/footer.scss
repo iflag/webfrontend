@@ -1,0 +1,20 @@
+.footer {
+  height: 2rem;
+  text-align: center;
+}
+
+.footer-title {
+  margin: 0;
+  line-height: 2rem;
+  font-size: 0.8rem;
+  color: #6da2e4;
+}
+
+@media screen and (max-width: 768px) {
+  .footer {
+    height: 1rem;
+  }
+  .footer-title {
+    line-height: 1rem;
+  }
+}
