@@ -1,6 +1,6 @@
 const version = "v1";
 
-export const API_HOST = "https://api.iflag.de/" + version;
+export const API_HOST = "https://api.iflag.co/" + version;
 
 const API_URL = {
   users: {

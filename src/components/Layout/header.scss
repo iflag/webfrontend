@@ -59,11 +59,6 @@ button {
   margin: 0.5rem 0;
 }
 
-.header-engineLogo {
-  width: 0.5rem;
-  height: 0.5rem;
-}
-
 .header-buttonItem {
   position: relative;
   top: -0.5rem;
@@ -72,6 +67,8 @@ button {
 }
 
 .header-searchEngine {
+  box-sizing: border-box;
+  position: relative;
   display: none;
   height: 2.5rem;
   width: 90%;
@@ -79,6 +76,8 @@ button {
   margin-left: auto;
   background-color: white;
   color: #8c8c8c;
+  text-align: right;
+  padding: 0 0.8rem 0 0.5rem;
 }
 
 .header-searchEngine.visible {
@@ -168,6 +167,11 @@ button {
     width: 100%;
     max-width: 100%;
   }
+
+  .header-searchEngine {
+    padding: 0 0.5rem;
+  }
+
   .header-searchForm {
     width: 100%;
   }

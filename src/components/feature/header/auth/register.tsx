@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "components/feature/header/auth/register.scss";
-import { AiOutlineClose } from "react-icons/ai";
 import AuthService from "utils/auth-service";
 import { SelectedForm } from "components/Layout/header";
 import styled from "styled-components";
@@ -36,15 +35,6 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
     return (
       <div className="register-header">
         <p className="register-title">SignUp</p>
-        <button
-          className="register-close"
-          onClick={() => {
-            setShowSelectedForm("close");
-          }}
-          type="button"
-        >
-          <AiOutlineClose />
-        </button>
       </div>
     );
   };

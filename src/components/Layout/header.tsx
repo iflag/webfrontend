@@ -5,6 +5,22 @@ import UserData from "utils/user-data";
 import Auth from "components/feature/header/auth/auth";
 import AuthService from "utils/auth-service";
 import { useUserDispatch, useUserState } from "contexts/user-context";
+import styled from "styled-components";
+
+type styleProps = {
+  imgUrl: string;
+};
+
+const SearchEngine = styled.figure`
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  background-image: url(${({ imgUrl }: styleProps) => imgUrl});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+`;
 
 type Props = {
   userData: UserData;
@@ -100,10 +116,8 @@ const Header = ({ userData, authService }: Props) => {
                       searchEngines.unshift(searchEngine);
                     }}
                   >
-                    <img
-                      src="webfrontend/src/assets/images/google.svg"
-                      alt="engine-logo"
-                      className="header-engineLogo"
+                    <SearchEngine
+                      imgUrl={`../../assets/images/${searchEngine}.svg`}
                     />
                     {searchEngine}
                   </button>
