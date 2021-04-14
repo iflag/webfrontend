@@ -6,6 +6,11 @@ import Auth from "components/feature/header/auth/auth";
 import AuthService from "utils/auth-service";
 import { useUserDispatch, useUserState } from "contexts/user-context";
 import styled from "styled-components";
+import GithubIcon from "assets/images/Github.svg";
+import DDGIcon from "assets/images/DDG.svg";
+import GoogleIcon from "assets/images/Google.svg";
+import NaverIcon from "assets/images/Naver.png";
+import WAIcon from "assets/images/WA.svg";
 
 type styleProps = {
   imgUrl: string;
@@ -47,6 +52,14 @@ const Header = ({ userData, authService }: Props) => {
   const [showSelectedForm, setShowSelectedForm] = useState<SelectedForm>(
     "close"
   );
+
+  const [searchEngineImgs, setSearchEngineImgs] = useState([
+    GoogleIcon,
+    NaverIcon,
+    DDGIcon,
+    GithubIcon,
+    WAIcon,
+  ]);
 
   useEffect(() => {
     userData
@@ -114,11 +127,13 @@ const Header = ({ userData, authService }: Props) => {
                       setSelectedSearchEngine(searchEngine);
                       searchEngines.splice(idx, 1);
                       searchEngines.unshift(searchEngine);
+
+                      const selectedSearchEngineImg = searchEngineImgs[idx];
+                      searchEngineImgs.splice(idx, 1);
+                      searchEngineImgs.unshift(selectedSearchEngineImg);
                     }}
                   >
-                    <SearchEngine
-                      imgUrl={`../../assets/images/${searchEngine}.svg`}
-                    />
+                    <SearchEngine imgUrl={searchEngineImgs[idx]} />
                     {searchEngine}
                   </button>
                 </li>
