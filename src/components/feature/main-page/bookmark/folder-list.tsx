@@ -8,22 +8,15 @@ import {
   FolderInfo,
 } from "components/feature/main-page/bookmark/bookmark";
 import { DarkModalSection } from "components/feature/header/auth/auth";
+import BookmarkStore from "stores/bookmark-store";
+import { observer } from "mobx-react";
 
 type Props = {
   bookmarkData: BookmarkData;
-  getAllFolder: () => Promise<void>;
-  folderInfoList: FolderInfo[];
-  rootBookmarks: Bookmark[];
-  getAllRootBookmarks: () => Promise<void>;
+  bookmarkStore: BookmarkStore;
 };
 
-const FolderList = ({
-  bookmarkData,
-  getAllFolder,
-  folderInfoList,
-  rootBookmarks,
-  getAllRootBookmarks,
-}: Props) => {
+const FolderList = observer(({ bookmarkData, bookmarkStore }: Props) => {
   const [showAddFolderForm, setShowAddFolderForm] = useState(false);
   const [title, setTitle] = useState("");
 
@@ -32,7 +25,7 @@ const FolderList = ({
   };
 
   useEffect(() => {
-    getAllRootBookmarks();
+    bookmarkStore.getAllRootBookmarks();
   }, []);
   return (
     <div className="folderList">
@@ -43,26 +36,26 @@ const FolderList = ({
         >
           <AiOutlinePlus />
         </button>
-        {folderInfoList.map((folderInfo: FolderInfo, idx: number) => {
-          return (
-            <FolderItem
-              key={idx}
-              bookmarkData={bookmarkData}
-              type="folder"
-              content={folderInfo}
-              getAllRootBookmarks={getAllRootBookmarks}
-              getAllFolder={getAllFolder}
-            />
-          );
-        })}
-        {rootBookmarks.map((content: Bookmark, idx: number) => (
+        {bookmarkStore.folderInfoList.map(
+          (folderInfo: FolderInfo, idx: number) => {
+            return (
+              <FolderItem
+                key={idx}
+                bookmarkData={bookmarkData}
+                bookmarkStore={bookmarkStore}
+                type="folder"
+                content={folderInfo}
+              />
+            );
+          }
+        )}
+        {bookmarkStore.rootBookmarks.map((content: Bookmark, idx: number) => (
           <FolderItem
             key={idx}
             bookmarkData={bookmarkData}
+            bookmarkStore={bookmarkStore}
             type="bookmark"
             content={content}
-            getAllRootBookmarks={getAllRootBookmarks}
-            getAllFolder={getAllFolder}
           />
         ))}
       </div>
@@ -73,8 +66,8 @@ const FolderList = ({
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
               addFolder();
-              getAllRootBookmarks();
-              getAllFolder();
+              bookmarkStore.getAllRootBookmarks();
+              bookmarkStore.getAllFolder();
               setShowAddFolderForm(false);
             }}
           >
@@ -111,6 +104,6 @@ const FolderList = ({
       )}
     </div>
   );
-};
+});
 
 export default FolderList;

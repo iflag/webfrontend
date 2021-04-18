@@ -10,6 +10,8 @@ import BookmarkData from "utils/bookmark-data";
 import { DarkModalSection } from "components/feature/header/auth/auth";
 import { useUserState } from "contexts/user-context";
 import AuthService from "utils/auth-service";
+import { useStoreContext } from "contexts/store-context";
+import { observer } from "mobx-react";
 
 type Props = {
   bookmarkData: BookmarkData;
@@ -25,11 +27,7 @@ export type Bookmark = {
   url: string;
 };
 
-export type BookmarkInfo = {
-  title: string;
-  description: string;
-  url: string;
-};
+export type BookmarkInfo = Pick<Bookmark, "title" | "description" | "url">;
 
 export type Folder = {
   title: string;
@@ -38,14 +36,11 @@ export type Folder = {
   category_title?: string;
 };
 
-export type FolderInfo = {
-  author: object;
-  id: number;
-  title: string;
-};
+export type FolderInfo = Pick<Bookmark, "author" | "id" | "title">;
 
-const Bookmark = ({ bookmarkData, authService }: Props) => {
+const Bookmark = observer(({ bookmarkData, authService }: Props) => {
   const userState = useUserState();
+  const { bookmarkStore } = useStoreContext();
 
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
@@ -54,46 +49,15 @@ const Bookmark = ({ bookmarkData, authService }: Props) => {
 
   const [showAddBookmarkForm, setShowAddBookmarkForm] = useState(false);
 
-  const [rootBookmarks, setRootBookmarks] = useState<Bookmark[]>([]);
-
-  const getAllRootBookmarks = async () => {
-    try {
-      const response = await bookmarkData.getAllBookmarks();
-      const newRootBookmarks = await response.data[0].bookmarks;
-      setRootBookmarks(newRootBookmarks);
-      authService.refreshToken();
-    } catch (error) {
-      setRootBookmarks([]);
-    }
-  };
-
-  const [folderInfoList, setFolderInfoList] = useState<FolderInfo[]>([]);
-  const [folderNameList, setFolderNameList] = useState<string[]>([""]);
-
-  const getAllFolder = async () => {
-    try {
-      const response = await bookmarkData.getAllFolderInfo();
-      setFolderInfoList(response.data);
-      const newFolderNameList = response.data.map(
-        (info: FolderInfo) => info.title
-      );
-      setFolderNameList(["", ...newFolderNameList]);
-      authService.refreshToken();
-    } catch (error) {
-      setFolderInfoList([]);
-      setFolderNameList([]);
-    }
-  };
-
   const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
-    getAllFolder();
+    bookmarkStore.getAllFolder();
   }, []);
 
   useEffect(() => {
-    getAllRootBookmarks();
-    getAllFolder();
+    bookmarkStore.getAllRootBookmarks();
+    bookmarkStore.getAllFolder();
   }, [userState.onLogin]);
 
   return (
@@ -104,21 +68,7 @@ const Bookmark = ({ bookmarkData, authService }: Props) => {
           className="bookmark-searchForm"
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
-            if (searchInput === "") {
-              getAllRootBookmarks();
-              getAllFolder();
-              return;
-            }
-            bookmarkData.searchBookmark(searchInput).then((response) => {
-              if (response.status === 200) {
-                if (response.data[0].bookmarks.length === 0) {
-                  alert("원하는 북마크를 찾을 수 없습니다.");
-                } else {
-                  setRootBookmarks(response.data[0].bookmarks);
-                  setFolderInfoList([]);
-                }
-              }
-            });
+            bookmarkStore.searchBookmarks(searchInput);
           }}
         >
           <input
@@ -156,14 +106,14 @@ const Bookmark = ({ bookmarkData, authService }: Props) => {
                 .then((response) => {
                   if (response.status === 201) {
                     setShowAddBookmarkForm(false);
-                    getAllRootBookmarks();
-                    getAllFolder();
+                    bookmarkStore.getAllRootBookmarks();
+                    bookmarkStore.getAllFolder();
                     setTitle("");
                     setUrl("");
                     setDescription("");
                     setCategoryTitle("");
                   } else {
-                    window.alert("북마크 추가 실패");
+                    alert("북마크 추가 실패");
                   }
                 });
             }}
@@ -214,11 +164,13 @@ const Bookmark = ({ bookmarkData, authService }: Props) => {
                   setCategoryTitle(e.target.value);
                 }}
               >
-                {folderNameList.map((name: string, idx: number) => (
-                  <option key={idx} onSelect={() => setCategoryTitle(name)}>
-                    {name}
-                  </option>
-                ))}
+                {bookmarkStore.folderNameList.map(
+                  (name: string, idx: number) => (
+                    <option key={idx} onSelect={() => setCategoryTitle(name)}>
+                      {name}
+                    </option>
+                  )
+                )}
               </select>
             </section>
             <section className="bookmark-form-buttons">
@@ -229,15 +181,9 @@ const Bookmark = ({ bookmarkData, authService }: Props) => {
           </form>
         </DarkModalSection>
       )}
-      <FolderList
-        bookmarkData={bookmarkData}
-        getAllFolder={getAllFolder}
-        folderInfoList={folderInfoList}
-        rootBookmarks={rootBookmarks}
-        getAllRootBookmarks={getAllRootBookmarks}
-      />
+      <FolderList bookmarkData={bookmarkData} bookmarkStore={bookmarkStore} />
     </div>
   );
-};
+});
 
 export default Bookmark;

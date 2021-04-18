@@ -7,11 +7,12 @@ import {
   storageKey,
 } from "utils/local-storage";
 
-export interface AuthServiceInterface {
+export interface IAuthService {
+  logout(): void;
   refreshToken: () => Promise<AxiosResponse<any>>;
 }
 
-class AuthService implements AuthServiceInterface {
+class AuthService implements IAuthService {
   private base;
   private userUrl;
 

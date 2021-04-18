@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import {
   BookmarkInfo,
   Folder,
@@ -6,7 +6,15 @@ import {
 import API_URL, { API_HOST } from "utils/api";
 import { getStorageItem, storageKey } from "utils/local-storage";
 
-class BookmarkData {
+export interface IBookmarkData {
+  getAllBookmarks(): Promise<AxiosResponse<any>>;
+  appendBookmark(bookmarkInfo: Folder): Promise<AxiosResponse<any>>;
+  getAllFolderInfo(): Promise<AxiosResponse<any>>;
+  addFolder(title: string): Promise<any>;
+  getAllBookmarksInFolder(id: number): Promise<AxiosResponse<any>>;
+  searchBookmark(name: string): Promise<AxiosResponse<any>>;
+}
+class BookmarkData implements IBookmarkData {
   private base;
   private bookmarkUrl;
   constructor() {

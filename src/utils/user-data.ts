@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import API_URL, { API_HOST } from "utils/api";
 import { getStorageItem, storageKey } from "utils/local-storage";
-import AuthService, { AuthServiceInterface } from "utils/auth-service";
 interface UserDataInterface {
   selectSearchEngine(mode: string): Promise<AxiosResponse<any>>;
 }
