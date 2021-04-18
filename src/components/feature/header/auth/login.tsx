@@ -20,14 +20,17 @@ const Login = ({ authService, setShowSelectedForm }: Props) => {
       className="login-form"
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        authService.login(email, password).then((response) => {
-          if (response.status === 200) {
-            const token = response.data.token;
-            setStorageItem(storageKey, token);
-            userDispatch({ type: "LOGIN" });
-            setShowSelectedForm("close");
-          }
-        });
+        authService
+          .login(email, password)
+          .then((response) => {
+            if (response.status === 200) {
+              const token = response.data.token;
+              setStorageItem(storageKey, token);
+              userDispatch({ type: "LOGIN" });
+              setShowSelectedForm("close");
+            }
+          })
+          .catch((error) => alert(error.request.response));
       }}
     >
       <div className="login-header">

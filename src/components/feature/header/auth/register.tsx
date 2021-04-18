@@ -49,15 +49,18 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
           setLoaded(false);
-          authService.verification(email).then((response) => {
-            setLoaded(true);
-            if (response.status === 201) {
-              setStep("verification");
-            } else {
-              // error handling
+          authService
+            .verification(email)
+            .then((response) => {
+              setLoaded(true);
+              if (response.status === 201) {
+                setStep("verification");
+              }
+            })
+            .catch((error) => {
+              alert(error.request.response);
               setStep("email");
-            }
-          });
+            });
         }}
       >
         {showHeader()}
@@ -104,15 +107,18 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
           setLoaded(false);
-          authService.verificationCode(verificationCode).then((response) => {
-            setLoaded(true);
-            if (response.status === 200) {
-              setStep("password");
-              alert(response.data.message);
-            } else {
-              alert(response.data.message);
-            }
-          });
+          authService
+            .verificationCode(verificationCode)
+            .then((response) => {
+              setLoaded(true);
+              if (response.status === 200) {
+                setStep("password");
+                alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              alert(error.request.response);
+            });
         }}
       >
         {showHeader()}
@@ -158,14 +164,18 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
           setLoaded(false);
-          authService.register(email, password).then((response) => {
-            setLoaded(true);
-            if (response.status === 201) {
-              setStep("success");
-            } else {
-              // error handling
-            }
-          });
+          authService
+            .register(email, password)
+            .then((response) => {
+              setLoaded(true);
+              if (response.status === 201) {
+                setStep("success");
+              }
+            })
+            .catch((error) => {
+              alert(error.request.response);
+              setStep("email");
+            });
         }}
       >
         {showHeader()}

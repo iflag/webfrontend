@@ -4,12 +4,14 @@ import NoteData from "utils/note-data";
 import { AiOutlineClear } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
 import { useUserState } from "contexts/user-context";
+import AuthService from "utils/auth-service";
 
 type Props = {
   noteData: NoteData;
+  authService: AuthService;
 };
 
-const MemoList = ({ noteData }: Props) => {
+const MemoList = ({ noteData, authService }: Props) => {
   const userState = useUserState();
   const [contents, setContents] = useState("");
 
@@ -20,8 +22,10 @@ const MemoList = ({ noteData }: Props) => {
       const response = await noteData.getNoteContents();
       if (response.status === 200) {
         setContents(response.data.contents);
+        authService.refreshToken();
       }
     } catch (error) {
+      alert(error.request.response);
       setContents("");
     }
   };

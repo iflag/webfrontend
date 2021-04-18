@@ -12,6 +12,7 @@ function App() {
   const bookmarkData = new BookmarkData();
   const noteData = new NoteData();
   const userDispatch = useUserDispatch();
+  const authService = new AuthService();
 
   useEffect(() => {
     if (userData.onLogin()) {
@@ -23,7 +24,11 @@ function App() {
 
   return (
     <div className="app">
-      <MainPage bookmarkData={bookmarkData} noteData={noteData} />
+      <MainPage
+        bookmarkData={bookmarkData}
+        noteData={noteData}
+        authService={authService}
+      />
     </div>
   );
 }

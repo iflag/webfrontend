@@ -78,7 +78,7 @@ class AuthService implements AuthServiceInterface {
     };
 
     const response = await this.base.post(refresh, data);
-    const newToken = await response.data;
+    const newToken = await response.data.token;
     setStorageItem(storageKey, newToken);
     return response;
   }

@@ -9,9 +9,11 @@ import FolderList from "components/feature/main-page/bookmark/folder-list";
 import BookmarkData from "utils/bookmark-data";
 import { DarkModalSection } from "components/feature/header/auth/auth";
 import { useUserState } from "contexts/user-context";
+import AuthService from "utils/auth-service";
 
 type Props = {
   bookmarkData: BookmarkData;
+  authService: AuthService;
 };
 
 export type Bookmark = {
@@ -42,7 +44,7 @@ export type FolderInfo = {
   title: string;
 };
 
-const Bookmark = ({ bookmarkData }: Props) => {
+const Bookmark = ({ bookmarkData, authService }: Props) => {
   const userState = useUserState();
 
   const [title, setTitle] = useState("");
@@ -59,6 +61,7 @@ const Bookmark = ({ bookmarkData }: Props) => {
       const response = await bookmarkData.getAllBookmarks();
       const newRootBookmarks = await response.data[0].bookmarks;
       setRootBookmarks(newRootBookmarks);
+      authService.refreshToken();
     } catch (error) {
       setRootBookmarks([]);
     }
@@ -75,6 +78,7 @@ const Bookmark = ({ bookmarkData }: Props) => {
         (info: FolderInfo) => info.title
       );
       setFolderNameList(["", ...newFolderNameList]);
+      authService.refreshToken();
     } catch (error) {
       setFolderInfoList([]);
       setFolderNameList([]);
@@ -103,19 +107,18 @@ const Bookmark = ({ bookmarkData }: Props) => {
             if (searchInput === "") {
               getAllRootBookmarks();
               getAllFolder();
-            } else {
-              bookmarkData.searchBookmark(searchInput).then((response) => {
-                if (response.status === 200) {
-                  console.log(response.data[0].bookmarks);
-                  if (response.data[0].bookmarks.length === 0) {
-                    alert("원하는 북마크를 찾을 수 없습니다.");
-                  } else {
-                    setRootBookmarks(response.data[0].bookmarks);
-                    setFolderInfoList([]);
-                  }
-                }
-              });
+              return;
             }
+            bookmarkData.searchBookmark(searchInput).then((response) => {
+              if (response.status === 200) {
+                if (response.data[0].bookmarks.length === 0) {
+                  alert("원하는 북마크를 찾을 수 없습니다.");
+                } else {
+                  setRootBookmarks(response.data[0].bookmarks);
+                  setFolderInfoList([]);
+                }
+              }
+            });
           }}
         >
           <input
