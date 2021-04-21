@@ -18,6 +18,10 @@ const MemoList = ({ noteData, authService }: Props) => {
   const [editing, setEditing] = useState(false);
 
   const refreshNoteContents = async () => {
+    if (userState.onLogin === false) {
+      setContents("");
+      return;
+    }
     try {
       const response = await noteData.getNoteContents();
       if (response.status === 200) {
@@ -74,15 +78,6 @@ const MemoList = ({ noteData, authService }: Props) => {
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                 setContents(e.target.value);
               }}
-              // onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-              //   if (e.key === "Enter" || e.key === "Escape") {
-              //     setEditing(false);
-              //     noteData.editNote(contents);
-              //     refreshNoteContents();
-              //     e.preventDefault();
-              //     e.stopPropagation();
-              //   }
-              // }}
               className="memoList-input"
             />
             <button

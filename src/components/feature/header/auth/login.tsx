@@ -4,6 +4,16 @@ import AuthService from "utils/auth-service";
 import { storageKey, setStorageItem } from "utils/local-storage";
 import { SelectedForm } from "components/Layout/header";
 import { useUserDispatch } from "contexts/user-context";
+import styled from "styled-components";
+
+const LoadingSpinner = styled.div`
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  border: solid 0.2rem #ebebeb;
+  border-top: solid 0.2rem #8bb7ee;
+  animation: spin 1s linear infinite;
+`;
 
 type Props = {
   authService: AuthService;
@@ -15,14 +25,18 @@ const Login = ({ authService, setShowSelectedForm }: Props) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [loaded, setLoaded] = useState(true);
   return (
     <form
       className="login-form"
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoaded(false);
         authService
           .login(email, password)
           .then((response) => {
+            setLoaded(true);
             if (response.status === 200) {
               const token = response.data.token;
               setStorageItem(storageKey, token);
@@ -30,7 +44,10 @@ const Login = ({ authService, setShowSelectedForm }: Props) => {
               setShowSelectedForm("close");
             }
           })
-          .catch((error) => alert(error.request.response));
+          .catch((error) => {
+            alert(error.request.response);
+            setLoaded(true);
+          });
       }}
     >
       <div className="login-header">
@@ -59,8 +76,11 @@ const Login = ({ authService, setShowSelectedForm }: Props) => {
         />
       </section>
       <section className="login-buttons">
-        <button className="login-submit" type="submit">
-          Login
+        <button
+          className={`login-submit ${loaded ? "" : "loading"}`}
+          type="submit"
+        >
+          {loaded ? "Login" : <LoadingSpinner />}
         </button>
         <button
           className="login-otherOption"

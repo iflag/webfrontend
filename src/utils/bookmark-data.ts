@@ -12,7 +12,7 @@ export interface IBookmarkData {
   getAllFolderInfo(): Promise<AxiosResponse<any>>;
   addFolder(title: string): Promise<any>;
   getAllBookmarksInFolder(id: number): Promise<AxiosResponse<any>>;
-  searchBookmark(name: string): Promise<AxiosResponse<any>>;
+  searchBookmarks(name: string): Promise<AxiosResponse<any>>;
 }
 class BookmarkData implements IBookmarkData {
   private base;
@@ -30,7 +30,7 @@ class BookmarkData implements IBookmarkData {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -49,7 +49,7 @@ class BookmarkData implements IBookmarkData {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -62,7 +62,7 @@ class BookmarkData implements IBookmarkData {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -78,7 +78,7 @@ class BookmarkData implements IBookmarkData {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -96,7 +96,7 @@ class BookmarkData implements IBookmarkData {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -111,7 +111,7 @@ class BookmarkData implements IBookmarkData {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -126,7 +126,7 @@ class BookmarkData implements IBookmarkData {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -141,7 +141,7 @@ class BookmarkData implements IBookmarkData {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -156,7 +156,7 @@ class BookmarkData implements IBookmarkData {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -164,14 +164,14 @@ class BookmarkData implements IBookmarkData {
     return response;
   }
 
-  async searchBookmark(name: string) {
+  async searchBookmarks(name: string) {
     const { search } = this.bookmarkUrl;
     const url = `${search}?q=${name}`;
 
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 

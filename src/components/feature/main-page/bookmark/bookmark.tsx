@@ -52,12 +52,23 @@ const Bookmark = observer(({ bookmarkData, authService }: Props) => {
   const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
-    bookmarkStore.getAllFolder();
+    if (userState.onLogin === false) {
+      bookmarkStore.setFolderInfoList([]);
+      bookmarkStore.setFolderNameList([]);
+      return;
+    }
+    bookmarkStore.getAllFolders();
   }, []);
 
   useEffect(() => {
+    if (userState.onLogin === false) {
+      bookmarkStore.setFolderInfoList([]);
+      bookmarkStore.setFolderNameList([]);
+      bookmarkStore.setRootBookmarks([]);
+      return;
+    }
     bookmarkStore.getAllRootBookmarks();
-    bookmarkStore.getAllFolder();
+    bookmarkStore.getAllFolders();
   }, [userState.onLogin]);
 
   return (
@@ -107,7 +118,7 @@ const Bookmark = observer(({ bookmarkData, authService }: Props) => {
                   if (response.status === 201) {
                     setShowAddBookmarkForm(false);
                     bookmarkStore.getAllRootBookmarks();
-                    bookmarkStore.getAllFolder();
+                    bookmarkStore.getAllFolders();
                     setTitle("");
                     setUrl("");
                     setDescription("");

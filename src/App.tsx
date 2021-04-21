@@ -1,7 +1,7 @@
 import MainPage from "pages/main-page/main-page";
 import React, { useEffect } from "react";
 import "App.scss";
-import { useUserDispatch, useUserState } from "contexts/user-context";
+import { useUserDispatch } from "contexts/user-context";
 import UserData from "utils/user-data";
 import BookmarkData from "utils/bookmark-data";
 import NoteData from "utils/note-data";

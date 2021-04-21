@@ -18,7 +18,7 @@ class NoteData {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -32,7 +32,7 @@ class NoteData {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -50,7 +50,7 @@ class NoteData {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 

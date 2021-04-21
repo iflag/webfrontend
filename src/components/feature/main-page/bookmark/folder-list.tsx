@@ -10,6 +10,7 @@ import {
 import { DarkModalSection } from "components/feature/header/auth/auth";
 import BookmarkStore from "stores/bookmark-store";
 import { observer } from "mobx-react";
+import { useUserState } from "contexts/user-context";
 
 type Props = {
   bookmarkData: BookmarkData;
@@ -17,6 +18,7 @@ type Props = {
 };
 
 const FolderList = observer(({ bookmarkData, bookmarkStore }: Props) => {
+  const userState = useUserState();
   const [showAddFolderForm, setShowAddFolderForm] = useState(false);
   const [title, setTitle] = useState("");
 
@@ -25,6 +27,10 @@ const FolderList = observer(({ bookmarkData, bookmarkStore }: Props) => {
   };
 
   useEffect(() => {
+    if (userState.onLogin === false) {
+      bookmarkStore.setRootBookmarks([]);
+      return;
+    }
     bookmarkStore.getAllRootBookmarks();
   }, []);
   return (
@@ -67,7 +73,7 @@ const FolderList = observer(({ bookmarkData, bookmarkStore }: Props) => {
               e.preventDefault();
               addFolder();
               bookmarkStore.getAllRootBookmarks();
-              bookmarkStore.getAllFolder();
+              bookmarkStore.getAllFolders();
               setShowAddFolderForm(false);
             }}
           >

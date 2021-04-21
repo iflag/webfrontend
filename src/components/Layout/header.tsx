@@ -62,6 +62,7 @@ const Header = ({ userData, authService }: Props) => {
   ]);
 
   useEffect(() => {
+    if (userState.onLogin === false) return;
     userData
       .selectSearchEngine(selectedSearchEngine)
       .then((response) => console.log(response));

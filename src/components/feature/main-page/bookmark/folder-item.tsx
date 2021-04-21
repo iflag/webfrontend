@@ -57,7 +57,7 @@ const FolderItem = observer(
                   if (response.status === 200) {
                     setShowEditSection(false);
                     bookmarkStore.getAllRootBookmarks();
-                    bookmarkStore.getAllFolder();
+                    bookmarkStore.getAllFolders();
                   } else {
                     window.alert("북마크 정보 변경 실패");
                   }
@@ -169,7 +169,7 @@ const FolderItem = observer(
                       .then((response) => {
                         if (response.status === 200) {
                           setEditing(false);
-                          bookmarkStore.getAllFolder();
+                          bookmarkStore.getAllFolders();
                         }
                       });
                   } else if (type === "bookmark") {
@@ -199,7 +199,7 @@ const FolderItem = observer(
                         .changeFolderName(content.id, title)
                         .then((response) => {
                           if (response.status === 200) {
-                            bookmarkStore.getAllFolder();
+                            bookmarkStore.getAllFolders();
                           }
                         });
                     } else if (type === "bookmark") {

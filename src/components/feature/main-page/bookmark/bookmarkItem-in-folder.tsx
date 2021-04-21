@@ -45,7 +45,7 @@ const BookmarkItemInFolder = observer(
                   if (response.status === 200) {
                     setShowEditSection(false);
                     bookmarkStore.getAllRootBookmarks();
-                    bookmarkStore.getAllFolder();
+                    bookmarkStore.getAllFolders();
                   } else {
                     window.alert("북마크 정보 변경 실패");
                   }

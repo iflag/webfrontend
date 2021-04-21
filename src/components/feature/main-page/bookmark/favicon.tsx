@@ -8,7 +8,6 @@ type Props = {
 };
 
 const cleanUrl = (url: string) => {
-  // url에서 호스트만 추출한다.
   let cleanedUrl = url.includes("https")
     ? url.slice(8)
     : url.includes("http")
@@ -29,7 +28,6 @@ const Favicon = ({ content }: Props) => {
   const [isError, setError] = useState(false);
 
   const getFavicon = async (url: string) => {
-    // grabber api 사용
     try {
       const {
         data: { icons },
@@ -51,28 +49,16 @@ const Favicon = ({ content }: Props) => {
 
   return (
     <div>
-      {isReady ? (
-        isError ? (
-          <>
-            <img
-              src={`http://www.google.com/s2/favicons?domain=${siteUrl}`}
-              width="30"
-              height="30"
-              alt="icon"
-              className="favicon"
-            />
-          </>
-        ) : (
-          <>
-            <img
-              src={favicon}
-              width="30"
-              height="30"
-              alt="icon"
-              className="favicon"
-            />
-          </>
-        )
+      {isReady && !isError ? (
+        <>
+          <img
+            src={favicon}
+            width="30"
+            height="30"
+            alt="icon"
+            className="favicon"
+          />
+        </>
       ) : (
         <>
           <img
@@ -88,4 +74,4 @@ const Favicon = ({ content }: Props) => {
   );
 };
 
-export default Favicon;
+export default React.memo(Favicon);

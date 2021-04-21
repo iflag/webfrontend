@@ -26,7 +26,7 @@ class BookmarkStore {
       setFolderInfoList: action,
       setFolderNameList: action,
       getAllRootBookmarks: action,
-      getAllFolder: action,
+      getAllFolders: action,
       searchBookmarks: action,
     });
 
@@ -63,7 +63,7 @@ class BookmarkStore {
     }
   }
 
-  async getAllFolder() {
+  async getAllFolders() {
     try {
       const response = await this.bookmarkData.getAllFolderInfo();
       this.setFolderInfoList(response.data);
@@ -84,11 +84,11 @@ class BookmarkStore {
   async searchBookmarks(searchInput: string) {
     if (searchInput === "") {
       this.getAllRootBookmarks();
-      this.getAllFolder();
+      this.getAllFolders();
       return;
     }
 
-    this.bookmarkData.searchBookmark(searchInput).then((response) => {
+    this.bookmarkData.searchBookmarks(searchInput).then((response) => {
       if (response.status === 200) {
         if (response.data[0].bookmarks.length === 0) {
           alert("원하는 북마크를 찾을 수 없습니다.");

@@ -23,7 +23,7 @@ class UserData implements UserDataInterface {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
     const response = await this.base.post(portal, data, config);
@@ -39,7 +39,7 @@ class UserData implements UserDataInterface {
     const token = getStorageItem(storageKey, "");
     const config = {
       headers: {
-        Authorization: `X-JWT ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
