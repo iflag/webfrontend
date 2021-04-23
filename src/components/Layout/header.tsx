@@ -6,11 +6,12 @@ import Auth from "components/feature/header/auth/auth";
 import AuthService from "utils/auth-service";
 import { useUserDispatch, useUserState } from "contexts/user-context";
 import styled from "styled-components";
-import GithubIcon from "assets/images/Github.svg";
+
+import GithubIcon from "assets/images/github.svg";
 import DDGIcon from "assets/images/DDG.svg";
-import GoogleIcon from "assets/images/Google.svg";
-import NaverIcon from "assets/images/Naver.png";
-import WAIcon from "assets/images/WA.svg";
+import GoogleIcon from "assets/images/google.svg";
+import NaverIcon from "assets/images/naver.png";
+import WAIcon from "assets/images/wa.svg";
 
 type styleProps = {
   imgUrl: string;

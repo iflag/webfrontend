@@ -15,19 +15,39 @@ const Login = ({ authService, setShowSelectedForm }: Props) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   return (
     <form
       className="login-form"
-      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+      onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        authService.login(email, password).then((response) => {
+
+        try {
+          const response = await authService.login(email, password);
+          console.log(response);
           if (response.status === 200) {
             const token = response.data.token;
             setStorageItem(storageKey, token);
             userDispatch({ type: "LOGIN" });
             setShowSelectedForm("close");
+          } else {
+            console.log(response);
           }
-        });
+        } catch (error) {
+          console.log(error);
+          console.log(error.message);
+          console.log(error.request);
+        }
+
+        // authService.login(email, password).then((response) => {
+        //   if (response.status === 200) {
+        //
+        //     const token = response.data.token;
+        //     setStorageItem(storageKey, token);
+        //     userDispatch({ type: "LOGIN" });
+        //     setShowSelectedForm("close");
+        //   }
+        // });
       }}
     >
       <div className="login-header">
