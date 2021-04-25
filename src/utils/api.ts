@@ -6,11 +6,11 @@ const API_URL = {
   users: {
     verification: "/users/verification",
     verificationCode: "/users/verification/code",
-    signin: "/users/signin",
+    signin: "/users/signin/",
     signup: "/users/signup",
     portal: "/users/portal",
     history: "/users/history",
-    refresh: "/users/token/refresh",
+    refresh: "/users/token/refresh/",
   },
   bookmarks: {
     bookmarks: "/bookmarks/",

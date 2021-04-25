@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import "components/feature/header/auth/login.scss";
 import AuthService from "utils/auth-service";
-import { storageKey, setStorageItem } from "utils/local-storage";
+import {
+  setStorageItem,
+  storageAccessKey,
+  storageRefreshKey,
+} from "utils/local-storage";
 import { SelectedForm } from "components/Layout/header";
 import { useUserDispatch } from "contexts/user-context";
 import styled from "styled-components";
+import { observer } from "mobx-react";
 
 const LoadingSpinner = styled.div`
   width: 1.2rem;
@@ -20,9 +25,8 @@ type Props = {
   setShowSelectedForm: React.Dispatch<React.SetStateAction<SelectedForm>>;
 };
 
-const Login = ({ authService, setShowSelectedForm }: Props) => {
+const Login = observer(({ authService, setShowSelectedForm }: Props) => {
   const userDispatch = useUserDispatch();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -38,8 +42,9 @@ const Login = ({ authService, setShowSelectedForm }: Props) => {
           .then((response) => {
             setLoaded(true);
             if (response.status === 200) {
-              const token = response.data.token;
-              setStorageItem(storageKey, token);
+              const result = response.data;
+              setStorageItem(storageAccessKey, result.accessToken);
+              setStorageItem(storageRefreshKey, result.refreshToken);
               userDispatch({ type: "LOGIN" });
               setShowSelectedForm("close");
             }
@@ -94,6 +99,6 @@ const Login = ({ authService, setShowSelectedForm }: Props) => {
       </section>
     </form>
   );
-};
+});
 
 export default Login;

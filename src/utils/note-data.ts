@@ -1,6 +1,6 @@
 import axios from "axios";
 import API_URL, { API_HOST } from "utils/api";
-import { getStorageItem, storageKey } from "utils/local-storage";
+import { getStorageItem, storageAccessKey } from "utils/local-storage";
 
 class NoteData {
   private base;
@@ -15,7 +15,7 @@ class NoteData {
   async getNoteContents() {
     const { notes } = this.noteUrl;
 
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -29,7 +29,7 @@ class NoteData {
   async editNote(contents: string) {
     const { notes } = this.noteUrl;
 
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -47,7 +47,7 @@ class NoteData {
   async deleteAllContents() {
     const { notes } = this.noteUrl;
 
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,

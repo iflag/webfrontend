@@ -6,10 +6,10 @@ import Auth from "components/feature/header/auth/auth";
 import AuthService from "utils/auth-service";
 import { useUserDispatch, useUserState } from "contexts/user-context";
 import styled from "styled-components";
-import GithubIcon from "assets/images/Github.svg";
+import GithubIcon from "assets/images/github.svg";
 import DDGIcon from "assets/images/DDG.svg";
-import GoogleIcon from "assets/images/Google.svg";
-import NaverIcon from "assets/images/Naver.png";
+import GoogleIcon from "assets/images/google.svg";
+import NaverIcon from "assets/images/naver.png";
 import WAIcon from "assets/images/WA.svg";
 
 type styleProps = {
@@ -62,14 +62,16 @@ const Header = ({ userData, authService }: Props) => {
   ]);
 
   useEffect(() => {
-    if (userState.onLogin === false) return;
+    if (!userState.onLogin) return;
     userData
       .selectSearchEngine(selectedSearchEngine)
       .then((response) => console.log(response));
   }, [selectedSearchEngine]);
 
   useEffect(() => {
-    if (!userData.onLogin()) {
+    if (userState.onLogin) {
+      setShowSelectedForm("close");
+    } else {
       setShowSelectedForm("login");
     }
   }, [userState.onLogin]);

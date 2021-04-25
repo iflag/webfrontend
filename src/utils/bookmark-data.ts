@@ -4,7 +4,7 @@ import {
   Folder,
 } from "components/feature/main-page/bookmark/bookmark";
 import API_URL, { API_HOST } from "utils/api";
-import { getStorageItem, storageKey } from "utils/local-storage";
+import { getStorageItem, storageAccessKey } from "utils/local-storage";
 
 export interface IBookmarkData {
   getAllBookmarks(): Promise<AxiosResponse<any>>;
@@ -27,7 +27,7 @@ class BookmarkData implements IBookmarkData {
   async getAllBookmarks() {
     const { bookmarks } = this.bookmarkUrl;
 
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -46,7 +46,7 @@ class BookmarkData implements IBookmarkData {
       description: bookmarkInfo.description,
       category_title: bookmarkInfo.category_title,
     };
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ class BookmarkData implements IBookmarkData {
 
   async getAllFolderInfo() {
     const { categories } = this.bookmarkUrl;
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ class BookmarkData implements IBookmarkData {
     const data = {
       title,
     };
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ class BookmarkData implements IBookmarkData {
     const data = {
       title,
     };
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -108,7 +108,7 @@ class BookmarkData implements IBookmarkData {
     const { bookmarks } = this.bookmarkUrl;
     const url = `${bookmarks}${id}`;
 
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -123,7 +123,7 @@ class BookmarkData implements IBookmarkData {
     const { categories } = this.bookmarkUrl;
     const url = `${categories}${id}`;
 
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -138,7 +138,7 @@ class BookmarkData implements IBookmarkData {
     const { bookmarks } = this.bookmarkUrl;
     const url = `${bookmarks}${id}`;
 
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -153,7 +153,7 @@ class BookmarkData implements IBookmarkData {
     const { categories } = this.bookmarkUrl;
     const url = `${categories}${id}`;
 
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -168,7 +168,7 @@ class BookmarkData implements IBookmarkData {
     const { search } = this.bookmarkUrl;
     const url = `${search}?q=${name}`;
 
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,

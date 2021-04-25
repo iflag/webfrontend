@@ -8,7 +8,7 @@ import BookmarkData, { IBookmarkData } from "utils/bookmark-data";
 import { RootStore } from "./root-store";
 
 class BookmarkStore {
-  rootStore: RootStore;
+  private rootStore: RootStore;
 
   rootBookmarks: Bookmark[];
   folderInfoList: FolderInfo[];
@@ -56,6 +56,7 @@ class BookmarkStore {
       this.setRootBookmarks(newRootBookmarks);
       this.authService.refreshToken();
     } catch (error) {
+      console.log(error);
       this.setRootBookmarks([]);
       if (error.response.status === 403) {
         this.authService.logout();

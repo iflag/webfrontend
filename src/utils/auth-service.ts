@@ -4,7 +4,8 @@ import {
   getStorageItem,
   removeStorageItem,
   setStorageItem,
-  storageKey,
+  storageAccessKey,
+  storageRefreshKey,
 } from "utils/local-storage";
 
 export interface IAuthService {
@@ -66,21 +67,25 @@ class AuthService implements IAuthService {
   }
 
   logout() {
-    removeStorageItem(storageKey);
+    removeStorageItem(storageAccessKey);
   }
 
   async refreshToken() {
     const { refresh } = this.userUrl;
 
-    const token = getStorageItem(storageKey, "");
+    const accessToken = getStorageItem(storageAccessKey, "");
+    const refreshToken = getStorageItem(storageRefreshKey, "");
 
     const data = {
-      token,
+      accessToken,
+      refreshToken,
     };
 
     const response = await this.base.post(refresh, data);
     const newToken = await response.data.token;
-    setStorageItem(storageKey, newToken);
+    console.log(response);
+    // setStorageItem(storageAccessKey, newToken.accessToken);
+    // setStorageItem(storageRefreshKey, newToken.refreshToken);
     return response;
   }
 }

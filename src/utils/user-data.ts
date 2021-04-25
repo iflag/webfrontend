@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import API_URL, { API_HOST } from "utils/api";
-import { getStorageItem, storageKey } from "utils/local-storage";
+import { getStorageItem, storageAccessKey } from "utils/local-storage";
 interface UserDataInterface {
   selectSearchEngine(mode: string): Promise<AxiosResponse<any>>;
 }
@@ -20,7 +20,7 @@ class UserData implements UserDataInterface {
       portal: searchEngine,
     };
 
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -36,7 +36,7 @@ class UserData implements UserDataInterface {
       keyword: searched,
     };
 
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ class UserData implements UserDataInterface {
   }
 
   onLogin() {
-    const token = getStorageItem(storageKey, "");
+    const token = getStorageItem(storageAccessKey, "");
     if (token.length > 0) return true;
     else return false;
   }

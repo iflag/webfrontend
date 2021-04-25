@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "components/feature/header/auth/register.scss";
 import AuthService from "utils/auth-service";
 import { SelectedForm } from "components/Layout/header";
@@ -38,6 +38,10 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
       </div>
     );
   };
+
+  const checkPasswordLength = useMemo((): boolean => {
+    return password.length >= 8;
+  }, [password]);
 
   const showEmailInput = (): React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLElement>,
@@ -163,6 +167,9 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
         className="register-form"
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
+          if (!checkPasswordLength) {
+            return;
+          }
           setLoaded(false);
           authService
             .register(email, password)
@@ -190,6 +197,11 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
             }}
             required
           />
+          <p className={`register-alert ${checkPasswordLength ? "" : "alert"}`}>
+            {checkPasswordLength
+              ? "사용 가능한 비밀번호 입니다"
+              : "비밀번호는 8글자 이상이어야 합니다."}
+          </p>
         </section>
         <section className="register-buttons">
           <button
