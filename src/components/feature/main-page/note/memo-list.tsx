@@ -18,7 +18,7 @@ const MemoList = ({ noteData, authService }: Props) => {
   const [editing, setEditing] = useState(false);
 
   const refreshNoteContents = async () => {
-    if (userState.onLogin === false) {
+    if (!userState.onLogin) {
       setContents("");
       return;
     }

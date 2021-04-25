@@ -1,6 +1,7 @@
 import AuthService, { IAuthService } from "utils/auth-service";
 import {
   Bookmark,
+  BookmarkInfo,
   FolderInfo,
 } from "components/feature/main-page/bookmark/bookmark";
 import { action, makeObservable, observable } from "mobx";
@@ -28,6 +29,7 @@ class BookmarkStore {
       getAllRootBookmarks: action,
       getAllFolders: action,
       searchBookmarks: action,
+      editBookmarkInfo: action,
     });
 
     this.rootStore = root;
@@ -97,6 +99,23 @@ class BookmarkStore {
           this.setRootBookmarks(response.data[0].bookmarks);
           this.setFolderInfoList([]);
         }
+      }
+    });
+  }
+
+  async editBookmarkInfo(
+    id: number,
+    info: BookmarkInfo,
+    setShowEditSection: React.Dispatch<React.SetStateAction<boolean>>
+  ) {
+    this.bookmarkData.editBookmarkInfo(id, info).then((response) => {
+      console.log(response.status);
+      if (response.status === 200) {
+        setShowEditSection(false);
+        this.getAllRootBookmarks();
+        this.getAllFolders();
+      } else {
+        window.alert("북마크 정보 변경 실패");
       }
     });
   }

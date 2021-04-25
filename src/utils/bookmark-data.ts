@@ -13,6 +13,7 @@ export interface IBookmarkData {
   addFolder(title: string): Promise<any>;
   getAllBookmarksInFolder(id: number): Promise<AxiosResponse<any>>;
   searchBookmarks(name: string): Promise<AxiosResponse<any>>;
+  editBookmarkInfo(id: number, info: BookmarkInfo): Promise<AxiosResponse<any>>;
 }
 class BookmarkData implements IBookmarkData {
   private base;

@@ -50,18 +50,11 @@ const FolderItem = observer(
             className="bookmark-form"
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
-              bookmarkData
-                .editBookmarkInfo(content.id, { title, description, url })
-                .then((response) => {
-                  console.log(response.status);
-                  if (response.status === 200) {
-                    setShowEditSection(false);
-                    bookmarkStore.getAllRootBookmarks();
-                    bookmarkStore.getAllFolders();
-                  } else {
-                    window.alert("북마크 정보 변경 실패");
-                  }
-                });
+              bookmarkStore.editBookmarkInfo(
+                content.id,
+                { title, description, url },
+                setShowEditSection
+              );
               setEditing(false);
             }}
           >
