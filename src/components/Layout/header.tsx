@@ -34,6 +34,13 @@ type Props = {
 
 export type SelectedForm = "close" | "login" | "register" | "findPassword";
 
+type SearchEngineInfo = {
+  key: number;
+  name: string;
+  image: string;
+  abbreviation: string;
+};
+
 const Header = ({ userData, authService }: Props) => {
   const userState = useUserState();
   const userDispatch = useUserDispatch();
@@ -41,25 +48,42 @@ const Header = ({ userData, authService }: Props) => {
   // const [logined, setLogined] = useState(false);
   const [toggleButtonList, setToggleButtonList] = useState(false);
   const [selectedSearchEngine, setSelectedSearchEngine] = useState("Google");
-  const [searchEngines, setSearchEngines] = useState([
-    "Google",
-    "Naver",
-    "DDG",
-    "Github",
-    "WA",
+  const [searchEngines, setSearchEngines] = useState<SearchEngineInfo[]>([
+    {
+      key: 1,
+      name: "Google",
+      image: GoogleIcon,
+      abbreviation: "G",
+    },
+    {
+      key: 2,
+      name: "Naver",
+      image: NaverIcon,
+      abbreviation: "N",
+    },
+    {
+      key: 3,
+      name: "DDG",
+      image: DDGIcon,
+      abbreviation: "D",
+    },
+    {
+      key: 4,
+      name: "Github",
+      image: GithubIcon,
+      abbreviation: "GH",
+    },
+    {
+      key: 5,
+      name: "WA",
+      image: WAIcon,
+      abbreviation: "WA",
+    },
   ]);
   const [searchContent, setSearchContent] = useState("");
   const [showSelectedForm, setShowSelectedForm] = useState<SelectedForm>(
     "close"
   );
-
-  const [searchEngineImgs, setSearchEngineImgs] = useState([
-    GoogleIcon,
-    NaverIcon,
-    DDGIcon,
-    GithubIcon,
-    WAIcon,
-  ]);
 
   useEffect(() => {
     if (!userState.onLogin) return;
@@ -113,32 +137,31 @@ const Header = ({ userData, authService }: Props) => {
           <ul className="header-buttonList">
             {searchEngines.map(
               (
-                searchEngine: string,
-                idx: number
+                searchEngine: SearchEngineInfo
               ): React.DetailedHTMLProps<
                 React.LiHTMLAttributes<HTMLLIElement>,
                 HTMLLIElement
               > => (
-                <li key={idx} className="header-buttonItem">
+                <li key={searchEngine.key} className="header-buttonItem">
                   <button
                     className={`header-searchEngine ${
-                      toggleButtonList || selectedSearchEngine === searchEngine
+                      toggleButtonList ||
+                      selectedSearchEngine === searchEngine.name
                         ? "visible"
                         : ""
                     }`}
                     onClick={() => {
                       setToggleButtonList((prev) => !prev);
-                      setSelectedSearchEngine(searchEngine);
-                      searchEngines.splice(idx, 1);
+                      setSelectedSearchEngine(searchEngine.name);
+                      const newSearchEngines = searchEngines.filter(
+                        (s) => s.key !== searchEngine.key
+                      );
+                      setSearchEngines([searchEngine, ...newSearchEngines]);
                       searchEngines.unshift(searchEngine);
-
-                      const selectedSearchEngineImg = searchEngineImgs[idx];
-                      searchEngineImgs.splice(idx, 1);
-                      searchEngineImgs.unshift(selectedSearchEngineImg);
                     }}
                   >
-                    <SearchEngine imgUrl={searchEngineImgs[idx]} />
-                    {searchEngine}
+                    <SearchEngine imgUrl={searchEngine.image} />
+                    {searchEngine.name}
                   </button>
                 </li>
               )
