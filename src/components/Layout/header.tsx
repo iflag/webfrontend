@@ -156,6 +156,7 @@ const Header = ({ userData, authService }: Props) => {
                       const newSearchEngines = searchEngines.filter(
                         (s) => s.key !== searchEngine.key
                       );
+                      newSearchEngines.sort((a, b) => a.key - b.key);
                       setSearchEngines([searchEngine, ...newSearchEngines]);
                       searchEngines.unshift(searchEngine);
                     }}
