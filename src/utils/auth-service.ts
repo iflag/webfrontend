@@ -82,10 +82,9 @@ class AuthService implements IAuthService {
     };
 
     const response = await this.base.post(refresh, data);
-    const newToken = await response.data.token;
-    console.log(response);
-    // setStorageItem(storageAccessKey, newToken.accessToken);
-    // setStorageItem(storageRefreshKey, newToken.refreshToken);
+    const result = await response.data;
+    setStorageItem(storageAccessKey, result.accessToken);
+    setStorageItem(storageRefreshKey, result.refreshToken);
     return response;
   }
 }

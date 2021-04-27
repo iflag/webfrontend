@@ -56,7 +56,7 @@ class BookmarkStore {
       const response = await this.bookmarkData.getAllBookmarks();
       const newRootBookmarks = await response.data[0].bookmarks;
       this.setRootBookmarks(newRootBookmarks);
-      this.authService.refreshToken();
+      // this.authService.refreshToken();
     } catch (error) {
       console.log(error);
       this.setRootBookmarks([]);
@@ -74,7 +74,7 @@ class BookmarkStore {
         (info: FolderInfo) => info.title
       );
       this.setFolderNameList(["", ...newFolderNameList]);
-      this.authService.refreshToken();
+      // this.authService.refreshToken();
     } catch (error) {
       this.setFolderInfoList([]);
       this.setFolderNameList([]);

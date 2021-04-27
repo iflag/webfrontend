@@ -17,7 +17,7 @@ const MainPage = ({ bookmarkData, noteData, authService }: Props) => {
   return (
     <Layout>
       <div className="mainpage">
-        <Bookmark bookmarkData={bookmarkData} authService={authService} />
+        <Bookmark bookmarkData={bookmarkData} />
         <Note noteData={noteData} authService={authService} />
       </div>
     </Layout>

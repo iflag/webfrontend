@@ -26,7 +26,7 @@ const MemoList = ({ noteData, authService }: Props) => {
       const response = await noteData.getNoteContents();
       if (response.status === 200) {
         setContents(response.data.contents);
-        authService.refreshToken();
+        // authService.refreshToken();
       }
     } catch (error) {
       alert(error.request.response);

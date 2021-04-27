@@ -126,7 +126,7 @@ const Header = ({ userData, authService }: Props) => {
     if (selectedSearchEngine === "WA") {
       window.open(`https://duckduckgo.com/?q=!wa+${searchContent}`, "_blank");
     }
-    authService.refreshToken();
+    // authService.refreshToken();
   };
 
   return (

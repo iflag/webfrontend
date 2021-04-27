@@ -9,13 +9,11 @@ import FolderList from "components/feature/main-page/bookmark/folder-list";
 import BookmarkData from "utils/bookmark-data";
 import { DarkModalSection } from "components/feature/header/auth/auth";
 import { useUserState } from "contexts/user-context";
-import AuthService from "utils/auth-service";
 import { useStoreContext } from "contexts/store-context";
 import { observer } from "mobx-react";
 
 type Props = {
   bookmarkData: BookmarkData;
-  authService: AuthService;
 };
 
 export type Bookmark = {
@@ -38,7 +36,7 @@ export type Folder = {
 
 export type FolderInfo = Pick<Bookmark, "author" | "id" | "title">;
 
-const Bookmark = observer(({ bookmarkData, authService }: Props) => {
+const Bookmark = observer(({ bookmarkData }: Props) => {
   const userState = useUserState();
   const { bookmarkStore } = useStoreContext();
 
@@ -50,6 +48,14 @@ const Bookmark = observer(({ bookmarkData, authService }: Props) => {
   const [showAddBookmarkForm, setShowAddBookmarkForm] = useState(false);
 
   const [searchInput, setSearchInput] = useState("");
+
+  const checkUrl = (): string => {
+    const front = url.slice(0, 5);
+    if (front !== "http") {
+      return "https://".concat(url);
+    }
+    return url;
+  };
 
   useEffect(() => {
     if (userState.onLogin === false) {
@@ -110,7 +116,7 @@ const Bookmark = observer(({ bookmarkData, authService }: Props) => {
               bookmarkData
                 .appendBookmark({
                   title,
-                  url,
+                  url: checkUrl(),
                   description,
                   category_title: categoryTitle,
                 })
