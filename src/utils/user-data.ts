@@ -30,6 +30,19 @@ class UserData implements UserDataInterface {
     return response;
   }
 
+  async getSelectedSearchEngine() {
+    const { portal } = this.userUrl;
+
+    const token = getStorageItem(storageAccessKey, "");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await this.base.get(portal, config);
+    return response;
+  }
+
   async saveSearchHistory(searched: string) {
     const { history } = this.userUrl;
     const data = {

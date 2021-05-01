@@ -39,45 +39,59 @@ type SearchEngineInfo = {
   name: string;
   image: string;
   abbreviation: string;
+  fullName?: string;
 };
 
 const Header = ({ userData, authService }: Props) => {
   const userState = useUserState();
   const userDispatch = useUserDispatch();
 
-  // const [logined, setLogined] = useState(false);
   const [toggleButtonList, setToggleButtonList] = useState(false);
-  const [selectedSearchEngine, setSelectedSearchEngine] = useState("Google");
+  const [
+    selectedSearchEngine,
+    setSelectedSearchEngine,
+  ] = useState<SearchEngineInfo>({
+    key: 1,
+    name: "Google",
+    image: GoogleIcon,
+    abbreviation: "G",
+    fullName: "google",
+  });
   const [searchEngines, setSearchEngines] = useState<SearchEngineInfo[]>([
     {
       key: 1,
       name: "Google",
       image: GoogleIcon,
       abbreviation: "G",
+      fullName: "google",
     },
     {
       key: 2,
       name: "Naver",
       image: NaverIcon,
       abbreviation: "N",
+      fullName: "naver",
     },
     {
       key: 3,
       name: "DDG",
       image: DDGIcon,
       abbreviation: "D",
+      fullName: "duckduckgo",
     },
     {
       key: 4,
       name: "Github",
       image: GithubIcon,
       abbreviation: "GH",
+      fullName: "github",
     },
     {
       key: 5,
       name: "WA",
       image: WAIcon,
       abbreviation: "WA",
+      fullName: "wolfram alpha",
     },
   ]);
   const [searchContent, setSearchContent] = useState("");
@@ -85,11 +99,37 @@ const Header = ({ userData, authService }: Props) => {
     "close"
   );
 
-  useEffect(() => {
+  const saveSeletedSearchEngine = () => {
     if (!userState.onLogin) return;
     userData
-      .selectSearchEngine(selectedSearchEngine)
-      .then((response) => console.log(response));
+      .selectSearchEngine(selectedSearchEngine.abbreviation)
+      .then((response) => {});
+  };
+
+  const sortSearchEngineList = (newSelectedSearchEngine: SearchEngineInfo) => {
+    const newSearchEngines = searchEngines.filter(
+      (s) => s.key !== newSelectedSearchEngine.key
+    );
+    newSearchEngines.sort((a, b) => a.key - b.key);
+    setSearchEngines([newSelectedSearchEngine, ...newSearchEngines]);
+  };
+
+  useEffect(() => {
+    userData.getSelectedSearchEngine().then((response) => {
+      if (response.status === 200) {
+        const newSelectedSearchEngine = searchEngines.find(
+          (s) => s.fullName === response.data.portal
+        );
+        if (newSelectedSearchEngine) {
+          setSelectedSearchEngine(newSelectedSearchEngine);
+          sortSearchEngineList(newSelectedSearchEngine);
+        }
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    saveSeletedSearchEngine();
   }, [selectedSearchEngine]);
 
   useEffect(() => {
@@ -101,32 +141,32 @@ const Header = ({ userData, authService }: Props) => {
   }, [userState.onLogin]);
 
   const browseInNewTab = () => {
-    if (selectedSearchEngine === "Google") {
+    if (selectedSearchEngine.name === "Google") {
       window.open(
         `https://duckduckgo.com/?q=!google+${searchContent}`,
         "_blank"
       );
     }
-    if (selectedSearchEngine === "Naver") {
+    if (selectedSearchEngine.name === "Naver") {
       window.open(
         `https://duckduckgo.com/?q=!naver+${searchContent}`,
 
         "_blank"
       );
     }
-    if (selectedSearchEngine === "DDG") {
+    if (selectedSearchEngine.name === "DDG") {
       window.open(`https://duckduckgo.com/?q=${searchContent}`, "_blank");
     }
-    if (selectedSearchEngine === "Github") {
+    if (selectedSearchEngine.name === "Github") {
       window.open(
         `https://duckduckgo.com/?q=!github+${searchContent}`,
         "_blank"
       );
     }
-    if (selectedSearchEngine === "WA") {
+    if (selectedSearchEngine.name === "WA") {
       window.open(`https://duckduckgo.com/?q=!wa+${searchContent}`, "_blank");
     }
-    // authService.refreshToken();
+    authService.refreshToken().then((response) => console.log(response));
   };
 
   return (
@@ -146,19 +186,14 @@ const Header = ({ userData, authService }: Props) => {
                   <button
                     className={`header-searchEngine ${
                       toggleButtonList ||
-                      selectedSearchEngine === searchEngine.name
+                      selectedSearchEngine.name === searchEngine.name
                         ? "visible"
                         : ""
                     }`}
                     onClick={() => {
                       setToggleButtonList((prev) => !prev);
-                      setSelectedSearchEngine(searchEngine.name);
-                      const newSearchEngines = searchEngines.filter(
-                        (s) => s.key !== searchEngine.key
-                      );
-                      newSearchEngines.sort((a, b) => a.key - b.key);
-                      setSearchEngines([searchEngine, ...newSearchEngines]);
-                      searchEngines.unshift(searchEngine);
+                      setSelectedSearchEngine(searchEngine);
+                      sortSearchEngineList(searchEngine);
                     }}
                   >
                     <SearchEngine imgUrl={searchEngine.image} />
