@@ -185,7 +185,7 @@ const FolderItem = observer(
                   setTitle(e.target.value);
                 }}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.key === "Enter" || e.key === "Escape") {
+                  if (e.key === "Enter") {
                     setEditing(false);
                     if (type === "folder") {
                       bookmarkData

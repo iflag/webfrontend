@@ -44,7 +44,7 @@ class NoteData {
     return response;
   }
 
-  async deleteAllContents() {
+  async deleteAllNote() {
     const { notes } = this.noteUrl;
 
     const token = getStorageItem(storageAccessKey, "");

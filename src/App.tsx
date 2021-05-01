@@ -6,6 +6,7 @@ import UserData from "utils/user-data";
 import BookmarkData from "utils/bookmark-data";
 import NoteData from "utils/note-data";
 import AuthService from "utils/auth-service";
+import TodoData from "utils/todo-data";
 
 function App() {
   const userData = new UserData();
@@ -13,6 +14,7 @@ function App() {
   const noteData = new NoteData();
   const userDispatch = useUserDispatch();
   const authService = new AuthService();
+  const todoData = new TodoData();
 
   useEffect(() => {
     if (userData.onLogin()) {
@@ -27,6 +29,7 @@ function App() {
       <MainPage
         bookmarkData={bookmarkData}
         noteData={noteData}
+        todoData={todoData}
         authService={authService}
       />
     </div>

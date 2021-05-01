@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "components/feature/main-page/note/memo-list.scss";
+import "components/feature/main-page/memo/note.scss";
 import NoteData from "utils/note-data";
 import { AiOutlineClear } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
@@ -58,7 +58,7 @@ const MemoList = ({ noteData, authService }: Props) => {
           <button
             className="memoList-clear"
             onClick={() => {
-              noteData.deleteAllContents();
+              noteData.deleteAllNote();
               refreshNoteContents();
             }}
           >

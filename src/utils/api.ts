@@ -19,6 +19,8 @@ const API_URL = {
   },
   notes: {
     notes: "/notes/",
+    todo: "/notes/todolist",
+    completed: "/notes/todolist/completed/",
   },
 };
 

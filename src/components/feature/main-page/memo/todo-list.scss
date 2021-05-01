@@ -1,6 +1,12 @@
 .todoList {
-  height: 50%;
-  min-height: 4rem;
+  height: 100%;
+  width: 20%;
+  box-sizing: border-box;
+  box-shadow: 0px 12px 18px rgba(0, 0, 0, 0.08);
+  border-radius: 15px;
+  padding: 0.5rem 1rem;
+  min-height: 12rem;
+  background-color: white;
 }
 
 .todoList-header {
@@ -47,7 +53,7 @@
   }
 }
 
-.todoList-todoItem {
+.todoList-addTodo {
   display: flex;
   box-sizing: border-box;
   padding: 0.2rem;
@@ -58,12 +64,13 @@
     0px 0px 1px rgba(0, 0, 0, 0.04);
 }
 
-.todoList-contents {
+.todoList-addContent {
   flex: 1 1 auto;
+  max-width: calc(100% - 1rem);
   white-space: pre-line;
 }
 
-.todoList-checkbox {
+.todoList-addButton {
   flex: 0 0 auto;
   border: none;
   outline: none;
@@ -73,7 +80,6 @@
 
 @media screen and (max-width: 768px) {
   .todoList {
-    width: 48%;
-    height: 100%;
+    width: 100%;
   }
 }
