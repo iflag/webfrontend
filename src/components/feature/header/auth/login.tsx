@@ -1,15 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import "components/feature/header/auth/login.scss";
-import AuthService from "utils/auth-service";
-import {
-  setStorageItem,
-  storageAccessKey,
-  storageRefreshKey,
-} from "utils/local-storage";
 import { SelectedForm } from "components/Layout/header";
-import { useUserDispatch } from "contexts/user-context";
 import styled from "styled-components";
 import { observer } from "mobx-react";
+import AuthStore from "stores/auth-store";
 
 const LoadingSpinner = styled.div`
   width: 1.2rem;
@@ -21,38 +15,22 @@ const LoadingSpinner = styled.div`
 `;
 
 type Props = {
-  authService: AuthService;
+  authStore: AuthStore;
   setShowSelectedForm: React.Dispatch<React.SetStateAction<SelectedForm>>;
 };
 
-const Login = observer(({ authService, setShowSelectedForm }: Props) => {
-  const userDispatch = useUserDispatch();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Login = observer(({ authStore, setShowSelectedForm }: Props) => {
+  useEffect(() => {
+    return () => authStore.loginForm.resetInfo();
+  }, []);
 
-  const [loaded, setLoaded] = useState(true);
   return (
     <form
       className="login-form"
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setLoaded(false);
-        authService
-          .login(email, password)
-          .then((response) => {
-            setLoaded(true);
-            if (response.status === 200) {
-              const result = response.data;
-              setStorageItem(storageAccessKey, result.accessToken);
-              setStorageItem(storageRefreshKey, result.refreshToken);
-              userDispatch({ type: "LOGIN" });
-              setShowSelectedForm("close");
-            }
-          })
-          .catch((error) => {
-            alert(error.request.response);
-            setLoaded(true);
-          });
+        authStore.loginForm.setLoaded(false);
+        authStore.login(setShowSelectedForm);
       }}
     >
       <div className="login-header">
@@ -63,9 +41,9 @@ const Login = observer(({ authService, setShowSelectedForm }: Props) => {
           type="email"
           className="login-email"
           placeholder="Email"
-          value={email}
+          value={authStore.loginForm.email}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setEmail(e.target.value);
+            authStore.loginForm.setEmail(e.target.value);
           }}
           required
         />
@@ -73,19 +51,21 @@ const Login = observer(({ authService, setShowSelectedForm }: Props) => {
           type="password"
           className="login-password"
           placeholder="Password"
-          value={password}
+          value={authStore.loginForm.password}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setPassword(e.target.value);
+            authStore.loginForm.setPassword(e.target.value);
           }}
           required
         />
       </section>
       <section className="login-buttons">
         <button
-          className={`login-submit ${loaded ? "" : "loading"}`}
+          className={`login-submit ${
+            authStore.loginForm.loaded ? "" : "loading"
+          }`}
           type="submit"
         >
-          {loaded ? "Login" : <LoadingSpinner />}
+          {authStore.loginForm.loaded ? "Login" : <LoadingSpinner />}
         </button>
         <button
           className="login-otherOption"

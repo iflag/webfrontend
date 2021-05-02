@@ -1,28 +1,22 @@
 import MainPage from "pages/main-page/main-page";
 import React, { useEffect } from "react";
 import "App.scss";
-import { useUserDispatch } from "contexts/user-context";
-import UserData from "utils/user-data";
 import BookmarkData from "utils/bookmark-data";
 import NoteData from "utils/note-data";
-import AuthService from "utils/auth-service";
 import TodoData from "utils/todo-data";
+import { useStoreContext } from "contexts/store-context";
+import { observer } from "mobx-react";
 
-function App() {
-  const userData = new UserData();
-  const bookmarkData = new BookmarkData();
-  const noteData = new NoteData();
-  const userDispatch = useUserDispatch();
-  const authService = new AuthService();
-  const todoData = new TodoData();
+const bookmarkData = new BookmarkData();
+const noteData = new NoteData();
+const todoData = new TodoData();
+
+const App = observer(() => {
+  const { authStore } = useStoreContext();
 
   useEffect(() => {
-    if (userData.onLogin()) {
-      userDispatch({ type: "LOGIN" });
-    } else {
-      userDispatch({ type: "LOGOUT" });
-    }
-  }, []);
+    authStore.checkLoginState();
+  });
 
   return (
     <div className="app">
@@ -30,10 +24,10 @@ function App() {
         bookmarkData={bookmarkData}
         noteData={noteData}
         todoData={todoData}
-        authService={authService}
+        authStore={authStore}
       />
     </div>
   );
-}
+});
 
 export default App;

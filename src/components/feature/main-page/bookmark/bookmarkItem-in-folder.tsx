@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "components/feature/main-page/bookmark/bookmarkItem-in-folder.scss";
 import BookmarkData from "utils/bookmark-data";
-import { Bookmark } from "components/feature/main-page/bookmark/bookmark";
+import { Bookmark } from "components/feature/main-page/bookmark/bookmarks";
 import { AiOutlineClose } from "react-icons/ai";
 import { DarkModalSection } from "components/feature/header/auth/auth";
 import { IoMdSettings } from "react-icons/io";

@@ -68,6 +68,7 @@ class AuthService implements IAuthService {
 
   logout() {
     removeStorageItem(storageAccessKey);
+    removeStorageItem(storageRefreshKey);
   }
 
   async refreshToken() {

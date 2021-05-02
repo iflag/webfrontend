@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "components/feature/main-page/bookmark/bookmark.scss";
+import "components/feature/main-page/bookmark/bookmarks.scss";
 import {
   AiOutlineSearch,
   AiFillPlusCircle,
@@ -8,12 +8,13 @@ import {
 import FolderList from "components/feature/main-page/bookmark/folder-list";
 import BookmarkData from "utils/bookmark-data";
 import { DarkModalSection } from "components/feature/header/auth/auth";
-import { useUserState } from "contexts/user-context";
 import { useStoreContext } from "contexts/store-context";
 import { observer } from "mobx-react";
+import AuthStore from "stores/auth-store";
 
 type Props = {
   bookmarkData: BookmarkData;
+  authStore: AuthStore;
 };
 
 export type Bookmark = {
@@ -36,8 +37,7 @@ export type Folder = {
 
 export type FolderInfo = Pick<Bookmark, "author" | "id" | "title">;
 
-const Bookmark = observer(({ bookmarkData }: Props) => {
-  const userState = useUserState();
+const Bookmarks = observer(({ bookmarkData, authStore }: Props) => {
   const { bookmarkStore } = useStoreContext();
 
   const [title, setTitle] = useState("");
@@ -58,7 +58,7 @@ const Bookmark = observer(({ bookmarkData }: Props) => {
   };
 
   useEffect(() => {
-    if (userState.onLogin === false) {
+    if (authStore.onLogin === false) {
       bookmarkStore.setFolderInfoList([]);
       bookmarkStore.setFolderNameList([]);
       return;
@@ -67,7 +67,7 @@ const Bookmark = observer(({ bookmarkData }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (userState.onLogin === false) {
+    if (!authStore.onLogin) {
       bookmarkStore.setFolderInfoList([]);
       bookmarkStore.setFolderNameList([]);
       bookmarkStore.setRootBookmarks([]);
@@ -75,7 +75,7 @@ const Bookmark = observer(({ bookmarkData }: Props) => {
     }
     bookmarkStore.getAllRootBookmarks();
     bookmarkStore.getAllFolders();
-  }, [userState.onLogin]);
+  }, [authStore.onLogin]);
 
   return (
     <div className="bookmark">
@@ -198,9 +198,13 @@ const Bookmark = observer(({ bookmarkData }: Props) => {
           </form>
         </DarkModalSection>
       )}
-      <FolderList bookmarkData={bookmarkData} bookmarkStore={bookmarkStore} />
+      <FolderList
+        bookmarkData={bookmarkData}
+        bookmarkStore={bookmarkStore}
+        authStore={authStore}
+      />
     </div>
   );
 });
 
-export default Bookmark;
+export default Bookmarks;

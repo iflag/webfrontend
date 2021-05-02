@@ -59,12 +59,6 @@ class UserData implements UserDataInterface {
     const response = await this.base.post(history, data, config);
     return response;
   }
-
-  onLogin() {
-    const token = getStorageItem(storageAccessKey, "");
-    if (token.length > 0) return true;
-    else return false;
-  }
 }
 
 export default UserData;

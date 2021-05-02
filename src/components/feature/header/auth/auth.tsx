@@ -3,8 +3,9 @@ import "components/feature/header/auth/auth.scss";
 import styled from "styled-components";
 import Login from "./login";
 import Register from "./register";
-import AuthService from "utils/auth-service";
 import { SelectedForm } from "components/Layout/header";
+import AuthStore from "stores/auth-store";
+import { observer } from "mobx-react";
 
 export const DarkModalSection = styled.div`
   position: absolute;
@@ -20,32 +21,30 @@ export const DarkModalSection = styled.div`
 `;
 
 type Props = {
-  authService: AuthService;
+  authStore: AuthStore;
   showSelectedForm: SelectedForm;
   setShowSelectedForm: React.Dispatch<React.SetStateAction<SelectedForm>>;
 };
 
-const Auth = ({
-  authService,
-  showSelectedForm,
-  setShowSelectedForm,
-}: Props) => {
-  return (
-    <DarkModalSection>
-      {showSelectedForm === "login" && (
-        <Login
-          authService={authService}
-          setShowSelectedForm={setShowSelectedForm}
-        />
-      )}
-      {showSelectedForm === "register" && (
-        <Register
-          authService={authService}
-          setShowSelectedForm={setShowSelectedForm}
-        />
-      )}
-    </DarkModalSection>
-  );
-};
+const Auth = observer(
+  ({ authStore, showSelectedForm, setShowSelectedForm }: Props) => {
+    return (
+      <DarkModalSection>
+        {showSelectedForm === "login" && (
+          <Login
+            authStore={authStore}
+            setShowSelectedForm={setShowSelectedForm}
+          />
+        )}
+        {showSelectedForm === "register" && (
+          <Register
+            authStore={authStore}
+            setShowSelectedForm={setShowSelectedForm}
+          />
+        )}
+      </DarkModalSection>
+    );
+  }
+);
 
 export default Auth;

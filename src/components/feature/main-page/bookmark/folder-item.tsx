@@ -3,7 +3,7 @@ import "components/feature/main-page/bookmark/folder-item.scss";
 import {
   FolderInfo,
   Bookmark,
-} from "components/feature/main-page/bookmark/bookmark";
+} from "components/feature/main-page/bookmark/bookmarks";
 import { AiOutlineClose } from "react-icons/ai";
 import { IoMdSettings } from "react-icons/io";
 import BookmarkData from "utils/bookmark-data";

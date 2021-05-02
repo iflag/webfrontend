@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import "components/feature/main-page/memo/todo-list.scss";
 import TodoItem from "./todo-item";
 import TodoData from "utils/todo-data";
+import AuthStore from "stores/auth-store";
+import { observer } from "mobx-react";
 
 type Props = {
   todoData: TodoData;
+  authStore: AuthStore;
 };
 
 export type Todo = {
@@ -13,17 +16,29 @@ export type Todo = {
   id: number;
 };
 
-const TodoList = ({ todoData }: Props) => {
+const TodoList = observer(({ todoData, authStore }: Props) => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [contents, setContents] = useState("");
 
   useEffect(() => {
+    refreshTodos();
+  }, []);
+
+  useEffect(() => {
+    refreshTodos();
+  }, [authStore.onLogin]);
+
+  const refreshTodos = () => {
+    if (!authStore.onLogin) {
+      setTodos([]);
+      return;
+    }
     todoData.getAllTodoList().then((response) => {
       if (response.status === 200) {
         setTodos(response.data.todos);
       }
     });
-  }, []);
+  };
 
   return (
     <div className="todoList">
@@ -41,6 +56,8 @@ const TodoList = ({ todoData }: Props) => {
 
           todoData.addTodo(contents).then((response) => {
             if (response.status === 200) {
+              refreshTodos();
+              setContents("");
             }
           });
         }}
@@ -57,7 +74,7 @@ const TodoList = ({ todoData }: Props) => {
           add
         </button>
       </form>
-      <div className="todoList-main">
+      <ul className="todoList-main">
         {todos &&
           todos.map(
             (
@@ -67,9 +84,9 @@ const TodoList = ({ todoData }: Props) => {
               HTMLParagraphElement
             > => <TodoItem key={todo.id} todo={todo} todoData={todoData} />
           )}
-      </div>
+      </ul>
     </div>
   );
-};
+});
 
 export default TodoList;

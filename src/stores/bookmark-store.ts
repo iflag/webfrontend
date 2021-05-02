@@ -3,7 +3,7 @@ import {
   Bookmark,
   BookmarkInfo,
   FolderInfo,
-} from "components/feature/main-page/bookmark/bookmark";
+} from "components/feature/main-page/bookmark/bookmarks";
 import { action, makeObservable, observable } from "mobx";
 import BookmarkData, { IBookmarkData } from "utils/bookmark-data";
 import { RootStore } from "./root-store";

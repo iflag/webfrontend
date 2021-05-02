@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "components/feature/main-page/memo/todo-item.scss";
 import { Todo } from "components/feature/main-page/memo/todo-list";
 import TodoData from "utils/todo-data";
+import { observer } from "mobx-react";
 type Props = {
   todo: Todo;
   todoData: TodoData;
 };
 
-const TodoItem = ({ todo, todoData }: Props) => {
+const TodoItem = observer(({ todo, todoData }: Props) => {
   const [checked, setChecked] = useState<boolean | undefined>(false);
   const [editing, setEditing] = useState(false);
   const [contents, setContents] = useState(todo.contents);
@@ -17,7 +18,7 @@ const TodoItem = ({ todo, todoData }: Props) => {
   }, []);
 
   return (
-    <div className="todoItem">
+    <li className="todoItem">
       {!editing ? (
         <>
           <p
@@ -57,8 +58,8 @@ const TodoItem = ({ todo, todoData }: Props) => {
           />
         </form>
       )}
-    </div>
+    </li>
   );
-};
+});
 
 export default TodoItem;

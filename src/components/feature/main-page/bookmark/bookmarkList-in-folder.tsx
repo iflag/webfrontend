@@ -1,6 +1,6 @@
 import React from "react";
 import "components/feature/main-page/bookmark/bookmarkList-in-folder.scss";
-import { Bookmark } from "components/feature/main-page/bookmark/bookmark";
+import { Bookmark } from "components/feature/main-page/bookmark/bookmarks";
 import { AiOutlineClose } from "react-icons/ai";
 import BookmarkData from "utils/bookmark-data";
 import BookmarkItemInFolder from "components/feature/main-page/bookmark/bookmarkItem-in-folder";

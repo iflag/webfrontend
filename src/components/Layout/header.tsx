@@ -3,14 +3,14 @@ import { HiOutlineArrowCircleRight } from "react-icons/hi";
 import "components/Layout/header.scss";
 import UserData from "utils/user-data";
 import Auth from "components/feature/header/auth/auth";
-import AuthService from "utils/auth-service";
-import { useUserDispatch, useUserState } from "contexts/user-context";
 import styled from "styled-components";
 import GithubIcon from "assets/images/github.svg";
 import DDGIcon from "assets/images/DDG.svg";
 import GoogleIcon from "assets/images/google.svg";
 import NaverIcon from "assets/images/naver.png";
 import WAIcon from "assets/images/WA.svg";
+import AuthStore from "stores/auth-store";
+import { observer } from "mobx-react";
 
 type styleProps = {
   imgUrl: string;
@@ -29,7 +29,7 @@ const SearchEngine = styled.figure`
 
 type Props = {
   userData: UserData;
-  authService: AuthService;
+  authStore: AuthStore;
 };
 
 export type SelectedForm = "close" | "login" | "register" | "findPassword";
@@ -42,10 +42,7 @@ type SearchEngineInfo = {
   fullName?: string;
 };
 
-const Header = ({ userData, authService }: Props) => {
-  const userState = useUserState();
-  const userDispatch = useUserDispatch();
-
+const Header = observer(({ userData, authStore }: Props) => {
   const [toggleButtonList, setToggleButtonList] = useState(false);
   const [
     selectedSearchEngine,
@@ -100,7 +97,7 @@ const Header = ({ userData, authService }: Props) => {
   );
 
   const saveSeletedSearchEngine = () => {
-    if (!userState.onLogin) return;
+    if (!authStore.onLogin) return;
     userData
       .selectSearchEngine(selectedSearchEngine.abbreviation)
       .then((response) => {});
@@ -115,17 +112,24 @@ const Header = ({ userData, authService }: Props) => {
   };
 
   useEffect(() => {
-    userData.getSelectedSearchEngine().then((response) => {
-      if (response.status === 200) {
-        const newSelectedSearchEngine = searchEngines.find(
-          (s) => s.fullName === response.data.portal
-        );
-        if (newSelectedSearchEngine) {
-          setSelectedSearchEngine(newSelectedSearchEngine);
-          sortSearchEngineList(newSelectedSearchEngine);
+    userData
+      .getSelectedSearchEngine()
+      .then((response) => {
+        if (response.status === 200) {
+          const newSelectedSearchEngine = searchEngines.find(
+            (s) => s.fullName === response.data.portal
+          );
+          if (newSelectedSearchEngine) {
+            setSelectedSearchEngine(newSelectedSearchEngine);
+            sortSearchEngineList(newSelectedSearchEngine);
+          }
         }
-      }
-    });
+      })
+      .catch((error) => {
+        if (error.request.status === 403) {
+          authStore.logout();
+        }
+      });
   }, []);
 
   useEffect(() => {
@@ -133,12 +137,12 @@ const Header = ({ userData, authService }: Props) => {
   }, [selectedSearchEngine]);
 
   useEffect(() => {
-    if (userState.onLogin) {
+    if (authStore.onLogin) {
       setShowSelectedForm("close");
     } else {
       setShowSelectedForm("login");
     }
-  }, [userState.onLogin]);
+  }, [authStore.onLogin]);
 
   const browseInNewTab = () => {
     if (selectedSearchEngine.name === "Google") {
@@ -166,7 +170,6 @@ const Header = ({ userData, authService }: Props) => {
     if (selectedSearchEngine.name === "WA") {
       window.open(`https://duckduckgo.com/?q=!wa+${searchContent}`, "_blank");
     }
-    authService.refreshToken().then((response) => console.log(response));
   };
 
   return (
@@ -224,12 +227,11 @@ const Header = ({ userData, authService }: Props) => {
             </button>
           </form>
         </div>
-        {userState.onLogin ? (
+        {authStore.onLogin ? (
           <button
             className="header-logoutButton"
             onClick={() => {
-              authService.logout();
-              userDispatch({ type: "LOGOUT" });
+              authStore.logout();
             }}
           >
             Logout
@@ -251,13 +253,13 @@ const Header = ({ userData, authService }: Props) => {
       </div> */}
       {showSelectedForm !== "close" && (
         <Auth
-          authService={authService}
+          authStore={authStore}
           showSelectedForm={showSelectedForm}
           setShowSelectedForm={setShowSelectedForm}
         />
       )}
     </header>
   );
-};
+});
 
 export default Header;

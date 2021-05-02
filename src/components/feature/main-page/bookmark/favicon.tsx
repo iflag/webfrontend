@@ -1,7 +1,7 @@
 import axios from "axios";
 import "components/feature/main-page/bookmark/favicon.scss";
 import React, { useState, useEffect } from "react";
-import { Bookmark, FolderInfo } from "./bookmark";
+import { Bookmark, FolderInfo } from "./bookmarks";
 
 type Props = {
   content: FolderInfo | Bookmark;

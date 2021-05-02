@@ -3,22 +3,21 @@ import "components/feature/main-page/memo/note.scss";
 import NoteData from "utils/note-data";
 import { AiOutlineClear } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
-import { useUserState } from "contexts/user-context";
-import AuthService from "utils/auth-service";
+import AuthStore from "stores/auth-store";
+import { observer } from "mobx-react";
 
 type Props = {
   noteData: NoteData;
-  authService: AuthService;
+  authStore: AuthStore;
 };
 
-const MemoList = ({ noteData, authService }: Props) => {
-  const userState = useUserState();
+const Note = observer(({ noteData, authStore }: Props) => {
   const [contents, setContents] = useState("");
 
   const [editing, setEditing] = useState(false);
 
   const refreshNoteContents = async () => {
-    if (!userState.onLogin) {
+    if (!authStore.onLogin) {
       setContents("");
       return;
     }
@@ -40,7 +39,7 @@ const MemoList = ({ noteData, authService }: Props) => {
 
   useEffect(() => {
     refreshNoteContents();
-  }, [userState.onLogin]);
+  }, [authStore.onLogin]);
 
   return (
     <div className="memoList">
@@ -96,6 +95,6 @@ const MemoList = ({ noteData, authService }: Props) => {
       </div>
     </div>
   );
-};
+});
 
-export default MemoList;
+export default Note;

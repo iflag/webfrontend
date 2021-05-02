@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import "components/feature/header/auth/register.scss";
-import AuthService from "utils/auth-service";
 import { SelectedForm } from "components/Layout/header";
 import styled from "styled-components";
+import AuthStore from "stores/auth-store";
+import { observer } from "mobx-react";
 
 const LoadingSpinner = styled.div`
   width: 1.2rem;
@@ -14,19 +15,16 @@ const LoadingSpinner = styled.div`
 `;
 
 type Props = {
-  authService: AuthService;
+  authStore: AuthStore;
   setShowSelectedForm: React.Dispatch<React.SetStateAction<SelectedForm>>;
 };
 
-type Steps = "email" | "verification" | "password" | "success";
+export type Steps = "email" | "verification" | "password" | "success";
 
-const Register = ({ authService, setShowSelectedForm }: Props) => {
-  const [step, setStep] = useState<Steps>("email");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-
-  const [loaded, setLoaded] = useState(true);
+const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
+  useEffect(() => {
+    return () => authStore.registerForm.resetInfo();
+  }, []);
 
   const showHeader = (): React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
@@ -40,8 +38,8 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
   };
 
   const checkPasswordLength = useMemo((): boolean => {
-    return password.length >= 8;
-  }, [password]);
+    return authStore.registerForm.password.length >= 8;
+  }, [authStore.registerForm.password]);
 
   const showEmailInput = (): React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLElement>,
@@ -52,19 +50,8 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
         className="register-form"
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
-          setLoaded(false);
-          authService
-            .verification(email)
-            .then((response) => {
-              setLoaded(true);
-              if (response.status === 201) {
-                setStep("verification");
-              }
-            })
-            .catch((error) => {
-              alert(error.request.response);
-              setStep("email");
-            });
+          authStore.registerForm.setLoaded(false);
+          authStore.verificateEmail();
         }}
       >
         {showHeader()}
@@ -73,24 +60,31 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
             type="email"
             className="register-email"
             placeholder="Email"
-            value={email}
+            value={authStore.registerForm.email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setEmail(e.target.value);
+              authStore.registerForm.setEmail(e.target.value);
             }}
             required
           />
         </section>
         <section className="register-buttons">
           <button
-            className={`register-submit ${loaded ? "" : "loading"}`}
+            className={`register-submit ${
+              authStore.registerForm.loaded ? "" : "loading"
+            }`}
             type="submit"
           >
-            {loaded ? "인증 요청하기" : <LoadingSpinner />}
+            {authStore.registerForm.loaded ? (
+              "인증 요청하기"
+            ) : (
+              <LoadingSpinner />
+            )}
           </button>
           <button
             className="register-otherOption"
             type="button"
             onClick={() => {
+              authStore.registerForm.setStep("email");
               setShowSelectedForm("login");
             }}
           >
@@ -110,19 +104,8 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
         className="register-form"
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
-          setLoaded(false);
-          authService
-            .verificationCode(verificationCode)
-            .then((response) => {
-              setLoaded(true);
-              if (response.status === 200) {
-                setStep("password");
-                alert(response.data.message);
-              }
-            })
-            .catch((error) => {
-              alert(error.request.response);
-            });
+          authStore.registerForm.setLoaded(false);
+          authStore.checkVerificationCode();
         }}
       >
         {showHeader()}
@@ -130,24 +113,27 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
           <input
             className="register-verification"
             placeholder="Verification Code"
-            value={verificationCode}
+            value={authStore.registerForm.verificationCode}
             required
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setVerificationCode(e.target.value);
+              authStore.registerForm.setVerificationCode(e.target.value);
             }}
           />
         </section>
         <section className="register-buttons">
           <button
-            className={`register-submit ${loaded ? "" : "loading"}`}
+            className={`register-submit ${
+              authStore.registerForm.loaded ? "" : "loading"
+            }`}
             type="submit"
           >
-            {loaded ? "인증하기" : <LoadingSpinner />}
+            {authStore.registerForm.loaded ? "인증하기" : <LoadingSpinner />}
           </button>
           <button
             className="register-otherOption"
             type="button"
             onClick={() => {
+              authStore.registerForm.setStep("email");
               setShowSelectedForm("login");
             }}
           >
@@ -170,19 +156,8 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
           if (!checkPasswordLength) {
             return;
           }
-          setLoaded(false);
-          authService
-            .register(email, password)
-            .then((response) => {
-              setLoaded(true);
-              if (response.status === 201) {
-                setStep("success");
-              }
-            })
-            .catch((error) => {
-              alert(error.request.response);
-              setStep("email");
-            });
+          authStore.registerForm.setLoaded(false);
+          authStore.register();
         }}
       >
         {showHeader()}
@@ -191,9 +166,9 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
             type="password"
             className="register-password"
             placeholder="Password"
-            value={password}
+            value={authStore.registerForm.password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setPassword(e.target.value);
+              authStore.registerForm.setPassword(e.target.value);
             }}
             required
           />
@@ -205,15 +180,22 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
         </section>
         <section className="register-buttons">
           <button
-            className={`register-submit ${loaded ? "" : "loading"}`}
+            className={`register-submit ${
+              authStore.registerForm.loaded ? "" : "loading"
+            }`}
             type="submit"
           >
-            {loaded ? "회원가입 하기" : <LoadingSpinner />}
+            {authStore.registerForm.loaded ? (
+              "회원가입 하기"
+            ) : (
+              <LoadingSpinner />
+            )}
           </button>
           <button
             className="register-otherOption"
             type="button"
             onClick={() => {
+              authStore.registerForm.setStep("email");
               setShowSelectedForm("login");
             }}
           >
@@ -239,7 +221,7 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
             className="register-button"
             type="button"
             onClick={() => {
-              setStep("email");
+              authStore.registerForm.setStep("email");
               setShowSelectedForm("login");
             }}
           >
@@ -265,7 +247,7 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
             className="register-button"
             type="button"
             onClick={() => {
-              setStep("email");
+              authStore.registerForm.setStep("email");
             }}
           >
             다시 회원가입 하러가기
@@ -277,12 +259,13 @@ const Register = ({ authService, setShowSelectedForm }: Props) => {
 
   return (
     <>
-      {step === "email" && showEmailInput()}
-      {step === "verification" && showVerificationCodeInput()}
-      {step === "password" && showPasswordInput()}
-      {step === "success" && showSuccessPage()}
+      {authStore.registerForm.step === "email" && showEmailInput()}
+      {authStore.registerForm.step === "verification" &&
+        showVerificationCodeInput()}
+      {authStore.registerForm.step === "password" && showPasswordInput()}
+      {authStore.registerForm.step === "success" && showSuccessPage()}
     </>
   );
-};
+});
 
 export default Register;
