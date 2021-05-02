@@ -170,6 +170,7 @@ const Header = observer(({ userData, authStore }: Props) => {
     if (selectedSearchEngine.name === "WA") {
       window.open(`https://duckduckgo.com/?q=!wa+${searchContent}`, "_blank");
     }
+    authStore.refreshToken();
   };
 
   return (

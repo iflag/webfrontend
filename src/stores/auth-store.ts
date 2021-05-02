@@ -1,5 +1,5 @@
 import { SelectedForm } from "components/Layout/header";
-import { action, makeObservable, observable } from "mobx";
+import { action, makeObservable, observable, reaction } from "mobx";
 import AuthService from "utils/auth-service";
 import {
   getStorageItem,
@@ -15,6 +15,9 @@ class AuthStore {
   private rootStore: RootStore;
 
   onLogin: boolean;
+  requireRefresh: boolean;
+
+  handleToken: () => void;
 
   private authService: AuthService;
 
@@ -24,6 +27,8 @@ class AuthStore {
   constructor(root: RootStore) {
     makeObservable(this, {
       onLogin: observable,
+      requireRefresh: observable,
+
       login: action,
       verificateEmail: action,
       checkVerificationCode: action,
@@ -34,9 +39,30 @@ class AuthStore {
 
     this.rootStore = root;
     this.onLogin = false;
+    this.requireRefresh = false;
+
     this.authService = new AuthService();
     this.registerForm = new RegisterForm(this);
     this.loginForm = new LoginForm(this);
+
+    this.handleToken = reaction(
+      () => this.requireRefresh,
+      (requireRefresh) => {
+        console.log(requireRefresh);
+        if (requireRefresh) {
+          this.authService
+            .refreshToken()
+            .then((result) => {
+              setStorageItem(storageAccessKey, result.accessToken);
+              setStorageItem(storageRefreshKey, result.refreshToken);
+              console.log(result);
+            })
+            .then(() => {
+              this.setRequireRefresh(false);
+            });
+        }
+      }
+    );
   }
 
   async login(
@@ -120,6 +146,15 @@ class AuthStore {
     } else {
       this.onLogin = false;
     }
+  }
+
+  setRequireRefresh(state: boolean) {
+    this.requireRefresh = state;
+  }
+
+  refreshToken() {
+    this.setRequireRefresh(true);
+    // this.handleToken();
   }
 }
 

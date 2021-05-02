@@ -26,6 +26,7 @@ const Note = observer(({ noteData, authStore }: Props) => {
       if (response.status === 200) {
         setContents(response.data.contents);
       }
+      authStore.refreshToken();
     } catch (error) {
       alert(error.request.response);
       setContents("");

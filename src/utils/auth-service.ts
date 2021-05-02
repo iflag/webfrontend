@@ -84,9 +84,7 @@ class AuthService implements IAuthService {
 
     const response = await this.base.post(refresh, data);
     const result = await response.data;
-    setStorageItem(storageAccessKey, result.accessToken);
-    setStorageItem(storageRefreshKey, result.refreshToken);
-    return response;
+    return result;
   }
 }
 

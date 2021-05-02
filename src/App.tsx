@@ -16,7 +16,7 @@ const App = observer(() => {
 
   useEffect(() => {
     authStore.checkLoginState();
-  });
+  }, []);
 
   return (
     <div className="app">

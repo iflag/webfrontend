@@ -55,6 +55,7 @@ const TodoList = observer(({ todoData, authStore }: Props) => {
               refreshTodos();
               setContents("");
             }
+            authStore.refreshToken();
           });
         }}
       >
