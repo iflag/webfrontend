@@ -25,17 +25,12 @@ const Note = observer(({ noteData, authStore }: Props) => {
       const response = await noteData.getNoteContents();
       if (response.status === 200) {
         setContents(response.data.contents);
-        // authService.refreshToken();
       }
     } catch (error) {
       alert(error.request.response);
       setContents("");
     }
   };
-
-  useEffect(() => {
-    refreshNoteContents();
-  }, []);
 
   useEffect(() => {
     refreshNoteContents();

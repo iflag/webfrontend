@@ -21,3 +21,18 @@
   width: 1rem;
   height: 1rem;
 }
+
+.todoItem-editForm {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.todoItem-editForm-input {
+  flex: 1 1 auto;
+  max-width: 70%;
+}
+
+.todoItem-editForm-input {
+  flex: 0 0 auto;
+}

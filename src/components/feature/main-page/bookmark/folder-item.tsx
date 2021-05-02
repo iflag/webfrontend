@@ -157,23 +157,9 @@ const FolderItem = observer(
                 className="folderItem-delete"
                 onClick={() => {
                   if (type === "folder") {
-                    bookmarkData
-                      .deleteFolderName(content.id)
-                      .then((response) => {
-                        if (response.status === 200) {
-                          setEditing(false);
-                          bookmarkStore.getAllFolders();
-                        }
-                      });
+                    bookmarkStore.deleteFolder(content.id, setEditing);
                   } else if (type === "bookmark") {
-                    bookmarkData
-                      .deleteBookmarkName(content.id)
-                      .then((response) => {
-                        if (response.status === 200) {
-                          setEditing(false);
-                          bookmarkStore.getAllRootBookmarks();
-                        }
-                      });
+                    bookmarkStore.deleteBookmark(content.id, setEditing);
                   }
                 }}
               >
@@ -188,25 +174,17 @@ const FolderItem = observer(
                   if (e.key === "Enter") {
                     setEditing(false);
                     if (type === "folder") {
-                      bookmarkData
-                        .changeFolderName(content.id, title)
-                        .then((response) => {
-                          if (response.status === 200) {
-                            bookmarkStore.getAllFolders();
-                          }
-                        });
+                      bookmarkStore.editFolderName(content.id, title);
                     } else if (type === "bookmark") {
-                      bookmarkData
-                        .editBookmarkInfo(content.id, {
+                      bookmarkStore.editBookmarkInfo(
+                        content.id,
+                        {
                           title,
                           description,
                           url,
-                        })
-                        .then((response) => {
-                          if (response.status === 200) {
-                            bookmarkStore.getAllRootBookmarks();
-                          }
-                        });
+                        },
+                        setShowEditSection
+                      );
                     }
                     e.preventDefault();
                     e.stopPropagation();

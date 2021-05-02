@@ -22,10 +22,6 @@ const TodoList = observer(({ todoData, authStore }: Props) => {
 
   useEffect(() => {
     refreshTodos();
-  }, []);
-
-  useEffect(() => {
-    refreshTodos();
   }, [authStore.onLogin]);
 
   const refreshTodos = () => {

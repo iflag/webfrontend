@@ -58,15 +58,6 @@ const Bookmarks = observer(({ bookmarkData, authStore }: Props) => {
   };
 
   useEffect(() => {
-    if (authStore.onLogin === false) {
-      bookmarkStore.setFolderInfoList([]);
-      bookmarkStore.setFolderNameList([]);
-      return;
-    }
-    bookmarkStore.getAllFolders();
-  }, []);
-
-  useEffect(() => {
     if (!authStore.onLogin) {
       bookmarkStore.setFolderInfoList([]);
       bookmarkStore.setFolderNameList([]);

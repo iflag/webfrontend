@@ -41,6 +41,7 @@ const TodoItem = observer(({ todo, todoData }: Props) => {
         </>
       ) : (
         <form
+          className="todoItem-editForm"
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             todoData.updateTodo(todo.id, contents).then((response) => {
@@ -51,11 +52,15 @@ const TodoItem = observer(({ todo, todoData }: Props) => {
           }}
         >
           <input
+            className="todoItem-editForm-input"
             value={contents}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setContents(e.target.value);
             }}
           />
+          <button className="todoItem-editForm-button" type="submit">
+            edit
+          </button>
         </form>
       )}
     </li>

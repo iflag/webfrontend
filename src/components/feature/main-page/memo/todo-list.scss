@@ -7,6 +7,7 @@
   padding: 0.5rem 1rem;
   min-height: 12rem;
   background-color: white;
+  overflow-y: hidden;
 }
 
 .todoList-header {
@@ -46,6 +47,8 @@
 }
 
 .todoList-main {
+  box-sizing: border-box;
+  padding-bottom: 4.5rem;
   height: calc(100% - 1.5rem);
   overflow-y: scroll;
   &::-webkit-scrollbar {

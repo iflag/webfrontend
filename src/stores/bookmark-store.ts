@@ -23,6 +23,7 @@ class BookmarkStore {
       rootBookmarks: observable,
       folderInfoList: observable,
       folderNameList: observable,
+
       setRootBookmarks: action,
       setFolderInfoList: action,
       setFolderNameList: action,
@@ -30,6 +31,8 @@ class BookmarkStore {
       getAllFolders: action,
       searchBookmarks: action,
       editBookmarkInfo: action,
+      deleteFolder: action,
+      deleteBookmark: action,
     });
 
     this.rootStore = root;
@@ -116,6 +119,38 @@ class BookmarkStore {
         this.getAllFolders();
       } else {
         window.alert("북마크 정보 변경 실패");
+      }
+    });
+  }
+
+  async editFolderName(id: number, title: string) {
+    this.bookmarkData.changeFolderName(id, title).then((response) => {
+      if (response.status === 200) {
+        this.getAllFolders();
+      }
+    });
+  }
+
+  async deleteBookmark(
+    id: number,
+    setEditing: (value: React.SetStateAction<boolean>) => void
+  ) {
+    this.bookmarkData.deleteBookmark(id).then((response) => {
+      if (response.status === 200) {
+        setEditing(false);
+        this.getAllRootBookmarks();
+      }
+    });
+  }
+
+  async deleteFolder(
+    id: number,
+    setEditing: (value: React.SetStateAction<boolean>) => void
+  ) {
+    this.bookmarkData.deleteFolder(id).then((response) => {
+      if (response.status === 200) {
+        setEditing(false);
+        this.getAllFolders();
       }
     });
   }

@@ -24,7 +24,7 @@ const FolderList = observer(
     const [title, setTitle] = useState("");
 
     const addFolder = () => {
-      bookmarkData.addFolder(title).then((response) => console.log(response));
+      bookmarkData.addFolder(title);
     };
 
     useEffect(() => {
@@ -34,6 +34,7 @@ const FolderList = observer(
       }
       bookmarkStore.getAllRootBookmarks();
     }, []);
+
     return (
       <div className="folderList">
         <div className="folderList-content">

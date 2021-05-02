@@ -132,14 +132,12 @@ const BookmarkItemInFolder = observer(
             <button
               className="insideFolder-delete"
               onClick={() => {
-                bookmarkData
-                  .deleteBookmarkName(bookmark.id)
-                  .then((response) => {
-                    if (response.status === 200) {
-                      setEditing(false);
-                      refreshBookmarkListInFolder(contentId);
-                    }
-                  });
+                bookmarkData.deleteBookmark(bookmark.id).then((response) => {
+                  if (response.status === 200) {
+                    setEditing(false);
+                    refreshBookmarkListInFolder(contentId);
+                  }
+                });
               }}
             >
               <AiOutlineClose />

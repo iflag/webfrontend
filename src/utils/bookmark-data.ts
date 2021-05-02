@@ -14,6 +14,9 @@ export interface IBookmarkData {
   getAllBookmarksInFolder(id: number): Promise<AxiosResponse<any>>;
   searchBookmarks(name: string): Promise<AxiosResponse<any>>;
   editBookmarkInfo(id: number, info: BookmarkInfo): Promise<AxiosResponse<any>>;
+  deleteFolder(id: number): Promise<AxiosResponse<any>>;
+  deleteBookmark(id: number): Promise<AxiosResponse<any>>;
+  changeFolderName(id: number, title: string): Promise<AxiosResponse<any>>;
 }
 class BookmarkData implements IBookmarkData {
   private base;
@@ -120,7 +123,7 @@ class BookmarkData implements IBookmarkData {
     return response;
   }
 
-  async deleteFolderName(id: number) {
+  async deleteFolder(id: number) {
     const { categories } = this.bookmarkUrl;
     const url = `${categories}${id}`;
 
@@ -135,7 +138,7 @@ class BookmarkData implements IBookmarkData {
     return response;
   }
 
-  async deleteBookmarkName(id: number) {
+  async deleteBookmark(id: number) {
     const { bookmarks } = this.bookmarkUrl;
     const url = `${bookmarks}${id}`;
 
