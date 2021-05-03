@@ -22,14 +22,22 @@ const Note = observer(({ noteData, authStore }: Props) => {
       return;
     }
     try {
-      const response = await noteData.getNoteContents();
-      if (response.status === 200) {
-        setContents(response.data.contents);
-      }
+      const result = await noteData.getNoteContents();
+      setContents(result.contents);
       authStore.refreshToken();
     } catch (error) {
       alert(error.request.response);
       setContents("");
+    }
+  };
+
+  const handleClickEditButton = async () => {
+    try {
+      await noteData.editNote(contents);
+      refreshNoteContents();
+      setEditing(false);
+    } catch (error) {
+      alert(error.request.response);
     }
   };
 
@@ -38,12 +46,12 @@ const Note = observer(({ noteData, authStore }: Props) => {
   }, [authStore.onLogin]);
 
   return (
-    <div className="memoList">
-      <div className="memoList-header">
-        <p className="memoList-title">Memo</p>
-        <div className="memoList-buttons">
+    <div className="note">
+      <div className="note-header">
+        <p className="note-title">Memo</p>
+        <div className="note-buttons">
           <button
-            className="memoList-edit"
+            className="note-edit"
             onClick={() => {
               setEditing((prev) => !prev);
             }}
@@ -51,7 +59,7 @@ const Note = observer(({ noteData, authStore }: Props) => {
             <BiEdit />
           </button>
           <button
-            className="memoList-clear"
+            className="note-clear"
             onClick={() => {
               noteData.deleteAllNote();
               refreshNoteContents();
@@ -61,29 +69,21 @@ const Note = observer(({ noteData, authStore }: Props) => {
           </button>
         </div>
       </div>
-      <div className="memoList-main">
+      <div className="note-main">
         {!editing ? (
-          <p className="memoList-contents" onClick={() => setEditing(true)}>
+          <p className="note-contents" onClick={() => setEditing(true)}>
             {contents}
           </p>
         ) : (
-          <div className="memoList-setting">
+          <div className="note-setting">
             <textarea
               value={contents}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                 setContents(e.target.value);
               }}
-              className="memoList-input"
+              className="note-input"
             />
-            <button
-              className="memoList-save"
-              onClick={() => {
-                setEditing(false);
-                noteData.editNote(contents).then(() => {
-                  refreshNoteContents();
-                });
-              }}
-            >
+            <button className="note-save" onClick={handleClickEditButton}>
               save
             </button>
           </div>

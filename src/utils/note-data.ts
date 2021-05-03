@@ -23,7 +23,8 @@ class NoteData {
     };
 
     const response = await this.base.get(notes, config);
-    return response;
+    const result = await response.data;
+    return result;
   }
 
   async editNote(contents: string) {
@@ -54,8 +55,7 @@ class NoteData {
       },
     };
 
-    const response = await this.base.delete(notes, config);
-    return response;
+    await this.base.delete(notes, config);
   }
 }
 
