@@ -20,18 +20,27 @@ type Props = {
 };
 
 const Login = observer(({ authStore, setShowSelectedForm }: Props) => {
+  const { loginForm } = authStore;
   useEffect(() => {
-    return () => authStore.loginForm.resetInfo();
+    return () => loginForm.resetInfo();
   }, []);
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    loginForm.setLoaded(false);
+    try {
+      await authStore.login();
+      if (authStore.onLogin) setShowSelectedForm("close");
+    } catch (error) {
+      alert(error.request.response);
+    }
+    loginForm.setLoaded(true);
+  };
 
   return (
     <form
       className="login-form"
-      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        authStore.loginForm.setLoaded(false);
-        authStore.login(setShowSelectedForm);
-      }}
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleLogin(e)}
     >
       <div className="login-header">
         <p className="login-title">Login</p>
@@ -41,9 +50,9 @@ const Login = observer(({ authStore, setShowSelectedForm }: Props) => {
           type="email"
           className="login-email"
           placeholder="Email"
-          value={authStore.loginForm.email}
+          value={loginForm.email}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            authStore.loginForm.setEmail(e.target.value);
+            loginForm.setEmail(e.target.value);
           }}
           required
         />
@@ -51,21 +60,19 @@ const Login = observer(({ authStore, setShowSelectedForm }: Props) => {
           type="password"
           className="login-password"
           placeholder="Password"
-          value={authStore.loginForm.password}
+          value={loginForm.password}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            authStore.loginForm.setPassword(e.target.value);
+            loginForm.setPassword(e.target.value);
           }}
           required
         />
       </section>
       <section className="login-buttons">
         <button
-          className={`login-submit ${
-            authStore.loginForm.loaded ? "" : "loading"
-          }`}
+          className={`login-submit ${loginForm.loaded ? "" : "loading"}`}
           type="submit"
         >
-          {authStore.loginForm.loaded ? "Login" : <LoadingSpinner />}
+          {loginForm.loaded ? "Login" : <LoadingSpinner />}
         </button>
         <button
           className="login-otherOption"

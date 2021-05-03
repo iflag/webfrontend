@@ -35,6 +35,7 @@ class AuthStore {
       register: action,
       logout: action,
       checkLoginState: action,
+      setRequireRefresh: action,
     });
 
     this.rootStore = root;
@@ -65,25 +66,14 @@ class AuthStore {
     );
   }
 
-  async login(
-    setShowSelectedForm: (value: React.SetStateAction<SelectedForm>) => void
-  ) {
-    this.authService
-      .login(this.loginForm.email, this.loginForm.password)
-      .then((response) => {
-        this.loginForm.setLoaded(true);
-        if (response.status === 200) {
-          const result = response.data;
-          setStorageItem(storageAccessKey, result.accessToken);
-          setStorageItem(storageRefreshKey, result.refreshToken);
-          this.onLogin = true;
-          setShowSelectedForm("close");
-        }
-      })
-      .catch((error) => {
-        alert(error.request.response);
-        this.loginForm.setLoaded(true);
-      });
+  async login() {
+    const result = await this.authService.login(
+      this.loginForm.email,
+      this.loginForm.password
+    );
+    setStorageItem(storageAccessKey, result.accessToken);
+    setStorageItem(storageRefreshKey, result.refreshToken);
+    this.onLogin = true;
   }
 
   async verificateEmail() {

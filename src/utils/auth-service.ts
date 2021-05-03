@@ -3,7 +3,6 @@ import API_URL, { API_HOST } from "utils/api";
 import {
   getStorageItem,
   removeStorageItem,
-  setStorageItem,
   storageAccessKey,
   storageRefreshKey,
 } from "utils/local-storage";
@@ -63,7 +62,9 @@ class AuthService implements IAuthService {
     };
 
     const response = await this.base.post(signin, data);
-    return response;
+    const result = await response.data;
+
+    return result;
   }
 
   logout() {
