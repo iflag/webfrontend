@@ -1,4 +1,3 @@
-import { SelectedForm } from "components/Layout/header";
 import { action, makeObservable, observable, reaction } from "mobx";
 import AuthService from "utils/auth-service";
 import {
@@ -7,9 +6,9 @@ import {
   storageAccessKey,
   storageRefreshKey,
 } from "utils/local-storage";
-import LoginForm from "./login-form-store";
-import RegisterForm from "./register-form-store";
-import { RootStore } from "./root-store";
+import LoginForm from "stores/login-form-store";
+import RegisterForm from "stores/register-form-store";
+import { RootStore } from "stores/root-store";
 
 class AuthStore {
   private rootStore: RootStore;
@@ -49,14 +48,12 @@ class AuthStore {
     this.handleToken = reaction(
       () => this.requireRefresh,
       (requireRefresh) => {
-        console.log(requireRefresh);
         if (requireRefresh) {
           this.authService
             .refreshToken()
             .then((result) => {
               setStorageItem(storageAccessKey, result.accessToken);
               setStorageItem(storageRefreshKey, result.refreshToken);
-              console.log(result);
             })
             .then(() => {
               this.setRequireRefresh(false);
