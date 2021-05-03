@@ -22,8 +22,10 @@ type Props = {
 export type Steps = "email" | "verification" | "password" | "success";
 
 const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
+  const { registerForm } = authStore;
+
   useEffect(() => {
-    return () => authStore.registerForm.resetInfo();
+    return () => registerForm.resetInfo();
   }, []);
 
   const showHeader = (): React.DetailedHTMLProps<
@@ -38,8 +40,20 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
   };
 
   const checkPasswordLength = useMemo((): boolean => {
-    return authStore.registerForm.password.length >= 8;
-  }, [authStore.registerForm.password]);
+    return registerForm.password.length >= 8;
+  }, [registerForm.password]);
+
+  const handleSubmitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    registerForm.setLoaded(false);
+    try {
+      await authStore.verificateEmail();
+    } catch (error) {
+      alert(error.request.response);
+      registerForm.setStep("email");
+    }
+    registerForm.setLoaded(true);
+  };
 
   const showEmailInput = (): React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLElement>,
@@ -48,11 +62,7 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
     return (
       <form
         className="register-form"
-        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-          e.preventDefault();
-          authStore.registerForm.setLoaded(false);
-          authStore.verificateEmail();
-        }}
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmitEmail(e)}
       >
         {showHeader()}
         <section className="register-input">
@@ -60,9 +70,9 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
             type="email"
             className="register-email"
             placeholder="Email"
-            value={authStore.registerForm.email}
+            value={registerForm.email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              authStore.registerForm.setEmail(e.target.value);
+              registerForm.setEmail(e.target.value);
             }}
             required
           />
@@ -70,21 +80,17 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
         <section className="register-buttons">
           <button
             className={`register-submit ${
-              authStore.registerForm.loaded ? "" : "loading"
+              registerForm.loaded ? "" : "loading"
             }`}
             type="submit"
           >
-            {authStore.registerForm.loaded ? (
-              "인증 요청하기"
-            ) : (
-              <LoadingSpinner />
-            )}
+            {registerForm.loaded ? "인증 요청하기" : <LoadingSpinner />}
           </button>
           <button
             className="register-otherOption"
             type="button"
             onClick={() => {
-              authStore.registerForm.setStep("email");
+              registerForm.setStep("email");
               setShowSelectedForm("login");
             }}
           >
@@ -93,6 +99,17 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
         </section>
       </form>
     );
+  };
+
+  const handleSubmitCode = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    registerForm.setLoaded(false);
+    try {
+      await authStore.checkVerificationCode();
+    } catch (error) {
+      alert(error.request.response);
+    }
+    registerForm.setLoaded(true);
   };
 
   const showVerificationCodeInput = (): React.DetailedHTMLProps<
@@ -102,38 +119,34 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
     return (
       <form
         className="register-form"
-        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-          e.preventDefault();
-          authStore.registerForm.setLoaded(false);
-          authStore.checkVerificationCode();
-        }}
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmitCode(e)}
       >
         {showHeader()}
         <section className="register-input">
           <input
             className="register-verification"
             placeholder="Verification Code"
-            value={authStore.registerForm.verificationCode}
+            value={registerForm.verificationCode}
             required
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              authStore.registerForm.setVerificationCode(e.target.value);
+              registerForm.setVerificationCode(e.target.value);
             }}
           />
         </section>
         <section className="register-buttons">
           <button
             className={`register-submit ${
-              authStore.registerForm.loaded ? "" : "loading"
+              registerForm.loaded ? "" : "loading"
             }`}
             type="submit"
           >
-            {authStore.registerForm.loaded ? "인증하기" : <LoadingSpinner />}
+            {registerForm.loaded ? "인증하기" : <LoadingSpinner />}
           </button>
           <button
             className="register-otherOption"
             type="button"
             onClick={() => {
-              authStore.registerForm.setStep("email");
+              registerForm.setStep("email");
               setShowSelectedForm("login");
             }}
           >
@@ -144,6 +157,20 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
     );
   };
 
+  const handleSubmitPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!checkPasswordLength) return;
+
+    registerForm.setLoaded(false);
+    try {
+      await authStore.register();
+    } catch (error) {
+      alert(error.request.response);
+      registerForm.setStep("email");
+    }
+    registerForm.setLoaded(true);
+  };
+
   const showPasswordInput = (): React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLElement>,
     HTMLElement
@@ -151,14 +178,9 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
     return (
       <form
         className="register-form"
-        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-          e.preventDefault();
-          if (!checkPasswordLength) {
-            return;
-          }
-          authStore.registerForm.setLoaded(false);
-          authStore.register();
-        }}
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
+          handleSubmitPassword(e)
+        }
       >
         {showHeader()}
         <section className="register-input">
@@ -166,9 +188,9 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
             type="password"
             className="register-password"
             placeholder="Password"
-            value={authStore.registerForm.password}
+            value={registerForm.password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              authStore.registerForm.setPassword(e.target.value);
+              registerForm.setPassword(e.target.value);
             }}
             required
           />
@@ -181,21 +203,17 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
         <section className="register-buttons">
           <button
             className={`register-submit ${
-              authStore.registerForm.loaded ? "" : "loading"
+              registerForm.loaded ? "" : "loading"
             }`}
             type="submit"
           >
-            {authStore.registerForm.loaded ? (
-              "회원가입 하기"
-            ) : (
-              <LoadingSpinner />
-            )}
+            {registerForm.loaded ? "회원가입 하기" : <LoadingSpinner />}
           </button>
           <button
             className="register-otherOption"
             type="button"
             onClick={() => {
-              authStore.registerForm.setStep("email");
+              registerForm.setStep("email");
               setShowSelectedForm("login");
             }}
           >
@@ -221,7 +239,7 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
             className="register-button"
             type="button"
             onClick={() => {
-              authStore.registerForm.setStep("email");
+              registerForm.setStep("email");
               setShowSelectedForm("login");
             }}
           >
@@ -247,7 +265,7 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
             className="register-button"
             type="button"
             onClick={() => {
-              authStore.registerForm.setStep("email");
+              registerForm.setStep("email");
             }}
           >
             다시 회원가입 하러가기
@@ -259,11 +277,10 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
 
   return (
     <>
-      {authStore.registerForm.step === "email" && showEmailInput()}
-      {authStore.registerForm.step === "verification" &&
-        showVerificationCodeInput()}
-      {authStore.registerForm.step === "password" && showPasswordInput()}
-      {authStore.registerForm.step === "success" && showSuccessPage()}
+      {registerForm.step === "email" && showEmailInput()}
+      {registerForm.step === "verification" && showVerificationCodeInput()}
+      {registerForm.step === "password" && showPasswordInput()}
+      {registerForm.step === "success" && showSuccessPage()}
     </>
   );
 });

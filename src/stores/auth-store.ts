@@ -77,51 +77,31 @@ class AuthStore {
   }
 
   async verificateEmail() {
-    this.authService
-      .verification(this.registerForm.email)
-      .then((response) => {
-        this.registerForm.setLoaded(true);
-        if (response.status === 201) {
-          this.registerForm.setStep("verification");
-        }
-      })
-      .catch((error) => {
-        alert(error.request.response);
-        this.registerForm.setLoaded(true);
-        this.registerForm.setStep("email");
-      });
+    const response = await this.authService.verification(
+      this.registerForm.email
+    );
+    if (response.status === 201) {
+      this.registerForm.setStep("verification");
+    }
   }
 
   async checkVerificationCode() {
-    this.authService
-      .verificationCode(this.registerForm.verificationCode)
-      .then((response) => {
-        this.registerForm.setLoaded(true);
-        if (response.status === 200) {
-          this.registerForm.setStep("password");
-          alert(response.data.message);
-        }
-      })
-      .catch((error) => {
-        alert(error.request.response);
-        this.registerForm.setLoaded(true);
-      });
+    const response = await this.authService.verificationCode(
+      this.registerForm.verificationCode
+    );
+    if (response.status === 200) {
+      this.registerForm.setStep("password");
+    }
   }
 
   async register() {
-    this.authService
-      .register(this.registerForm.email, this.registerForm.password)
-      .then((response) => {
-        this.registerForm.setLoaded(true);
-        if (response.status === 201) {
-          this.registerForm.setStep("success");
-        }
-      })
-      .catch((error) => {
-        alert(error.request.response);
-        this.registerForm.setLoaded(true);
-        this.registerForm.setStep("email");
-      });
+    const response = await this.authService.register(
+      this.registerForm.email,
+      this.registerForm.password
+    );
+    if (response.status === 201) {
+      this.registerForm.setStep("success");
+    }
   }
 
   async logout() {
