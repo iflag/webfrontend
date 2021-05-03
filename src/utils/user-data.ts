@@ -1,8 +1,8 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import API_URL, { API_HOST } from "utils/api";
 import { getStorageItem, storageAccessKey } from "utils/local-storage";
 interface UserDataInterface {
-  selectSearchEngine(mode: string): Promise<AxiosResponse<any>>;
+  selectSearchEngine(mode: string): Promise<void>;
 }
 class UserData implements UserDataInterface {
   private base;
@@ -14,7 +14,7 @@ class UserData implements UserDataInterface {
     this.userUrl = API_URL.users;
   }
 
-  async selectSearchEngine(searchEngine: string): Promise<AxiosResponse<any>> {
+  async selectSearchEngine(searchEngine: string): Promise<void> {
     const { portal } = this.userUrl;
     const data = {
       portal: searchEngine,
@@ -26,8 +26,7 @@ class UserData implements UserDataInterface {
         Authorization: `Bearer ${token}`,
       },
     };
-    const response = await this.base.post(portal, data, config);
-    return response;
+    await this.base.post(portal, data, config);
   }
 
   async getSelectedSearchEngine() {
@@ -40,7 +39,8 @@ class UserData implements UserDataInterface {
       },
     };
     const response = await this.base.get(portal, config);
-    return response;
+    const result = await response.data;
+    return result;
   }
 
   async saveSearchHistory(searched: string) {
@@ -56,8 +56,7 @@ class UserData implements UserDataInterface {
       },
     };
 
-    const response = await this.base.post(history, data, config);
-    return response;
+    await this.base.post(history, data, config);
   }
 }
 

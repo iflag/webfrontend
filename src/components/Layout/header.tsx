@@ -96,11 +96,13 @@ const Header = observer(({ userData, authStore }: Props) => {
     "close"
   );
 
-  const saveSeletedSearchEngine = () => {
+  const saveSeletedSearchEngine = async () => {
     if (!authStore.onLogin) return;
-    userData
-      .selectSearchEngine(selectedSearchEngine.abbreviation)
-      .then((response) => {});
+    try {
+      await userData.selectSearchEngine(selectedSearchEngine.abbreviation);
+    } catch (error) {
+      alert(error.request.response);
+    }
   };
 
   const sortSearchEngineList = (newSelectedSearchEngine: SearchEngineInfo) => {
@@ -111,25 +113,25 @@ const Header = observer(({ userData, authStore }: Props) => {
     setSearchEngines([newSelectedSearchEngine, ...newSearchEngines]);
   };
 
+  const setInitialSearchEngine = async () => {
+    const result = await userData.getSelectedSearchEngine();
+    const newSelectedSearchEngine = searchEngines.find(
+      (s) => s.fullName === result.portal
+    );
+    if (newSelectedSearchEngine) {
+      setSelectedSearchEngine(newSelectedSearchEngine);
+      sortSearchEngineList(newSelectedSearchEngine);
+    }
+  };
+
   useEffect(() => {
-    userData
-      .getSelectedSearchEngine()
-      .then((response) => {
-        if (response.status === 200) {
-          const newSelectedSearchEngine = searchEngines.find(
-            (s) => s.fullName === response.data.portal
-          );
-          if (newSelectedSearchEngine) {
-            setSelectedSearchEngine(newSelectedSearchEngine);
-            sortSearchEngineList(newSelectedSearchEngine);
-          }
-        }
-      })
-      .catch((error) => {
-        if (error.request.status === 403) {
-          authStore.logout();
-        }
-      });
+    try {
+      setInitialSearchEngine();
+    } catch (error) {
+      if (error.request.status === 403) {
+        authStore.logout();
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -145,31 +147,15 @@ const Header = observer(({ userData, authStore }: Props) => {
   }, [authStore.onLogin]);
 
   const browseInNewTab = () => {
-    if (selectedSearchEngine.name === "Google") {
-      window.open(
-        `https://duckduckgo.com/?q=!google+${searchContent}`,
-        "_blank"
-      );
-    }
-    if (selectedSearchEngine.name === "Naver") {
-      window.open(
-        `https://duckduckgo.com/?q=!naver+${searchContent}`,
+    const searchQuery =
+      selectedSearchEngine.name === "DDG"
+        ? ""
+        : `!${selectedSearchEngine.name.toLowerCase()}+`;
+    window.open(
+      `https://duckduckgo.com/?q=${searchQuery}${searchContent}`,
+      "_blank"
+    );
 
-        "_blank"
-      );
-    }
-    if (selectedSearchEngine.name === "DDG") {
-      window.open(`https://duckduckgo.com/?q=${searchContent}`, "_blank");
-    }
-    if (selectedSearchEngine.name === "Github") {
-      window.open(
-        `https://duckduckgo.com/?q=!github+${searchContent}`,
-        "_blank"
-      );
-    }
-    if (selectedSearchEngine.name === "WA") {
-      window.open(`https://duckduckgo.com/?q=!wa+${searchContent}`, "_blank");
-    }
     authStore.refreshToken();
   };
 
