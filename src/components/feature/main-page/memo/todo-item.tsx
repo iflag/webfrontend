@@ -17,6 +17,19 @@ const TodoItem = observer(({ todo, todoData }: Props) => {
     setChecked(todo.completed);
   }, []);
 
+  const handleChangeChecked = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setChecked(e.target.checked);
+    await todoData.completeTodo(todo.id);
+  };
+
+  const handleSubmitEditTodo = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await todoData.updateTodo(todo.id, contents);
+    setEditing(false);
+  };
+
   return (
     <li className="todoItem">
       {!editing ? (
@@ -27,29 +40,23 @@ const TodoItem = observer(({ todo, todoData }: Props) => {
               setEditing(true);
             }}
           >
-            {todo.contents}
+            {contents}
           </p>
           <input
             type="checkbox"
             className="todoItem-checkbox"
             checked={checked}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setChecked(e.target.checked);
-              todoData.completeTodo(todo.id).then((response) => {});
-            }}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleChangeChecked(e)
+            }
           />
         </>
       ) : (
         <form
           className="todoItem-editForm"
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-            todoData.updateTodo(todo.id, contents).then((response) => {
-              if (response.status === 200) {
-                setEditing(false);
-              }
-            });
-          }}
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
+            handleSubmitEditTodo(e)
+          }
         >
           <input
             className="todoItem-editForm-input"

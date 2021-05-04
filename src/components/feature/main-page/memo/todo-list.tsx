@@ -24,16 +24,33 @@ const TodoList = observer(({ todoData, authStore }: Props) => {
     refreshTodos();
   }, [authStore.onLogin]);
 
-  const refreshTodos = () => {
+  const refreshTodos = async () => {
     if (!authStore.onLogin) {
       setTodos([]);
       return;
     }
-    todoData.getAllTodoList().then((response) => {
-      if (response.status === 200) {
-        setTodos(response.data.todos);
-      }
-    });
+
+    try {
+      const result = await todoData.getAllTodoList();
+      setTodos(result.todos);
+    } catch (error) {
+      alert(error.request.response);
+    }
+  };
+
+  const handleSubmitTodo = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (contents === "") return;
+
+    try {
+      await todoData.addTodo(contents);
+      refreshTodos();
+      setContents("");
+    } catch (error) {
+      alert(error.request.response);
+    }
+
+    authStore.refreshToken();
   };
 
   return (
@@ -46,18 +63,7 @@ const TodoList = observer(({ todoData, authStore }: Props) => {
       </div>
       <form
         className="todoList-addTodo"
-        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-          e.preventDefault();
-          if (contents === "") return;
-
-          todoData.addTodo(contents).then((response) => {
-            if (response.status === 200) {
-              refreshTodos();
-              setContents("");
-            }
-            authStore.refreshToken();
-          });
-        }}
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmitTodo(e)}
       >
         <input
           className="todoList-addContent"

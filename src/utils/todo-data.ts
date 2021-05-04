@@ -23,7 +23,8 @@ class TodoData {
     };
 
     const response = await this.base.get(todo, config);
-    return response;
+    const result = await response.data;
+    return result;
   }
 
   async addTodo(contents: string) {
@@ -55,8 +56,7 @@ class TodoData {
       },
     };
 
-    const response = await this.base.put(url, "", config);
-    return response;
+    await this.base.put(url, "", config);
   }
 
   async updateTodo(id: number, contents: string) {
@@ -74,8 +74,7 @@ class TodoData {
       },
     };
 
-    const response = await this.base.put(url, data, config);
-    return response;
+    await this.base.put(url, data, config);
   }
 }
 
