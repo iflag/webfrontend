@@ -1,4 +1,4 @@
-import Bookmarks from "components/feature/main-page/bookmark/bookmarks";
+import BookmarkSection from "components/feature/main-page/bookmark/bookmark-section";
 import Note from "components/feature/main-page/memo/note";
 import TodoList from "components/feature/main-page/memo/todo-list";
 import Layout from "components/Layout";
@@ -23,7 +23,7 @@ const MainPage = observer(
       <Layout>
         <div className="mainpage">
           <TodoList todoData={todoData} authStore={authStore} />
-          <Bookmarks bookmarkData={bookmarkData} authStore={authStore} />
+          <BookmarkSection bookmarkData={bookmarkData} authStore={authStore} />
           <Note noteData={noteData} authStore={authStore} />
         </div>
       </Layout>

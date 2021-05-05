@@ -3,36 +3,30 @@ import "components/feature/main-page/bookmark/folder-item.scss";
 import {
   FolderInfo,
   Bookmark,
-} from "components/feature/main-page/bookmark/bookmarks";
+} from "components/feature/main-page/bookmark/bookmark-section";
 import { AiOutlineClose } from "react-icons/ai";
-import { IoMdSettings } from "react-icons/io";
 import BookmarkData from "utils/bookmark-data";
 import BookmarkListInFolder from "components/feature/main-page/bookmark/bookmarkList-in-folder";
 import { DarkModalSection } from "components/feature/header/auth/auth";
-import Favicon from "./favicon";
 import BookmarkStore from "stores/bookmark-store";
 import { observer } from "mobx-react";
+import FolderStore from "stores/folder-store";
 
 type Props = {
   bookmarkData: BookmarkData;
+  folderStore: FolderStore;
   bookmarkStore: BookmarkStore;
-  type: string;
   content: FolderInfo | Bookmark;
 };
 
 const FolderItem = observer(
-  ({ bookmarkData, bookmarkStore, type, content }: Props) => {
+  ({ bookmarkData, folderStore, bookmarkStore, content }: Props) => {
     const [bookmarksInFolder, setBookmarksInFolder] = useState<Bookmark[]>([]);
     const [editing, setEditing] = useState(false);
 
     const [title, setTitle] = useState(content.title);
-    const [description, setDescription] = useState(
-      (content as Bookmark).description
-    );
-    const [url, setUrl] = useState((content as Bookmark).url);
 
     const [showSelectedFolder, setShowSelectedFolder] = useState(false);
-    const [showEditSection, setShowEditSection] = useState(false);
 
     const refreshBookmarkListInFolder = (id: number) => {
       bookmarkData.getAllBookmarksInFolder(id).then(async (response) => {
@@ -43,88 +37,14 @@ const FolderItem = observer(
       });
     };
 
-    const showBookmarkEditForm = () => {
-      return (
-        <DarkModalSection>
-          <form
-            className="bookmark-form"
-            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-              bookmarkStore.editBookmarkInfo(
-                content.id,
-                { title, description, url },
-                setShowEditSection
-              );
-              setEditing(false);
-            }}
-          >
-            <div className="folderItem-form-header">
-              <p className="folderItem-form-title">Edit Bookmark</p>
-              <button
-                className="folderItem-form-close"
-                onClick={() => {
-                  setShowEditSection(false);
-                }}
-                type="button"
-              >
-                <AiOutlineClose />
-              </button>
-            </div>
-            <section className="folderItem-form-input">
-              <input
-                className="folderItem-form-folderItemTitle"
-                placeholder="Title"
-                value={title}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setTitle(e.target.value);
-                }}
-                required
-              />
-              <input
-                className="folderItem-form-url"
-                placeholder="Url"
-                value={url}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setUrl(e.target.value);
-                }}
-                required
-              />
-              <input
-                className="folderItem-form-description"
-                placeholder="Description"
-                value={description}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setDescription(e.target.value);
-                }}
-                required
-              />
-            </section>
-            <section className="folderItem-form-buttons">
-              <button className="folderItem-form-submit" type="submit">
-                Edit
-              </button>
-            </section>
-          </form>
-        </DarkModalSection>
-      );
-    };
-
     const showFolderItem = () => {
       return (
         <div
-          className={`${
-            type === "folder" ? "folderItem-folder" : "folderItem-bookmark"
-          } ${editing ? "editing" : ""}`}
+          className={`folderItem-main ${editing ? "editing" : ""}`}
           onClick={() => {
-            if (type === "folder") {
-              if (!editing) {
-                setShowSelectedFolder(true);
-                refreshBookmarkListInFolder(content.id);
-              }
-            } else if (type === "bookmark") {
-              if (!editing) {
-                window.open(`${(content as Bookmark).url}`, "_blank");
-              }
+            if (!editing) {
+              setShowSelectedFolder(true);
+              refreshBookmarkListInFolder(content.id);
             }
           }}
         >
@@ -138,29 +58,14 @@ const FolderItem = observer(
                 setEditing(true);
               }}
             >
-              {type === "bookmark" && <Favicon content={content} />}
               {title}
             </div>
           ) : (
             <div className="folderItem-setting">
-              {type === "bookmark" && (
-                <button
-                  className="folderItem-edit"
-                  onClick={() => {
-                    setShowEditSection(true);
-                  }}
-                >
-                  <IoMdSettings />
-                </button>
-              )}
               <button
                 className="folderItem-delete"
                 onClick={() => {
-                  if (type === "folder") {
-                    bookmarkStore.deleteFolder(content.id, setEditing);
-                  } else if (type === "bookmark") {
-                    bookmarkStore.deleteBookmark(content.id, setEditing);
-                  }
+                  folderStore.deleteFolder(content.id, setEditing);
                 }}
               >
                 <AiOutlineClose />
@@ -173,19 +78,7 @@ const FolderItem = observer(
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.key === "Enter") {
                     setEditing(false);
-                    if (type === "folder") {
-                      bookmarkStore.editFolderName(content.id, title);
-                    } else if (type === "bookmark") {
-                      bookmarkStore.editBookmarkInfo(
-                        content.id,
-                        {
-                          title,
-                          description,
-                          url,
-                        },
-                        setShowEditSection
-                      );
-                    }
+                    folderStore.editFolderName(content.id, title);
                     e.preventDefault();
                     e.stopPropagation();
                   }
@@ -213,7 +106,6 @@ const FolderItem = observer(
             />
           </DarkModalSection>
         )}
-        {showEditSection && showBookmarkEditForm()}
       </div>
     );
   }

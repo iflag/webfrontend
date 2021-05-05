@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from "react";
-import "components/feature/main-page/bookmark/folder-list.scss";
+import "components/feature/main-page/bookmark/rootItem-list.scss";
 import FolderItem from "components/feature/main-page/bookmark/folder-item";
 import BookmarkData from "utils/bookmark-data";
 import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
 import {
   Bookmark,
   FolderInfo,
-} from "components/feature/main-page/bookmark/bookmarks";
+} from "components/feature/main-page/bookmark/bookmark-section";
 import { DarkModalSection } from "components/feature/header/auth/auth";
 import BookmarkStore from "stores/bookmark-store";
 import { observer } from "mobx-react";
 import AuthStore from "stores/auth-store";
+import FolderStore from "stores/folder-store";
+import BookmarkItem from "./bookmark-item";
 
 type Props = {
   bookmarkData: BookmarkData;
+  folderStore: FolderStore;
   bookmarkStore: BookmarkStore;
   authStore: AuthStore;
 };
 
-const FolderList = observer(
-  ({ bookmarkData, bookmarkStore, authStore }: Props) => {
+const RootItemList = observer(
+  ({ bookmarkData, folderStore, bookmarkStore, authStore }: Props) => {
     const [showAddFolderForm, setShowAddFolderForm] = useState(false);
     const [title, setTitle] = useState("");
 
@@ -36,33 +39,29 @@ const FolderList = observer(
     }, []);
 
     return (
-      <div className="folderList">
-        <div className="folderList-content">
+      <div className="rootList">
+        <div className="rootList-content">
           <button
-            className="folderList-addButton"
+            className="rootList-addButton"
             onClick={() => setShowAddFolderForm(true)}
           >
             <AiOutlinePlus />
           </button>
-          {bookmarkStore.folderInfoList.map(
-            (folderInfo: FolderInfo, idx: number) => {
-              return (
-                <FolderItem
-                  key={idx}
-                  bookmarkData={bookmarkData}
-                  bookmarkStore={bookmarkStore}
-                  type="folder"
-                  content={folderInfo}
-                />
-              );
-            }
-          )}
-          {bookmarkStore.rootBookmarks.map((content: Bookmark, idx: number) => (
-            <FolderItem
-              key={idx}
-              bookmarkData={bookmarkData}
+          {folderStore.folderInfoList.map((folderInfo: FolderInfo) => {
+            return (
+              <FolderItem
+                key={folderInfo.id}
+                folderStore={folderStore}
+                bookmarkData={bookmarkData}
+                bookmarkStore={bookmarkStore}
+                content={folderInfo}
+              />
+            );
+          })}
+          {bookmarkStore.rootBookmarks.map((content: Bookmark) => (
+            <BookmarkItem
+              key={content.id}
               bookmarkStore={bookmarkStore}
-              type="bookmark"
               content={content}
             />
           ))}
@@ -70,19 +69,20 @@ const FolderList = observer(
         {showAddFolderForm && (
           <DarkModalSection>
             <form
-              className="folderList-form"
+              className="rootList-form"
               onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
                 addFolder();
                 bookmarkStore.getAllRootBookmarks();
-                bookmarkStore.getAllFolders();
+                folderStore.getAllFolders();
                 setShowAddFolderForm(false);
+                setTitle("");
               }}
             >
-              <div className="folderList-form-header">
-                <p className="folderList-form-title">Add Folder</p>
+              <div className="rootList-form-header">
+                <p className="rootList-form-title">Add Folder</p>
                 <button
-                  className="folderList-form-close"
+                  className="rootList-form-close"
                   onClick={() => {
                     setShowAddFolderForm(false);
                   }}
@@ -91,9 +91,9 @@ const FolderList = observer(
                   <AiOutlineClose />
                 </button>
               </div>
-              <section className="folderList-form-input">
+              <section className="rootList-form-input">
                 <input
-                  className="folderList-form-foldertitle"
+                  className="rootList-form-foldertitle"
                   placeholder="Title"
                   value={title}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,8 +102,8 @@ const FolderList = observer(
                   required
                 />
               </section>
-              <section className="folderList-form-buttons">
-                <button className="folderList-form-submit" type="submit">
+              <section className="rootList-form-buttons">
+                <button className="rootList-form-submit" type="submit">
                   Add
                 </button>
               </section>
@@ -115,4 +115,4 @@ const FolderList = observer(
   }
 );
 
-export default FolderList;
+export default RootItemList;

@@ -1,10 +1,10 @@
-.folderList {
+.rootList {
   height: calc(100% - 2.5rem);
   box-sizing: border-box;
   padding: 1rem 0;
 }
 
-.folderList-addButton {
+.rootList-addButton {
   box-sizing: border-box;
   margin: 0.5rem;
   width: 4.5rem;
@@ -32,7 +32,7 @@
   }
 }
 
-.folderList-content {
+.rootList-content {
   display: flex;
   flex-wrap: wrap;
   box-sizing: border-box;
@@ -45,7 +45,7 @@
   }
 }
 
-.folderList-form {
+.rootList-form {
   width: 30%;
   min-width: 18rem;
   height: 50%;
@@ -59,7 +59,7 @@
   border: 1px solid #8bb7ee;
 }
 
-.folderList-form-header {
+.rootList-form-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -69,13 +69,13 @@
   height: 20%;
 }
 
-.folderList-form-title {
+.rootList-form-title {
   margin: 0;
   font-weight: bold;
   color: #8bb7ee;
 }
 
-.folderList-form-close {
+.rootList-form-close {
   height: 1.1rem;
   border: none;
   outline: none;
@@ -86,7 +86,7 @@
   padding: 0;
 }
 
-.folderList-form-input {
+.rootList-form-input {
   width: 100%;
   height: 50%;
   display: flex;
@@ -95,7 +95,7 @@
   justify-content: space-around;
 }
 
-.folderList-form-foldertitle {
+.rootList-form-foldertitle {
   box-sizing: border-box;
   width: 75%;
   height: 2rem;
@@ -105,7 +105,7 @@
   border-bottom: 1px solid #8bb7ee;
 }
 
-.folderList-form-buttons {
+.rootList-form-buttons {
   width: 100%;
   height: 30%;
   display: flex;
@@ -114,7 +114,7 @@
   justify-content: space-around;
 }
 
-.folderList-form-submit {
+.rootList-form-submit {
   outline: none;
   border: 1px solid #8bb7ee;
   color: #8bb7ee;
@@ -129,15 +129,15 @@
 }
 
 @media screen and (max-width: 768px) {
-  .folderList {
+  .rootList {
     padding: 0.2rem 0;
   }
-  .folderList-title {
+  .rootList-title {
     height: 0.8rem;
     line-height: 0.8rem;
   }
 
-  .folderList-addButton {
+  .rootList-addButton {
     width: 4rem;
     height: 4rem;
     &:before {
@@ -146,7 +146,7 @@
     }
   }
 
-  .folderList-content {
+  .rootList-content {
     padding: 1.5rem 0.5rem;
   }
 }

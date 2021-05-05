@@ -1,6 +1,6 @@
 import React from "react";
 import "components/feature/main-page/bookmark/bookmarkList-in-folder.scss";
-import { Bookmark } from "components/feature/main-page/bookmark/bookmarks";
+import { Bookmark } from "components/feature/main-page/bookmark/bookmark-section";
 import { AiOutlineClose } from "react-icons/ai";
 import BookmarkData from "utils/bookmark-data";
 import BookmarkItemInFolder from "components/feature/main-page/bookmark/bookmarkItem-in-folder";
@@ -42,9 +42,9 @@ const BookmarkListInFolder = observer(
         </div>
         <section className="insideFolder-bookmarks">
           {bookmarksInFolder &&
-            bookmarksInFolder.map((bookmark: Bookmark, idx: number) => (
+            bookmarksInFolder.map((bookmark: Bookmark) => (
               <BookmarkItemInFolder
-                key={idx}
+                key={bookmark.id}
                 bookmarkData={bookmarkData}
                 bookmarkStore={bookmarkStore}
                 bookmark={bookmark}

@@ -3,43 +3,37 @@ import AuthService, { IAuthService } from "utils/auth-service";
 import {
   Bookmark,
   BookmarkInfo,
-  FolderInfo,
-} from "components/feature/main-page/bookmark/bookmarks";
+} from "components/feature/main-page/bookmark/bookmark-section";
 import { action, makeObservable, observable } from "mobx";
 import BookmarkData, { IBookmarkData } from "utils/bookmark-data";
-import { RootStore } from "./root-store";
+import { RootStore } from "stores/root-store";
+import FolderStore from "./folder-store";
 
 class BookmarkStore {
   private rootStore: RootStore;
 
   rootBookmarks: Bookmark[];
-  folderInfoList: FolderInfo[];
-  folderNameList: string[];
 
   private bookmarkData: IBookmarkData;
   private authService: IAuthService;
 
-  constructor(root: RootStore, private authStore: AuthStore) {
+  constructor(
+    root: RootStore,
+    private authStore: AuthStore,
+    private folderStore: FolderStore
+  ) {
     makeObservable(this, {
       rootBookmarks: observable,
-      folderInfoList: observable,
-      folderNameList: observable,
 
       setRootBookmarks: action,
-      setFolderInfoList: action,
-      setFolderNameList: action,
       getAllRootBookmarks: action,
-      getAllFolders: action,
       searchBookmarks: action,
       editBookmarkInfo: action,
-      deleteFolder: action,
       deleteBookmark: action,
     });
 
     this.rootStore = root;
     this.rootBookmarks = [];
-    this.folderInfoList = [];
-    this.folderNameList = [];
 
     this.bookmarkData = new BookmarkData();
     this.authService = new AuthService();
@@ -47,12 +41,6 @@ class BookmarkStore {
 
   setRootBookmarks(rootBookmarks: Bookmark[]) {
     this.rootBookmarks = rootBookmarks;
-  }
-  setFolderInfoList(folderInfoList: FolderInfo[]) {
-    this.folderInfoList = folderInfoList;
-  }
-  setFolderNameList(folderNameList: string[]) {
-    this.folderNameList = folderNameList;
   }
 
   async getAllRootBookmarks() {
@@ -70,28 +58,10 @@ class BookmarkStore {
     }
   }
 
-  async getAllFolders() {
-    try {
-      const response = await this.bookmarkData.getAllFolderInfo();
-      this.setFolderInfoList(response.data);
-      const newFolderNameList = response.data.map(
-        (info: FolderInfo) => info.title
-      );
-      this.setFolderNameList(["", ...newFolderNameList]);
-      this.authStore.refreshToken();
-    } catch (error) {
-      this.setFolderInfoList([]);
-      this.setFolderNameList([]);
-      if (error.response.status === 403) {
-        this.authService.logout();
-      }
-    }
-  }
-
   async searchBookmarks(searchInput: string) {
     if (searchInput === "") {
       this.getAllRootBookmarks();
-      this.getAllFolders();
+      this.folderStore.getAllFolders();
       return;
     }
 
@@ -101,7 +71,7 @@ class BookmarkStore {
           alert("원하는 북마크를 찾을 수 없습니다.");
         } else {
           this.setRootBookmarks(response.data[0].bookmarks);
-          this.setFolderInfoList([]);
+          this.folderStore.setFolderInfoList([]);
         }
       }
     });
@@ -117,17 +87,9 @@ class BookmarkStore {
       if (response.status === 200) {
         setShowEditSection(false);
         this.getAllRootBookmarks();
-        this.getAllFolders();
+        this.folderStore.getAllFolders();
       } else {
         window.alert("북마크 정보 변경 실패");
-      }
-    });
-  }
-
-  async editFolderName(id: number, title: string) {
-    this.bookmarkData.changeFolderName(id, title).then((response) => {
-      if (response.status === 200) {
-        this.getAllFolders();
       }
     });
   }
@@ -140,18 +102,6 @@ class BookmarkStore {
       if (response.status === 200) {
         setEditing(false);
         this.getAllRootBookmarks();
-      }
-    });
-  }
-
-  async deleteFolder(
-    id: number,
-    setEditing: (value: React.SetStateAction<boolean>) => void
-  ) {
-    this.bookmarkData.deleteFolder(id).then((response) => {
-      if (response.status === 200) {
-        setEditing(false);
-        this.getAllFolders();
       }
     });
   }

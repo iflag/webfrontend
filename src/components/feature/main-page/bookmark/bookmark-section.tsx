@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import "components/feature/main-page/bookmark/bookmarks.scss";
+import "components/feature/main-page/bookmark/bookmark-section.scss";
 import {
   AiOutlineSearch,
   AiFillPlusCircle,
   AiOutlineClose,
 } from "react-icons/ai";
-import FolderList from "components/feature/main-page/bookmark/folder-list";
+import RootItemList from "components/feature/main-page/bookmark/rootItem-list";
 import BookmarkData from "utils/bookmark-data";
 import { DarkModalSection } from "components/feature/header/auth/auth";
 import { useStoreContext } from "contexts/store-context";
@@ -37,8 +37,9 @@ export type Folder = {
 
 export type FolderInfo = Pick<Bookmark, "author" | "id" | "title">;
 
-const Bookmarks = observer(({ bookmarkData, authStore }: Props) => {
+const BookmarkSection = observer(({ bookmarkData, authStore }: Props) => {
   const { bookmarkStore } = useStoreContext();
+  const { folderStore } = useStoreContext();
 
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
@@ -59,13 +60,13 @@ const Bookmarks = observer(({ bookmarkData, authStore }: Props) => {
 
   useEffect(() => {
     if (!authStore.onLogin) {
-      bookmarkStore.setFolderInfoList([]);
-      bookmarkStore.setFolderNameList([]);
+      folderStore.setFolderInfoList([]);
+      folderStore.setFolderNameList([]);
       bookmarkStore.setRootBookmarks([]);
       return;
     }
     bookmarkStore.getAllRootBookmarks();
-    bookmarkStore.getAllFolders();
+    folderStore.getAllFolders();
   }, [authStore.onLogin]);
 
   return (
@@ -115,7 +116,7 @@ const Bookmarks = observer(({ bookmarkData, authStore }: Props) => {
                   if (response.status === 201) {
                     setShowAddBookmarkForm(false);
                     bookmarkStore.getAllRootBookmarks();
-                    bookmarkStore.getAllFolders();
+                    folderStore.getAllFolders();
                     setTitle("");
                     setUrl("");
                     setDescription("");
@@ -172,13 +173,11 @@ const Bookmarks = observer(({ bookmarkData, authStore }: Props) => {
                   setCategoryTitle(e.target.value);
                 }}
               >
-                {bookmarkStore.folderNameList.map(
-                  (name: string, idx: number) => (
-                    <option key={idx} onSelect={() => setCategoryTitle(name)}>
-                      {name}
-                    </option>
-                  )
-                )}
+                {folderStore.folderNameList.map((name: string, idx: number) => (
+                  <option key={idx} onSelect={() => setCategoryTitle(name)}>
+                    {name}
+                  </option>
+                ))}
               </select>
             </section>
             <section className="bookmark-form-buttons">
@@ -189,8 +188,9 @@ const Bookmarks = observer(({ bookmarkData, authStore }: Props) => {
           </form>
         </DarkModalSection>
       )}
-      <FolderList
+      <RootItemList
         bookmarkData={bookmarkData}
+        folderStore={folderStore}
         bookmarkStore={bookmarkStore}
         authStore={authStore}
       />
@@ -198,4 +198,4 @@ const Bookmarks = observer(({ bookmarkData, authStore }: Props) => {
   );
 });
 
-export default Bookmarks;
+export default BookmarkSection;

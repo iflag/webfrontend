@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import {
   BookmarkInfo,
   Folder,
-} from "components/feature/main-page/bookmark/bookmarks";
+} from "components/feature/main-page/bookmark/bookmark-section";
 import API_URL, { API_HOST } from "utils/api";
 import { getStorageItem, storageAccessKey } from "utils/local-storage";
 
