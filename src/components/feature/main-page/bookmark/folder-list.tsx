@@ -28,7 +28,7 @@ const FolderList = observer(
     };
 
     useEffect(() => {
-      if (authStore.onLogin === false) {
+      if (!authStore.onLogin) {
         bookmarkStore.setRootBookmarks([]);
         return;
       }

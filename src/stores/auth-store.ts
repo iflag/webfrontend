@@ -35,6 +35,7 @@ class AuthStore {
       logout: action,
       checkLoginState: action,
       setRequireRefresh: action,
+      refreshToken: action,
     });
 
     this.rootStore = root;
