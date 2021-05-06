@@ -6,14 +6,12 @@ import {
   AiOutlineClose,
 } from "react-icons/ai";
 import RootItemList from "components/feature/main-page/bookmark/rootItem-list";
-import BookmarkData from "utils/bookmark-data";
 import { DarkModalSection } from "components/feature/header/auth/auth";
 import { useStoreContext } from "contexts/store-context";
 import { observer } from "mobx-react";
 import AuthStore from "stores/auth-store";
 
 type Props = {
-  bookmarkData: BookmarkData;
   authStore: AuthStore;
 };
 
@@ -28,7 +26,7 @@ export type Bookmark = {
 
 export type BookmarkInfo = Pick<Bookmark, "title" | "description" | "url">;
 
-export type Folder = {
+export type CommonInfo = {
   title: string;
   url: string;
   description: string;
@@ -37,26 +35,14 @@ export type Folder = {
 
 export type FolderInfo = Pick<Bookmark, "author" | "id" | "title">;
 
-const BookmarkSection = observer(({ bookmarkData, authStore }: Props) => {
+const BookmarkSection = observer(({ authStore }: Props) => {
   const { bookmarkStore } = useStoreContext();
   const { folderStore } = useStoreContext();
-
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
-  const [description, setDescription] = useState("");
-  const [categoryTitle, setCategoryTitle] = useState("");
+  const { bookmarkForm } = bookmarkStore;
 
   const [showAddBookmarkForm, setShowAddBookmarkForm] = useState(false);
 
   const [searchInput, setSearchInput] = useState("");
-
-  const checkUrl = (): string => {
-    const front = url.slice(0, 5);
-    if (front !== "http") {
-      return "https://".concat(url);
-    }
-    return url;
-  };
 
   useEffect(() => {
     if (!authStore.onLogin) {
@@ -69,16 +55,32 @@ const BookmarkSection = observer(({ bookmarkData, authStore }: Props) => {
     folderStore.getAllFolders();
   }, [authStore.onLogin]);
 
+  const handleSubmitSearchInput = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      bookmarkStore.searchBookmarks(searchInput);
+    } catch (error) {
+      alert(error.request.response);
+    }
+  };
+
+  const handleSubmitAddBookmarkForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      bookmarkStore.addBookmark();
+      setShowAddBookmarkForm(false);
+    } catch (error) {
+      alert(error.request.response);
+    }
+    bookmarkForm.resetInfo();
+  };
   return (
     <div className="bookmark">
       <div className="bookmark-header">
         <p className="bookmark-header-title">Bookmark</p>
         <form
           className="bookmark-searchForm"
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-            bookmarkStore.searchBookmarks(searchInput);
-          }}
+          onSubmit={handleSubmitSearchInput}
         >
           <input
             className="bookmark-searchInput"
@@ -103,29 +105,7 @@ const BookmarkSection = observer(({ bookmarkData, authStore }: Props) => {
         <DarkModalSection>
           <form
             className="bookmark-form"
-            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-              bookmarkData
-                .appendBookmark({
-                  title,
-                  url: checkUrl(),
-                  description,
-                  category_title: categoryTitle,
-                })
-                .then((response) => {
-                  if (response.status === 201) {
-                    setShowAddBookmarkForm(false);
-                    bookmarkStore.getAllRootBookmarks();
-                    folderStore.getAllFolders();
-                    setTitle("");
-                    setUrl("");
-                    setDescription("");
-                    setCategoryTitle("");
-                  } else {
-                    alert("북마크 추가 실패");
-                  }
-                });
-            }}
+            onSubmit={handleSubmitAddBookmarkForm}
           >
             <div className="bookmark-form-header">
               <p className="bookmark-form-title">Add Bookmark</p>
@@ -133,6 +113,7 @@ const BookmarkSection = observer(({ bookmarkData, authStore }: Props) => {
                 className="bookmark-form-close"
                 onClick={() => {
                   setShowAddBookmarkForm(false);
+                  bookmarkForm.resetInfo();
                 }}
                 type="button"
               >
@@ -143,38 +124,41 @@ const BookmarkSection = observer(({ bookmarkData, authStore }: Props) => {
               <input
                 className="bookmark-form-bookmarkTitle"
                 placeholder="Title"
-                value={title}
+                value={bookmarkForm.title}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setTitle(e.target.value);
+                  bookmarkForm.setTitle(e.target.value);
                 }}
                 required
               />
               <input
                 className="bookmark-form-url"
                 placeholder="Url"
-                value={url}
+                value={bookmarkForm.url}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setUrl(e.target.value);
+                  bookmarkForm.setUrl(e.target.value);
                 }}
                 required
               />
               <input
                 className="bookmark-form-description"
                 placeholder="Description"
-                value={description}
+                value={bookmarkForm.description}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setDescription(e.target.value);
+                  bookmarkForm.setDescription(e.target.value);
                 }}
                 required
               />
               <select
                 className="bookmark-form-categoryTitle"
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                  setCategoryTitle(e.target.value);
+                  bookmarkForm.setCategoryTitle(e.target.value);
                 }}
               >
                 {folderStore.folderNameList.map((name: string, idx: number) => (
-                  <option key={idx} onSelect={() => setCategoryTitle(name)}>
+                  <option
+                    key={idx}
+                    onSelect={() => bookmarkForm.setCategoryTitle(name)}
+                  >
                     {name}
                   </option>
                 ))}
@@ -189,7 +173,6 @@ const BookmarkSection = observer(({ bookmarkData, authStore }: Props) => {
         </DarkModalSection>
       )}
       <RootItemList
-        bookmarkData={bookmarkData}
         folderStore={folderStore}
         bookmarkStore={bookmarkStore}
         authStore={authStore}

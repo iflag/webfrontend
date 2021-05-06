@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "components/feature/main-page/bookmark/bookmarkItem-in-folder.scss";
-import BookmarkData from "utils/bookmark-data";
 import { Bookmark } from "components/feature/main-page/bookmark/bookmark-section";
 import { AiOutlineClose } from "react-icons/ai";
 import { DarkModalSection } from "components/feature/header/auth/auth";
@@ -10,41 +9,52 @@ import BookmarkStore from "stores/bookmark-store";
 import { observer } from "mobx-react";
 
 type Props = {
-  bookmarkData: BookmarkData;
   bookmarkStore: BookmarkStore;
   bookmark: Bookmark;
-  refreshBookmarkListInFolder: (id: number) => void;
   contentId: number;
 };
 
 const BookmarkItemInFolder = observer(
-  ({
-    bookmarkData,
-    bookmarkStore,
-    bookmark,
-    refreshBookmarkListInFolder,
-    contentId,
-  }: Props) => {
+  ({ bookmarkStore, bookmark, contentId }: Props) => {
     const [editing, setEditing] = useState(false);
     const [showeditSection, setShowEditSection] = useState(false);
     const [title, setTitle] = useState(bookmark.title);
     const [description, setDescription] = useState(bookmark.description);
     const [url, setUrl] = useState(bookmark.url);
 
+    const handleSubmitBookmarkEditForm = (
+      e: React.FormEvent<HTMLFormElement>
+    ) => {
+      e.preventDefault();
+      try {
+        bookmarkStore.editBookmarkInfo(bookmark.id, {
+          title,
+          description,
+          url,
+        });
+        setShowEditSection(false);
+        setEditing(false);
+      } catch (error) {
+        alert(error.response.message);
+      }
+    };
+
+    const handleClickDeleteBookmarkButton = async () => {
+      try {
+        await bookmarkStore.deleteBookmark(bookmark.id);
+        bookmarkStore.refreshBookmarkListInFolder(contentId);
+        setEditing(false);
+      } catch (error) {
+        alert(error.response.message);
+      }
+    };
+
     const showBookmarkEditForm = () => {
       return (
         <DarkModalSection>
           <form
             className="bookmark-form"
-            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-              bookmarkStore.editBookmarkInfo(
-                bookmark.id,
-                { title, description, url },
-                setShowEditSection
-              );
-              setEditing(false);
-            }}
+            onSubmit={handleSubmitBookmarkEditForm}
           >
             <div className="folderItem-form-header">
               <p className="folderItem-form-title">Edit Bookmark</p>
@@ -131,38 +141,19 @@ const BookmarkItemInFolder = observer(
             </button>
             <button
               className="insideFolder-delete"
-              onClick={() => {
-                bookmarkData.deleteBookmark(bookmark.id).then((response) => {
-                  if (response.status === 200) {
-                    setEditing(false);
-                    refreshBookmarkListInFolder(contentId);
-                  }
-                });
-              }}
+              onClick={handleClickDeleteBookmarkButton}
             >
               <AiOutlineClose />
             </button>
-            <input
-              value={title}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setTitle(e.target.value);
-              }}
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                if (e.key === "Enter" || e.key === "Escape") {
-                  setEditing(false);
-                  bookmarkData
-                    .editBookmarkInfo(bookmark.id, { title, description, url })
-                    .then((response) => {
-                      if (response.status === 200) {
-                        refreshBookmarkListInFolder(contentId);
-                      }
-                    });
-                  e.preventDefault();
-                  e.stopPropagation();
-                }
-              }}
-              className="insideFolder-input"
-            />
+            <form onSubmit={handleSubmitBookmarkEditForm}>
+              <input
+                className="insideFolder-input"
+                value={title}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setTitle(e.target.value);
+                }}
+              />
+            </form>
           </div>
         )}
         {showeditSection && showBookmarkEditForm()}

@@ -8,14 +8,18 @@ import { action, makeObservable, observable } from "mobx";
 import BookmarkData, { IBookmarkData } from "utils/bookmark-data";
 import { RootStore } from "stores/root-store";
 import FolderStore from "./folder-store";
+import BookmarkForm from "./bookmark-form-store";
 
 class BookmarkStore {
   private rootStore: RootStore;
 
   rootBookmarks: Bookmark[];
+  bookmarksInFolder: Bookmark[];
 
   private bookmarkData: IBookmarkData;
   private authService: IAuthService;
+
+  bookmarkForm: BookmarkForm;
 
   constructor(
     root: RootStore,
@@ -24,23 +28,34 @@ class BookmarkStore {
   ) {
     makeObservable(this, {
       rootBookmarks: observable,
+      bookmarksInFolder: observable,
 
       setRootBookmarks: action,
+      setBookmarksInFolder: action,
       getAllRootBookmarks: action,
       searchBookmarks: action,
+      addBookmark: action,
       editBookmarkInfo: action,
       deleteBookmark: action,
+      refreshBookmarkListInFolder: action,
     });
 
     this.rootStore = root;
     this.rootBookmarks = [];
+    this.bookmarksInFolder = [];
 
     this.bookmarkData = new BookmarkData();
     this.authService = new AuthService();
+
+    this.bookmarkForm = new BookmarkForm(this);
   }
 
-  setRootBookmarks(rootBookmarks: Bookmark[]) {
-    this.rootBookmarks = rootBookmarks;
+  setRootBookmarks(newRootBookmarks: Bookmark[]) {
+    this.rootBookmarks = newRootBookmarks;
+  }
+
+  setBookmarksInFolder(newBookmarksInFolder: Bookmark[]) {
+    this.bookmarksInFolder = newBookmarksInFolder;
   }
 
   async getAllRootBookmarks() {
@@ -50,7 +65,7 @@ class BookmarkStore {
       this.setRootBookmarks(newRootBookmarks);
       this.authStore.refreshToken();
     } catch (error) {
-      console.log(error);
+      alert(error.request.response);
       this.setRootBookmarks([]);
       if (error.response.status === 403) {
         this.authService.logout();
@@ -65,45 +80,41 @@ class BookmarkStore {
       return;
     }
 
-    this.bookmarkData.searchBookmarks(searchInput).then((response) => {
-      if (response.status === 200) {
-        if (response.data[0].bookmarks.length === 0) {
-          alert("원하는 북마크를 찾을 수 없습니다.");
-        } else {
-          this.setRootBookmarks(response.data[0].bookmarks);
-          this.folderStore.setFolderInfoList([]);
-        }
-      }
-    });
+    const result = await this.bookmarkData.searchBookmarks(searchInput);
+    if (result[0].bookmarks.length === 0) {
+      alert("원하는 북마크를 찾을 수 없습니다.");
+    } else {
+      this.setRootBookmarks(result[0].bookmarks);
+      this.folderStore.setFolderInfoList([]);
+    }
   }
 
-  async editBookmarkInfo(
-    id: number,
-    info: BookmarkInfo,
-    setShowEditSection: React.Dispatch<React.SetStateAction<boolean>>
-  ) {
-    this.bookmarkData.editBookmarkInfo(id, info).then((response) => {
-      console.log(response.status);
-      if (response.status === 200) {
-        setShowEditSection(false);
-        this.getAllRootBookmarks();
-        this.folderStore.getAllFolders();
-      } else {
-        window.alert("북마크 정보 변경 실패");
-      }
+  async addBookmark() {
+    const { title, description, categoryTitle } = this.bookmarkForm;
+
+    const fixedUrl = this.bookmarkForm.checkUrl();
+
+    await this.bookmarkData.appendBookmark({
+      title,
+      url: fixedUrl,
+      description,
+      category_title: categoryTitle,
     });
+    this.getAllRootBookmarks();
   }
 
-  async deleteBookmark(
-    id: number,
-    setEditing: (value: React.SetStateAction<boolean>) => void
-  ) {
-    this.bookmarkData.deleteBookmark(id).then((response) => {
-      if (response.status === 200) {
-        setEditing(false);
-        this.getAllRootBookmarks();
-      }
-    });
+  async editBookmarkInfo(id: number, info: BookmarkInfo) {
+    await this.bookmarkData.editBookmarkInfo(id, info);
+  }
+
+  async deleteBookmark(id: number) {
+    await this.bookmarkData.deleteBookmark(id);
+  }
+
+  async refreshBookmarkListInFolder(id: number) {
+    const response = await this.bookmarkData.getAllBookmarksInFolder(id);
+    const result = await response.data;
+    this.setBookmarksInFolder(result);
   }
 }
 

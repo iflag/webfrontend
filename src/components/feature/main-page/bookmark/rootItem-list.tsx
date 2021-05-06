@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "components/feature/main-page/bookmark/rootItem-list.scss";
 import FolderItem from "components/feature/main-page/bookmark/folder-item";
-import BookmarkData from "utils/bookmark-data";
 import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
 import {
   Bookmark,
@@ -15,28 +14,26 @@ import FolderStore from "stores/folder-store";
 import BookmarkItem from "./bookmark-item";
 
 type Props = {
-  bookmarkData: BookmarkData;
   folderStore: FolderStore;
   bookmarkStore: BookmarkStore;
   authStore: AuthStore;
 };
 
 const RootItemList = observer(
-  ({ bookmarkData, folderStore, bookmarkStore, authStore }: Props) => {
+  ({ folderStore, bookmarkStore, authStore }: Props) => {
     const [showAddFolderForm, setShowAddFolderForm] = useState(false);
     const [title, setTitle] = useState("");
 
-    const addFolder = () => {
-      bookmarkData.addFolder(title);
-    };
-
-    useEffect(() => {
-      if (!authStore.onLogin) {
-        bookmarkStore.setRootBookmarks([]);
-        return;
+    const handleSubmitAddFolderForm = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      try {
+        folderStore.addFolder(title);
+        setShowAddFolderForm(false);
+      } catch (error) {
+        alert(error.request.response);
       }
-      bookmarkStore.getAllRootBookmarks();
-    }, []);
+      setTitle("");
+    };
 
     return (
       <div className="rootList">
@@ -52,7 +49,6 @@ const RootItemList = observer(
               <FolderItem
                 key={folderInfo.id}
                 folderStore={folderStore}
-                bookmarkData={bookmarkData}
                 bookmarkStore={bookmarkStore}
                 content={folderInfo}
               />
@@ -70,14 +66,7 @@ const RootItemList = observer(
           <DarkModalSection>
             <form
               className="rootList-form"
-              onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-                e.preventDefault();
-                addFolder();
-                bookmarkStore.getAllRootBookmarks();
-                folderStore.getAllFolders();
-                setShowAddFolderForm(false);
-                setTitle("");
-              }}
+              onSubmit={handleSubmitAddFolderForm}
             >
               <div className="rootList-form-header">
                 <p className="rootList-form-title">Add Folder</p>
@@ -85,6 +74,7 @@ const RootItemList = observer(
                   className="rootList-form-close"
                   onClick={() => {
                     setShowAddFolderForm(false);
+                    setTitle("");
                   }}
                   type="button"
                 >

@@ -2,7 +2,7 @@ import AuthStore from "stores/auth-store";
 import AuthService, { IAuthService } from "utils/auth-service";
 import { FolderInfo } from "components/feature/main-page/bookmark/bookmark-section";
 import { action, makeObservable, observable } from "mobx";
-import BookmarkData, { IBookmarkData } from "utils/bookmark-data";
+import BookmarkData, { IFolderData } from "utils/bookmark-data";
 import { RootStore } from "stores/root-store";
 
 class FolderStore {
@@ -11,7 +11,7 @@ class FolderStore {
   folderInfoList: FolderInfo[];
   folderNameList: string[];
 
-  private bookmarkData: IBookmarkData;
+  private bookmarkData: IFolderData;
   private authService: IAuthService;
 
   constructor(root: RootStore, private authStore: AuthStore) {
@@ -22,6 +22,7 @@ class FolderStore {
       setFolderInfoList: action,
       setFolderNameList: action,
       getAllFolders: action,
+      addFolder: action,
       editFolderName: action,
       deleteFolder: action,
     });
@@ -59,24 +60,19 @@ class FolderStore {
     }
   }
 
-  async editFolderName(id: number, title: string) {
-    this.bookmarkData.changeFolderName(id, title).then((response) => {
-      if (response.status === 200) {
-        this.getAllFolders();
-      }
-    });
+  async addFolder(title: string) {
+    await this.bookmarkData.addFolder(title);
+    this.getAllFolders();
   }
 
-  async deleteFolder(
-    id: number,
-    setEditing: (value: React.SetStateAction<boolean>) => void
-  ) {
-    this.bookmarkData.deleteFolder(id).then((response) => {
-      if (response.status === 200) {
-        setEditing(false);
-        this.getAllFolders();
-      }
-    });
+  async editFolderName(id: number, title: string) {
+    await this.bookmarkData.changeFolderName(id, title);
+    this.getAllFolders();
+  }
+
+  async deleteFolder(id: number) {
+    await this.bookmarkData.deleteFolder(id);
+    this.getAllFolders();
   }
 }
 

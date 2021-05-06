@@ -7,7 +7,6 @@ import TodoData from "utils/todo-data";
 import { useStoreContext } from "contexts/store-context";
 import { observer } from "mobx-react";
 
-const bookmarkData = new BookmarkData();
 const noteData = new NoteData();
 const todoData = new TodoData();
 
@@ -20,12 +19,7 @@ const App = observer(() => {
 
   return (
     <div className="app">
-      <MainPage
-        bookmarkData={bookmarkData}
-        noteData={noteData}
-        todoData={todoData}
-        authStore={authStore}
-      />
+      <MainPage noteData={noteData} todoData={todoData} authStore={authStore} />
     </div>
   );
 });

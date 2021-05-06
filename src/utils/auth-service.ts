@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import API_URL, { API_HOST } from "utils/api";
 import {
   getStorageItem,
@@ -9,7 +9,6 @@ import {
 
 export interface IAuthService {
   logout(): void;
-  refreshToken: () => Promise<AxiosResponse<any>>;
 }
 
 class AuthService implements IAuthService {

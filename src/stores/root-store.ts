@@ -2,9 +2,9 @@ import BookmarkStore from "stores/bookmark-store";
 import AuthStore from "stores/auth-store";
 import FolderStore from "stores/folder-store";
 export class RootStore {
-  authStore;
-  folderStore;
-  bookmarkStore;
+  authStore: AuthStore;
+  folderStore: FolderStore;
+  bookmarkStore: BookmarkStore;
 
   constructor() {
     this.authStore = new AuthStore(this);

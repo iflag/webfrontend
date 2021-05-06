@@ -1,32 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "components/feature/main-page/bookmark/bookmarkList-in-folder.scss";
 import { Bookmark } from "components/feature/main-page/bookmark/bookmark-section";
 import { AiOutlineClose } from "react-icons/ai";
-import BookmarkData from "utils/bookmark-data";
 import BookmarkItemInFolder from "components/feature/main-page/bookmark/bookmarkItem-in-folder";
 import BookmarkStore from "stores/bookmark-store";
 import { observer } from "mobx-react";
 
 type Props = {
   title: string;
-  bookmarkData: BookmarkData;
   bookmarkStore: BookmarkStore;
-  bookmarksInFolder: Bookmark[];
-  setShowSelectedFolder: React.Dispatch<React.SetStateAction<boolean>>;
-  refreshBookmarkListInFolder: (id: number) => void;
   contentId: number;
+  setShowSelectedFolder: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const BookmarkListInFolder = observer(
-  ({
-    title,
-    bookmarkData,
-    bookmarkStore,
-    bookmarksInFolder,
-    setShowSelectedFolder,
-    refreshBookmarkListInFolder,
-    contentId,
-  }: Props) => {
+  ({ title, bookmarkStore, contentId, setShowSelectedFolder }: Props) => {
+    useEffect(() => {
+      return () => {
+        bookmarkStore.setBookmarksInFolder([]);
+      };
+    }, []);
+
     return (
       <section className="insideFolder">
         <div className="insideFolder-header">
@@ -41,14 +35,12 @@ const BookmarkListInFolder = observer(
           </button>
         </div>
         <section className="insideFolder-bookmarks">
-          {bookmarksInFolder &&
-            bookmarksInFolder.map((bookmark: Bookmark) => (
+          {bookmarkStore.bookmarksInFolder &&
+            bookmarkStore.bookmarksInFolder.map((bookmark: Bookmark) => (
               <BookmarkItemInFolder
                 key={bookmark.id}
-                bookmarkData={bookmarkData}
                 bookmarkStore={bookmarkStore}
                 bookmark={bookmark}
-                refreshBookmarkListInFolder={refreshBookmarkListInFolder}
                 contentId={contentId}
               />
             ))}

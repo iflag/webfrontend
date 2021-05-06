@@ -1,24 +1,27 @@
 import axios, { AxiosResponse } from "axios";
 import {
   BookmarkInfo,
-  Folder,
+  CommonInfo,
 } from "components/feature/main-page/bookmark/bookmark-section";
 import API_URL, { API_HOST } from "utils/api";
 import { getStorageItem, storageAccessKey } from "utils/local-storage";
 
+export interface IFolderData {
+  getAllFolderInfo(): Promise<AxiosResponse<any>>;
+  addFolder(title: string): Promise<void>;
+  changeFolderName(id: number, title: string): Promise<void>;
+  deleteFolder(id: number): Promise<void>;
+}
 export interface IBookmarkData {
   getAllBookmarks(): Promise<AxiosResponse<any>>;
-  appendBookmark(bookmarkInfo: Folder): Promise<AxiosResponse<any>>;
-  getAllFolderInfo(): Promise<AxiosResponse<any>>;
-  addFolder(title: string): Promise<any>;
+  searchBookmarks(name: string): any;
+  appendBookmark(bookmarkInfo: CommonInfo): Promise<void>;
+  editBookmarkInfo(id: number, info: BookmarkInfo): Promise<void>;
+  deleteBookmark(id: number): Promise<void>;
   getAllBookmarksInFolder(id: number): Promise<AxiosResponse<any>>;
-  searchBookmarks(name: string): Promise<AxiosResponse<any>>;
-  editBookmarkInfo(id: number, info: BookmarkInfo): Promise<AxiosResponse<any>>;
-  deleteFolder(id: number): Promise<AxiosResponse<any>>;
-  deleteBookmark(id: number): Promise<AxiosResponse<any>>;
-  changeFolderName(id: number, title: string): Promise<AxiosResponse<any>>;
 }
-class BookmarkData implements IBookmarkData {
+
+class BookmarkData implements IFolderData, IBookmarkData {
   private base;
   private bookmarkUrl;
   constructor() {
@@ -42,13 +45,18 @@ class BookmarkData implements IBookmarkData {
     return response;
   }
 
-  async appendBookmark(bookmarkInfo: Folder) {
+  async appendBookmark({
+    title,
+    url,
+    description,
+    category_title,
+  }: CommonInfo) {
     const { bookmarks } = this.bookmarkUrl;
     const data = {
-      title: bookmarkInfo.title,
-      url: bookmarkInfo.url,
-      description: bookmarkInfo.description,
-      category_title: bookmarkInfo.category_title,
+      title,
+      url,
+      description,
+      category_title,
     };
     const token = getStorageItem(storageAccessKey, "");
     const config = {
@@ -57,8 +65,7 @@ class BookmarkData implements IBookmarkData {
       },
     };
 
-    const response = await this.base.post(bookmarks, data, config);
-    return response;
+    await this.base.post(bookmarks, data, config);
   }
 
   async getAllFolderInfo() {
@@ -86,8 +93,7 @@ class BookmarkData implements IBookmarkData {
       },
     };
 
-    const response = await this.base.post(categories, data, config);
-    return response.data;
+    await this.base.post(categories, data, config);
   }
 
   async changeFolderName(id: number, title: string) {
@@ -104,8 +110,7 @@ class BookmarkData implements IBookmarkData {
       },
     };
 
-    const response = await this.base.put(url, data, config);
-    return response;
+    await this.base.put(url, data, config);
   }
 
   async editBookmarkInfo(id: number, info: BookmarkInfo) {
@@ -119,8 +124,7 @@ class BookmarkData implements IBookmarkData {
       },
     };
 
-    const response = await this.base.put(url, info, config);
-    return response;
+    await this.base.put(url, info, config);
   }
 
   async deleteFolder(id: number) {
@@ -134,8 +138,7 @@ class BookmarkData implements IBookmarkData {
       },
     };
 
-    const response = await this.base.delete(url, config);
-    return response;
+    await this.base.delete(url, config);
   }
 
   async deleteBookmark(id: number) {
@@ -149,8 +152,7 @@ class BookmarkData implements IBookmarkData {
       },
     };
 
-    const response = await this.base.delete(url, config);
-    return response;
+    await this.base.delete(url, config);
   }
 
   async getAllBookmarksInFolder(id: number) {
@@ -180,7 +182,8 @@ class BookmarkData implements IBookmarkData {
     };
 
     const response = await this.base.get(url, config);
-    return response;
+    const result = await response.data;
+    return result;
   }
 }
 

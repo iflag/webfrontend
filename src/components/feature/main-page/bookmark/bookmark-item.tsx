@@ -22,20 +22,39 @@ const BookmarkItem = observer(({ bookmarkStore, content }: Props) => {
 
   const [showEditSection, setShowEditSection] = useState(false);
 
+  const handleSubmitBookmarkEditForm = (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+    try {
+      bookmarkStore.editBookmarkInfo(content.id, {
+        title,
+        description,
+        url,
+      });
+      setShowEditSection(false);
+      setEditing(false);
+    } catch (error) {
+      alert(error.response.message);
+    }
+  };
+
+  const handleClickDeleteBookmarkButton = async () => {
+    try {
+      await bookmarkStore.deleteBookmark(content.id);
+      bookmarkStore.getAllRootBookmarks();
+      setEditing(false);
+    } catch (error) {
+      alert(error.response.message);
+    }
+  };
+
   const showBookmarkEditForm = () => {
     return (
       <DarkModalSection>
         <form
           className="bookmarkItem-form"
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-            bookmarkStore.editBookmarkInfo(
-              content.id,
-              { title, description, url },
-              setShowEditSection
-            );
-            setEditing(false);
-          }}
+          onSubmit={handleSubmitBookmarkEditForm}
         >
           <div className="bookmarkItem-form-header">
             <p className="bookmarkItem-form-title">Edit Bookmark</p>
@@ -123,35 +142,19 @@ const BookmarkItem = observer(({ bookmarkStore, content }: Props) => {
             </button>
             <button
               className="bookmarkItem-delete"
-              onClick={() => {
-                bookmarkStore.deleteBookmark(content.id, setEditing);
-              }}
+              onClick={handleClickDeleteBookmarkButton}
             >
               <AiOutlineClose />
             </button>
-            <input
-              value={title}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setTitle(e.target.value);
-              }}
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                if (e.key === "Enter") {
-                  setEditing(false);
-                  bookmarkStore.editBookmarkInfo(
-                    content.id,
-                    {
-                      title,
-                      description,
-                      url,
-                    },
-                    setShowEditSection
-                  );
-                  e.preventDefault();
-                  e.stopPropagation();
-                }
-              }}
-              className="bookmarkItem-input"
-            />
+            <form onSubmit={handleSubmitBookmarkEditForm}>
+              <input
+                className="bookmarkItem-input"
+                value={title}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setTitle(e.target.value);
+                }}
+              />
+            </form>
           </div>
         )}
       </div>
