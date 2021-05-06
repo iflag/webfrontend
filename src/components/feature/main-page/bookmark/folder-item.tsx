@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import "components/feature/main-page/bookmark/folder-item.scss";
 import { FolderInfo } from "components/feature/main-page/bookmark/bookmark-section";
 import { AiOutlineClose } from "react-icons/ai";
-import BookmarkListInFolder from "components/feature/main-page/bookmark/bookmarkList-in-folder";
 import { DarkModalSection } from "components/feature/header/auth/auth";
 import BookmarkStore from "stores/bookmark-store";
 import { observer } from "mobx-react";
@@ -14,6 +13,10 @@ type Props = {
   content: FolderInfo;
 };
 
+const LazyBookmarkListInFolder = lazy(
+  () => import("components/feature/main-page/bookmark/bookmarkList-in-folder")
+);
+
 const FolderItem = observer(
   ({ folderStore, bookmarkStore, content }: Props) => {
     const [editing, setEditing] = useState(false);
@@ -21,6 +24,9 @@ const FolderItem = observer(
     const [title, setTitle] = useState(content.title);
 
     const [showSelectedFolder, setShowSelectedFolder] = useState(false);
+
+    const handleMouseEnterLazyLoad = () =>
+      import("components/feature/main-page/bookmark/bookmarkList-in-folder");
 
     const handleClickDeleteFolderButton = async () => {
       try {
@@ -90,16 +96,20 @@ const FolderItem = observer(
     };
 
     return (
-      <div className="folderItem">
+      <div className="folderItem" onMouseEnter={handleMouseEnterLazyLoad}>
         {showFolderItem()}
         {showSelectedFolder && (
           <DarkModalSection>
-            <BookmarkListInFolder
-              title={title}
-              bookmarkStore={bookmarkStore}
-              contentId={content.id}
-              setShowSelectedFolder={setShowSelectedFolder}
-            />
+            {
+              <Suspense fallback={null}>
+                <LazyBookmarkListInFolder
+                  title={title}
+                  bookmarkStore={bookmarkStore}
+                  contentId={content.id}
+                  setShowSelectedFolder={setShowSelectedFolder}
+                />
+              </Suspense>
+            }
           </DarkModalSection>
         )}
       </div>
