@@ -1,77 +1,41 @@
 import axios from "axios";
 import "components/feature/main-page/bookmark/favicon.scss";
-import React, { useState, useEffect } from "react";
-import { Bookmark, FolderInfo } from "./bookmark-section";
+import React, { useEffect } from "react";
+import { Bookmark } from "./bookmark-section";
 
 type Props = {
-  content: FolderInfo | Bookmark;
+  content: Bookmark;
+  favicon: string;
+  setFavicon: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const cleanUrl = (url: string) => {
-  let cleanedUrl = url.includes("https")
-    ? url.slice(8)
-    : url.includes("http")
-    ? url.slice(7)
-    : "";
-  if (cleanedUrl) {
-    cleanedUrl = (cleanedUrl as string).includes("/")
-      ? (cleanedUrl as string).split("/")[0]
-      : cleanedUrl;
-  }
-  return cleanedUrl;
-};
+const Favicon = ({ content, favicon, setFavicon }: Props) => {
+  const { url } = content;
 
-const Favicon = ({ content }: Props) => {
-  const siteUrl = cleanUrl((content as Bookmark).url);
-  const [favicon, setFavicon] = useState();
-  const [isReady, setIsReady] = useState(false);
-  const [isError, setError] = useState(false);
-
-  const getFavicon = async (url: string) => {
-    try {
-      const {
-        data: { icons },
-      } = await axios.get(`https://favicongrabber.com/api/grab/${url}`);
-      if (icons[0].src !== "") {
-        setFavicon(icons[0].src);
-      } else {
-        throw new Error("undefined url");
-      }
-    } catch (error) {
-      setError(true);
+  const getFavicon = async () => {
+    const {
+      data: { icons },
+    } = await axios.get(`https://favicongrabber.com/api/grab/${url}`);
+    if (icons[0].src !== "") {
+      setFavicon(icons[0].src);
     }
-    setIsReady(true);
   };
 
   useEffect(() => {
-    getFavicon(siteUrl);
+    getFavicon();
   }, []);
 
   return (
     <div>
-      {isReady && !isError ? (
-        <>
-          <img
-            src={favicon}
-            width="30"
-            height="30"
-            alt="icon"
-            className="favicon"
-          />
-        </>
-      ) : (
-        <>
-          <img
-            src={`http://www.google.com/s2/favicons?domain=${siteUrl}`}
-            width="30"
-            height="30"
-            alt="icon"
-            className="favicon"
-          />
-        </>
-      )}
+      <img
+        src={favicon}
+        width="30"
+        height="30"
+        alt="icon"
+        className="favicon"
+      />
     </div>
   );
 };
 
-export default React.memo(Favicon);
+export default Favicon;

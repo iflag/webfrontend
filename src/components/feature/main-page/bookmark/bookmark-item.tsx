@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "components/feature/main-page/bookmark/bookmark-item.scss";
 import { Bookmark } from "components/feature/main-page/bookmark/bookmark-section";
 import { AiOutlineClose } from "react-icons/ai";
@@ -13,6 +13,20 @@ type Props = {
   content: Bookmark;
 };
 
+export const cleanUrl = (url: string) => {
+  let cleanedUrl = url.includes("https")
+    ? url.slice(8)
+    : url.includes("http")
+    ? url.slice(7)
+    : "";
+  if (cleanedUrl) {
+    cleanedUrl = cleanedUrl.includes("/")
+      ? cleanedUrl.split("/")[0]
+      : cleanedUrl;
+  }
+  return cleanedUrl;
+};
+
 const BookmarkItem = observer(({ bookmarkStore, content }: Props) => {
   const [editing, setEditing] = useState(false);
 
@@ -21,6 +35,12 @@ const BookmarkItem = observer(({ bookmarkStore, content }: Props) => {
   const [url, setUrl] = useState(content.url);
 
   const [showEditSection, setShowEditSection] = useState(false);
+
+  const faviconUrl = useMemo(() => cleanUrl(url), [url]);
+
+  const [favicon, setFavicon] = useState(
+    `http://www.google.com/s2/favicons?domain=${faviconUrl}`
+  );
 
   const handleSubmitBookmarkEditForm = (
     e: React.FormEvent<HTMLFormElement>
@@ -127,7 +147,13 @@ const BookmarkItem = observer(({ bookmarkStore, content }: Props) => {
               setEditing(true);
             }}
           >
-            {<Favicon content={content} />}
+            {
+              <Favicon
+                content={content}
+                favicon={favicon}
+                setFavicon={setFavicon}
+              />
+            }
             {title}
           </div>
         ) : (

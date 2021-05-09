@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "components/feature/main-page/bookmark/bookmarkItem-in-folder.scss";
 import { Bookmark } from "components/feature/main-page/bookmark/bookmark-section";
 import { AiOutlineClose } from "react-icons/ai";
@@ -7,6 +7,7 @@ import { IoMdSettings } from "react-icons/io";
 import Favicon from "./favicon";
 import BookmarkStore from "stores/bookmark-store";
 import { observer } from "mobx-react";
+import { cleanUrl } from "components/feature/main-page/bookmark/bookmark-item";
 
 type Props = {
   bookmarkStore: BookmarkStore;
@@ -21,6 +22,12 @@ const BookmarkItemInFolder = observer(
     const [title, setTitle] = useState(bookmark.title);
     const [description, setDescription] = useState(bookmark.description);
     const [url, setUrl] = useState(bookmark.url);
+
+    const faviconUrl = useMemo(() => cleanUrl(url), [url]);
+
+    const [favicon, setFavicon] = useState(
+      `http://www.google.com/s2/favicons?domain=${faviconUrl}`
+    );
 
     const handleSubmitBookmarkEditForm = (
       e: React.FormEvent<HTMLFormElement>
@@ -126,7 +133,13 @@ const BookmarkItemInFolder = observer(
               setEditing(true);
             }}
           >
-            {<Favicon content={bookmark} />}
+            {
+              <Favicon
+                content={bookmark}
+                favicon={favicon}
+                setFavicon={setFavicon}
+              />
+            }
             {title}
           </div>
         ) : (
