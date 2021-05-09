@@ -85,7 +85,14 @@ const TodoList = observer(({ todoData, authStore }: Props) => {
             ): React.DetailedHTMLProps<
               React.HTMLAttributes<HTMLParagraphElement>,
               HTMLParagraphElement
-            > => <TodoItem key={todo.id} todo={todo} todoData={todoData} />
+            > => (
+              <TodoItem
+                key={todo.id}
+                todo={todo}
+                todoData={todoData}
+                refreshTodos={refreshTodos}
+              />
+            )
           )}
       </ul>
     </div>

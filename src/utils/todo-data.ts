@@ -76,6 +76,20 @@ class TodoData {
 
     await this.base.put(url, data, config);
   }
+
+  async deleteTodo(id: number) {
+    const { todo } = this.todoUrl;
+    const url = `${todo}/${id}`;
+
+    const token = getStorageItem(storageAccessKey, "");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    await this.base.delete(url, config);
+  }
 }
 
 export default TodoData;
