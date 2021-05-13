@@ -42,7 +42,7 @@ const BookmarkItemInFolder = observer(
         setShowEditSection(false);
         setEditing(false);
       } catch (error) {
-        alert(error.response.message);
+        alert(error.request.response);
       }
     };
 
@@ -52,7 +52,7 @@ const BookmarkItemInFolder = observer(
         bookmarkStore.refreshBookmarkListInFolder(contentId);
         setEditing(false);
       } catch (error) {
-        alert(error.response.message);
+        alert(error.request.response);
       }
     };
 
@@ -63,10 +63,10 @@ const BookmarkItemInFolder = observer(
             className="bookmark-form"
             onSubmit={handleSubmitBookmarkEditForm}
           >
-            <div className="folderItem-form-header">
-              <p className="folderItem-form-title">Edit Bookmark</p>
+            <div className="insideFolder-form-header">
+              <p className="insideFolder-form-title">Edit Bookmark</p>
               <button
-                className="folderItem-form-close"
+                className="insideFolder-form-close"
                 onClick={() => {
                   setShowEditSection(false);
                 }}
@@ -75,9 +75,9 @@ const BookmarkItemInFolder = observer(
                 <AiOutlineClose />
               </button>
             </div>
-            <section className="folderItem-form-input">
+            <section className="insideFolder-form-input">
               <input
-                className="folderItem-form-folderItemTitle"
+                className="insideFolder-form-bookmarkTitle"
                 placeholder="Title"
                 value={title}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +86,7 @@ const BookmarkItemInFolder = observer(
                 required
               />
               <input
-                className="folderItem-form-url"
+                className="insideFolder-form-url"
                 placeholder="Url"
                 value={url}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,7 +95,7 @@ const BookmarkItemInFolder = observer(
                 required
               />
               <input
-                className="folderItem-form-description"
+                className="insideFolder-form-description"
                 placeholder="Description"
                 value={description}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,8 +104,8 @@ const BookmarkItemInFolder = observer(
                 required
               />
             </section>
-            <section className="folderItem-form-buttons">
-              <button className="folderItem-form-submit" type="submit">
+            <section className="insideFolder-form-buttons">
+              <button className="insideFolder-form-submit" type="submit">
                 Edit
               </button>
             </section>
@@ -125,7 +125,7 @@ const BookmarkItemInFolder = observer(
       >
         {!editing ? (
           <div
-            className="folderItem-icon"
+            className="insideFolder-icon"
             onContextMenu={(
               e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
             ) => {

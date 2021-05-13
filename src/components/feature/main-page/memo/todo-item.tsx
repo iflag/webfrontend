@@ -49,7 +49,10 @@ const TodoItem = observer(({ todo, todoData, refreshTodos }: Props) => {
           </button>
           <p
             className="todoItem-contents"
-            onDoubleClick={() => {
+            onContextMenu={(
+              e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
+            ) => {
+              e.preventDefault();
               setEditing(true);
             }}
           >

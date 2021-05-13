@@ -65,11 +65,12 @@ class BookmarkStore {
       this.setRootBookmarks(newRootBookmarks);
       this.authStore.refreshToken();
     } catch (error) {
-      alert(error.request.response);
       this.setRootBookmarks([]);
       if (error.response.status === 403) {
         this.authService.logout();
+        return;
       }
+      alert(error.request.response);
     }
   }
 

@@ -9,9 +9,25 @@
     0px 0px 1px rgba(0, 0, 0, 0.04);
 }
 
+.todoItem-deleteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
+
 .todoItem-contents {
+  box-sizing: border-box;
+  padding: 0 0.2rem;
   flex: 1 1 auto;
   white-space: pre-line;
+  min-height: 1rem;
+  line-height: 1rem;
 }
 
 .todoItem-checkbox {
@@ -30,9 +46,14 @@
 
 .todoItem-editForm-input {
   flex: 1 1 auto;
-  max-width: 70%;
+  max-width: calc(100% - 2.5rem);
 }
 
-.todoItem-editForm-input {
+.todoItem-editForm-button {
+  width: 2rem;
+  height: 1rem;
   flex: 0 0 auto;
+  background-color: transparent;
+  border: none;
+  outline: none;
 }

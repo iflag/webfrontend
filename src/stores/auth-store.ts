@@ -112,7 +112,7 @@ class AuthStore {
     if (token.length > 0) {
       this.onLogin = true;
     } else {
-      this.onLogin = false;
+      this.logout();
     }
   }
 

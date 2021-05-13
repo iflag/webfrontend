@@ -57,9 +57,6 @@ const TodoList = observer(({ todoData, authStore }: Props) => {
     <div className="todoList">
       <div className="todoList-header">
         <p className="todoList-title">Todo</p>
-        <button className="todoList-addButton">
-          <figure className="todoList-buttonImage" />
-        </button>
       </div>
       <form
         className="todoList-addTodo"

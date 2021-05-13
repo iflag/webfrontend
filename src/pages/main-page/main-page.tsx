@@ -1,7 +1,7 @@
 import Layout from "components/Layout";
 import { observer } from "mobx-react";
 import "pages/main-page/main-page.scss";
-import { useEffect, lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import AuthStore from "stores/auth-store";
 import NoteData from "utils/note-data";
 import TodoData from "utils/todo-data";

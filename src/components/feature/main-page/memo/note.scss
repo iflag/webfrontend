@@ -109,6 +109,11 @@
 
 @media screen and (max-width: 768px) {
   .note {
+    order: 3;
     width: 100%;
+    min-height: 12rem;
+  }
+  .note-main {
+    min-height: 12rem;
   }
 }

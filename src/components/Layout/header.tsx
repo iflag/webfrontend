@@ -25,6 +25,10 @@ const SearchEngine = styled.figure`
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
+  @media screen and (max-width: 768px) {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
 `;
 
 type Props = {
@@ -44,16 +48,14 @@ type SearchEngineInfo = {
 
 const Header = observer(({ userData, authStore }: Props) => {
   const [toggleButtonList, setToggleButtonList] = useState(false);
-  const [
-    selectedSearchEngine,
-    setSelectedSearchEngine,
-  ] = useState<SearchEngineInfo>({
-    key: 1,
-    name: "Google",
-    image: GoogleIcon,
-    abbreviation: "G",
-    fullName: "google",
-  });
+  const [selectedSearchEngine, setSelectedSearchEngine] =
+    useState<SearchEngineInfo>({
+      key: 1,
+      name: "Google",
+      image: GoogleIcon,
+      abbreviation: "G",
+      fullName: "google",
+    });
   const [searchEngines, setSearchEngines] = useState<SearchEngineInfo[]>([
     {
       key: 1,
@@ -92,9 +94,8 @@ const Header = observer(({ userData, authStore }: Props) => {
     },
   ]);
   const [searchContent, setSearchContent] = useState("");
-  const [showSelectedForm, setShowSelectedForm] = useState<SelectedForm>(
-    "close"
-  );
+  const [showSelectedForm, setShowSelectedForm] =
+    useState<SelectedForm>("close");
 
   const saveSeletedSearchEngine = async () => {
     if (!authStore.onLogin) return;

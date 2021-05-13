@@ -33,7 +33,7 @@ const FolderItem = observer(
         folderStore.deleteFolder(content.id);
         setEditing(false);
       } catch (error) {
-        alert(error.response.message);
+        alert(error.request.response);
       }
     };
 
@@ -45,7 +45,7 @@ const FolderItem = observer(
         folderStore.editFolderName(content.id, title);
         setEditing(false);
       } catch (error) {
-        alert(error.response.message);
+        alert(error.request.response);
       }
     };
 

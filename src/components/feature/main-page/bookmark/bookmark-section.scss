@@ -172,9 +172,10 @@
 
 @media screen and (max-width: 768px) {
   .bookmark {
+    order: 1;
     width: 100%;
-    height: 60%;
-    min-height: 13rem;
+    min-height: 18rem;
+    margin-bottom: 1rem;
   }
 
   .bookmark-form {

@@ -55,7 +55,7 @@ const BookmarkItem = observer(({ bookmarkStore, content }: Props) => {
       setShowEditSection(false);
       setEditing(false);
     } catch (error) {
-      alert(error.response.message);
+      alert(error.request.response);
     }
   };
 
@@ -65,7 +65,7 @@ const BookmarkItem = observer(({ bookmarkStore, content }: Props) => {
       bookmarkStore.getAllRootBookmarks();
       setEditing(false);
     } catch (error) {
-      alert(error.response.message);
+      alert(error.request.response);
     }
   };
 

@@ -172,11 +172,7 @@ const BookmarkSection = observer(({ authStore }: Props) => {
           </form>
         </DarkModalSection>
       )}
-      <RootItemList
-        folderStore={folderStore}
-        bookmarkStore={bookmarkStore}
-        authStore={authStore}
-      />
+      <RootItemList folderStore={folderStore} bookmarkStore={bookmarkStore} />
     </div>
   );
 });
