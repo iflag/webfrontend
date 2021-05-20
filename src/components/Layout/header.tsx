@@ -9,6 +9,7 @@ import DDGIcon from "assets/images/DDG.svg";
 import GoogleIcon from "assets/images/google.svg";
 import NaverIcon from "assets/images/naver.png";
 import WAIcon from "assets/images/WA.svg";
+import Logo from "assets/images/iflag-logo.svg";
 import AuthStore from "stores/auth-store";
 import { observer } from "mobx-react";
 
@@ -163,7 +164,7 @@ const Header = observer(({ userData, authStore }: Props) => {
   return (
     <header className="header">
       <div className="header-main">
-        <figure className="header-logo" />
+        <img className="header-logo" src={Logo} alt="logo" />
         <div className="header-search">
           <ul className="header-buttonList">
             {searchEngines.map(
