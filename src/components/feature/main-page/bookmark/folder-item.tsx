@@ -61,25 +61,28 @@ const FolderItem = observer(
           }}
         >
           {!editing ? (
-            <div
-              className="folderItem-icon"
-              onContextMenu={(
-                e: React.MouseEvent<HTMLDivElement, MouseEvent>
-              ) => {
-                e.preventDefault();
-                setEditing(true);
-              }}
-            >
-              {title}
-            </div>
+            <>
+              <div
+                className="folderItem-icon"
+                onContextMenu={(
+                  e: React.MouseEvent<HTMLDivElement, MouseEvent>
+                ) => {
+                  e.preventDefault();
+                  setEditing(true);
+                }}
+              ></div>
+              <p className="folderItem-title">{title}</p>
+            </>
           ) : (
-            <div className="folderItem-setting">
-              <button
-                className="folderItem-delete"
-                onClick={handleClickDeleteFolderButton}
-              >
-                <AiOutlineClose />
-              </button>
+            <>
+              <div className="folderItem-setting">
+                <button
+                  className="folderItem-delete"
+                  onClick={handleClickDeleteFolderButton}
+                >
+                  <AiOutlineClose />
+                </button>
+              </div>
               <form onSubmit={handleSubmitFolderEditForm}>
                 <input
                   className="folderItem-input"
@@ -89,7 +92,7 @@ const FolderItem = observer(
                   }}
                 />
               </form>
-            </div>
+            </>
           )}
         </div>
       );

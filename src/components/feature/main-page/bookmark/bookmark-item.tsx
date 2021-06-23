@@ -138,24 +138,26 @@ const BookmarkItem = observer(({ bookmarkStore, content }: Props) => {
         }}
       >
         {!editing ? (
-          <div
-            className="bookmarkItem-icon"
-            onContextMenu={(
-              e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
-            ) => {
-              e.preventDefault();
-              setEditing(true);
-            }}
-          >
-            {
-              <Favicon
-                content={content}
-                favicon={favicon}
-                setFavicon={setFavicon}
-              />
-            }
-            {title}
-          </div>
+          <>
+            <div
+              className="bookmarkItem-icon"
+              onContextMenu={(
+                e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
+              ) => {
+                e.preventDefault();
+                setEditing(true);
+              }}
+            >
+              {
+                <Favicon
+                  content={content}
+                  favicon={favicon}
+                  setFavicon={setFavicon}
+                />
+              }
+            </div>
+            <p className="bookmarkItem-title">{title}</p>
+          </>
         ) : (
           <div className="bookmarkItem-setting">
             <button

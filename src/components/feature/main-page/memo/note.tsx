@@ -31,13 +31,20 @@ const Note = observer(({ noteData, authStore }: Props) => {
     }
   };
 
-  const handleClickEditButton = async () => {
-    try {
-      await noteData.editNote(contents);
-      refreshNoteContents();
-      setEditing(false);
-    } catch (error) {
-      alert(error.request.response);
+  const handleKeyPressEditButton = async (
+    e: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      if (!e.shiftKey) {
+        e.preventDefault();
+        try {
+          await noteData.editNote(contents);
+          refreshNoteContents();
+          setEditing(false);
+        } catch (error) {
+          alert(error.request.response);
+        }
+      }
     }
   };
 
@@ -82,10 +89,8 @@ const Note = observer(({ noteData, authStore }: Props) => {
                 setContents(e.target.value);
               }}
               className="note-input"
+              onKeyPress={handleKeyPressEditButton}
             />
-            <button className="note-save" onClick={handleClickEditButton}>
-              save
-            </button>
           </div>
         )}
       </div>
