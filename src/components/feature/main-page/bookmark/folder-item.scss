@@ -1,34 +1,29 @@
+.folderItem-container {
+  width: 4rem;
+  height: 2.6rem;
+  background: #34b0e2;
+  margin: 1rem 1.4rem 0.5rem 1.4rem;
+  cursor: pointer;
+}
+
 .folderItem {
+  position: relative;
+  top: 0.4rem;
+  left: 0.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 4.5rem;
-  height: 4.5rem;
-  margin: 0.5rem;
-  cursor: pointer;
+  width: 3.8rem;
+  height: 2.6rem;
 }
 
 .folderItem-main {
   box-sizing: border-box;
-  width: 4.5rem;
-  height: 4.5rem;
-  font-size: 0.8rem;
+  width: 3.8rem;
+  height: 2.6rem;
   outline: none;
-  border: 2px solid #8bb7ee;
-  position: relative;
-  background-color: white;
-  border-radius: 0 6px 6px 6px;
-  &:before {
-    content: "";
-    width: 50%;
-    height: 0.75rem;
-    border-radius: 0 20px 0 0;
-    background-color: white;
-    border: 2px solid #8bb7ee;
-    position: absolute;
-    top: -1rem;
-    left: -0.1rem;
-  }
+  background-color: #5dbbf4;
+  transform: skew(-25deg);
 }
 
 .folderItem-icon {
@@ -44,57 +39,48 @@
 }
 
 .folderItem-title {
-  margin: 0.2rem 0 0 0;
+  box-sizing: border-box;
+  padding-left: 0.4rem;
+  margin-top: 0.2rem;
   text-align: center;
+  font-size: 0.8rem;
+  transform: skew(25deg);
 }
 
 .folderItem-setting {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
   width: 100%;
   height: 100%;
 }
 
 .folderItem-delete {
-  position: absolute;
-  top: 0.2rem;
   right: 0.2rem;
   height: 0.9rem;
   border: none;
   outline: none;
-  background-color: white;
+  background-color: transparent;
   font-size: 0.9rem;
   font-weight: bold;
-  color: #8bb7ee;
+  color: white;
   padding: 0;
+  transform: skew(25deg);
+}
+
+.folderItem-form {
+  transform: skew(25deg);
 }
 
 .folderItem-input {
   width: 90%;
   outline: none;
-  border: 1px solid #8bb7ee;
+  border: none;
+  border-bottom: 1px solid #8bb7ee;
   margin: 0.2rem 0 0 0;
+  background-color: transparent;
+  width: 100%;
 }
 
 @media screen and (max-width: 768px) {
-  .folderItem {
-    width: 4rem;
-    height: 4rem;
-  }
-
-  .folderItem-folder {
-    width: 4rem;
-    height: 4rem;
-    &:before {
-      height: 0.5rem;
-      top: -0.75rem;
-    }
-  }
-
-  .folderItem-main {
-    width: 100%;
-    height: 100%;
-  }
 }

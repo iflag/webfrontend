@@ -27,8 +27,9 @@ const BookmarkListInFolder = observer(
           <p className="insideFolder-folderTitle">{title}</p>
           <button
             className="insideFolder-close"
-            onClick={() => {
+            onClick={(e) => {
               setShowSelectedFolder(false);
+              e.stopPropagation();
             }}
           >
             <AiOutlineClose />

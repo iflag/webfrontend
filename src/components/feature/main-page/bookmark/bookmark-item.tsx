@@ -11,6 +11,8 @@ import { observer } from "mobx-react";
 type Props = {
   bookmarkStore: BookmarkStore;
   content: Bookmark;
+  editing: boolean;
+  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const cleanUrl = (url: string) => {
@@ -27,173 +29,159 @@ export const cleanUrl = (url: string) => {
   return cleanedUrl;
 };
 
-const BookmarkItem = observer(({ bookmarkStore, content }: Props) => {
-  const [editing, setEditing] = useState(false);
+const BookmarkItem = observer(
+  ({ bookmarkStore, content, editing, setEditing }: Props) => {
+    const [title, setTitle] = useState(content.title);
+    const [description, setDescription] = useState(content.description);
+    const [url, setUrl] = useState(content.url);
 
-  const [title, setTitle] = useState(content.title);
-  const [description, setDescription] = useState(content.description);
-  const [url, setUrl] = useState(content.url);
+    const [showEditSection, setShowEditSection] = useState(false);
 
-  const [showEditSection, setShowEditSection] = useState(false);
+    const faviconUrl = useMemo(() => cleanUrl(url), [url]);
 
-  const faviconUrl = useMemo(() => cleanUrl(url), [url]);
-
-  const [favicon, setFavicon] = useState(
-    `http://www.google.com/s2/favicons?domain=${faviconUrl}`
-  );
-
-  const handleSubmitBookmarkEditForm = (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
-    e.preventDefault();
-    try {
-      bookmarkStore.editBookmarkInfo(content.id, {
-        title,
-        description,
-        url,
-      });
-      setShowEditSection(false);
-      setEditing(false);
-    } catch (error) {
-      alert(error.request.response);
-    }
-  };
-
-  const handleClickDeleteBookmarkButton = async () => {
-    try {
-      await bookmarkStore.deleteBookmark(content.id);
-      bookmarkStore.getAllRootBookmarks();
-      setEditing(false);
-    } catch (error) {
-      alert(error.request.response);
-    }
-  };
-
-  const showBookmarkEditForm = () => {
-    return (
-      <DarkModalSection>
-        <form
-          className="bookmarkItem-form"
-          onSubmit={handleSubmitBookmarkEditForm}
-        >
-          <div className="bookmarkItem-form-header">
-            <p className="bookmarkItem-form-title">Edit Bookmark</p>
-            <button
-              className="bookmarkItem-form-close"
-              onClick={() => {
-                setShowEditSection(false);
-              }}
-              type="button"
-            >
-              <AiOutlineClose />
-            </button>
-          </div>
-          <section className="bookmarkItem-form-input">
-            <input
-              className="bookmarkItem-form-title"
-              placeholder="Title"
-              value={title}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setTitle(e.target.value);
-              }}
-              required
-            />
-            <input
-              className="bookmarkItem-form-url"
-              placeholder="Url"
-              value={url}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setUrl(e.target.value);
-              }}
-              required
-            />
-            <input
-              className="bookmarkItem-form-description"
-              placeholder="Description"
-              value={description}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setDescription(e.target.value);
-              }}
-              required
-            />
-          </section>
-          <section className="bookmarkItem-form-buttons">
-            <button className="bookmarkItem-form-submit" type="submit">
-              Edit
-            </button>
-          </section>
-        </form>
-      </DarkModalSection>
+    const [favicon, setFavicon] = useState(
+      `http://www.google.com/s2/favicons?domain=${faviconUrl}`
     );
-  };
 
-  const showBookmarkItem = () => {
-    return (
-      <div
-        className={`bookmarkItem-main ${editing ? "editing" : ""}`}
-        onClick={() => {
-          if (!editing) {
-            window.open(`${content.url}`, "_blank");
-          }
-        }}
-      >
-        {!editing ? (
-          <>
-            <div
-              className="bookmarkItem-icon"
-              onContextMenu={(
-                e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
-              ) => {
-                e.preventDefault();
-                setEditing(true);
-              }}
-            >
-              {
-                <Favicon
-                  content={content}
-                  favicon={favicon}
-                  setFavicon={setFavicon}
-                />
-              }
+    const handleSubmitBookmarkEditForm = (
+      e: React.FormEvent<HTMLFormElement>
+    ) => {
+      e.preventDefault();
+      try {
+        bookmarkStore.editBookmarkInfo(content.id, {
+          title,
+          description,
+          url,
+        });
+        setShowEditSection(false);
+        setEditing(false);
+      } catch (error) {
+        alert(error.request.response);
+      }
+    };
+
+    const handleClickDeleteBookmarkButton = async () => {
+      try {
+        await bookmarkStore.deleteBookmark(content.id);
+        bookmarkStore.getAllRootBookmarks();
+        setEditing(false);
+      } catch (error) {
+        alert(error.request.response);
+      }
+    };
+
+    const showBookmarkEditForm = () => {
+      return (
+        <DarkModalSection>
+          <form
+            className="bookmarkItem-form"
+            onSubmit={handleSubmitBookmarkEditForm}
+          >
+            <div className="bookmarkItem-form-header">
+              <p className="bookmarkItem-form-title">Edit Bookmark</p>
+              <button
+                className="bookmarkItem-form-close"
+                onClick={() => {
+                  setShowEditSection(false);
+                }}
+                type="button"
+              >
+                <AiOutlineClose />
+              </button>
             </div>
-            <p className="bookmarkItem-title">{title}</p>
-          </>
-        ) : (
-          <div className="bookmarkItem-setting">
-            <button
-              className="bookmarkItem-edit"
-              onClick={() => {
-                setShowEditSection(true);
-              }}
-            >
-              <IoMdSettings />
-            </button>
-            <button
-              className="bookmarkItem-delete"
-              onClick={handleClickDeleteBookmarkButton}
-            >
-              <AiOutlineClose />
-            </button>
-            <form onSubmit={handleSubmitBookmarkEditForm}>
+            <section className="bookmarkItem-form-input">
               <input
-                className="bookmarkItem-input"
+                className="bookmarkItem-form-title"
+                placeholder="Title"
                 value={title}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setTitle(e.target.value);
                 }}
+                required
               />
-            </form>
-          </div>
-        )}
+              <input
+                className="bookmarkItem-form-url"
+                placeholder="Url"
+                value={url}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setUrl(e.target.value);
+                }}
+                required
+              />
+              <input
+                className="bookmarkItem-form-description"
+                placeholder="Description"
+                value={description}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setDescription(e.target.value);
+                }}
+                required
+              />
+            </section>
+            <section className="bookmarkItem-form-buttons">
+              <button className="bookmarkItem-form-submit" type="submit">
+                Edit
+              </button>
+            </section>
+          </form>
+        </DarkModalSection>
+      );
+    };
+
+    const showBookmarkItem = () => {
+      return (
+        <div
+          className={`bookmarkItem-main ${editing ? "editing" : ""}`}
+          onClick={() => {
+            if (!editing) {
+              window.open(`${content.url}`, "_blank");
+            }
+          }}
+        >
+          {!editing ? (
+            <>
+              <div className="bookmarkItem-icon">
+                {
+                  <Favicon
+                    content={content}
+                    favicon={favicon}
+                    setFavicon={setFavicon}
+                  />
+                }
+              </div>
+              <p className="bookmarkItem-title">{title}</p>
+            </>
+          ) : (
+            <>
+              <div className="bookmarkItem-setting">
+                <button
+                  className="bookmarkItem-delete"
+                  onClick={handleClickDeleteBookmarkButton}
+                >
+                  <AiOutlineClose />
+                </button>
+              </div>
+              <form onSubmit={handleSubmitBookmarkEditForm}>
+                <input
+                  className="bookmarkItem-input"
+                  value={title}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setTitle(e.target.value);
+                  }}
+                />
+              </form>
+            </>
+          )}
+        </div>
+      );
+    };
+    return (
+      <div className="bookmarkItem">
+        {showBookmarkItem()}
+        {showEditSection && showBookmarkEditForm()}
       </div>
     );
-  };
-  return (
-    <div className="bookmarkItem">
-      {showBookmarkItem()}
-      {showEditSection && showBookmarkEditForm()}
-    </div>
-  );
-});
+  }
+);
 
 export default BookmarkItem;

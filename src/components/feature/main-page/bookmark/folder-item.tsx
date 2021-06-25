@@ -11,6 +11,8 @@ type Props = {
   folderStore: FolderStore;
   bookmarkStore: BookmarkStore;
   content: FolderInfo;
+  editing: boolean;
+  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const LazyBookmarkListInFolder = lazy(
@@ -18,9 +20,7 @@ const LazyBookmarkListInFolder = lazy(
 );
 
 const FolderItem = observer(
-  ({ folderStore, bookmarkStore, content }: Props) => {
-    const [editing, setEditing] = useState(false);
-
+  ({ folderStore, bookmarkStore, content, editing, setEditing }: Props) => {
     const [title, setTitle] = useState(content.title);
 
     const [showSelectedFolder, setShowSelectedFolder] = useState(false);
@@ -51,26 +51,10 @@ const FolderItem = observer(
 
     const showFolderItem = () => {
       return (
-        <div
-          className={`folderItem-main ${editing ? "editing" : ""}`}
-          onClick={() => {
-            if (!editing) {
-              setShowSelectedFolder(true);
-              bookmarkStore.refreshBookmarkListInFolder(content.id);
-            }
-          }}
-        >
+        <div className={`folderItem-main ${editing ? "editing" : ""}`}>
           {!editing ? (
             <>
-              <div
-                className="folderItem-icon"
-                onContextMenu={(
-                  e: React.MouseEvent<HTMLDivElement, MouseEvent>
-                ) => {
-                  e.preventDefault();
-                  setEditing(true);
-                }}
-              ></div>
+              <div className="folderItem-icon"></div>
               <p className="folderItem-title">{title}</p>
             </>
           ) : (
@@ -83,7 +67,10 @@ const FolderItem = observer(
                   <AiOutlineClose />
                 </button>
               </div>
-              <form onSubmit={handleSubmitFolderEditForm}>
+              <form
+                className="folderItem-form"
+                onSubmit={handleSubmitFolderEditForm}
+              >
                 <input
                   className="folderItem-input"
                   value={title}
@@ -99,23 +86,36 @@ const FolderItem = observer(
     };
 
     return (
-      <div className="folderItem" onMouseEnter={handleMouseEnterLazyLoad}>
-        {showFolderItem()}
-        {showSelectedFolder && (
-          <DarkModalSection>
-            {
-              <Suspense fallback={null}>
-                <LazyBookmarkListInFolder
-                  title={title}
-                  bookmarkStore={bookmarkStore}
-                  contentId={content.id}
-                  setShowSelectedFolder={setShowSelectedFolder}
-                />
-              </Suspense>
+      <>
+        <div
+          className="folderItem-container"
+          onClick={() => {
+            if (!editing) {
+              console.log("open");
+              setShowSelectedFolder(true);
+              bookmarkStore.refreshBookmarkListInFolder(content.id);
             }
-          </DarkModalSection>
-        )}
-      </div>
+          }}
+        >
+          <div className="folderItem" onMouseEnter={handleMouseEnterLazyLoad}>
+            {showFolderItem()}
+            {showSelectedFolder && (
+              <DarkModalSection>
+                {
+                  <Suspense fallback={null}>
+                    <LazyBookmarkListInFolder
+                      title={title}
+                      bookmarkStore={bookmarkStore}
+                      contentId={content.id}
+                      setShowSelectedFolder={setShowSelectedFolder}
+                    />
+                  </Suspense>
+                }
+              </DarkModalSection>
+            )}
+          </div>
+        </div>
+      </>
     );
   }
 );

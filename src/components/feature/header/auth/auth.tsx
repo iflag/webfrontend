@@ -8,7 +8,7 @@ import AuthStore from "stores/auth-store";
 import { observer } from "mobx-react";
 
 export const DarkModalSection = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   display: flex;

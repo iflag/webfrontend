@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "components/feature/main-page/bookmark/rootItem-list.scss";
 import FolderItem from "components/feature/main-page/bookmark/folder-item";
 import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
+import { IoMdSettings } from "react-icons/io";
 import {
   Bookmark,
   FolderInfo,
@@ -21,6 +22,8 @@ const RootItemList = observer(({ folderStore, bookmarkStore }: Props) => {
   const [showAddFolderForm, setShowAddFolderForm] = useState(false);
   const [title, setTitle] = useState("");
 
+  const [editing, setEditing] = useState(false);
+
   const handleSubmitAddFolderForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -34,30 +37,48 @@ const RootItemList = observer(({ folderStore, bookmarkStore }: Props) => {
 
   return (
     <div className="rootList">
+      <button
+        className="rootList-editButton"
+        onClick={() => setEditing((prev) => !prev)}
+      >
+        <IoMdSettings />
+      </button>
+
       <div className="rootList-content">
-        <button
-          className="rootList-addButton"
-          onClick={() => setShowAddFolderForm(true)}
-        >
-          <AiOutlinePlus />
-        </button>
-        {folderStore.folderInfoList.map((folderInfo: FolderInfo) => {
-          return (
-            <FolderItem
-              key={folderInfo.id}
-              folderStore={folderStore}
+        <div className="rootList-container">
+          <button
+            className="rootList-addButton"
+            onClick={() => setShowAddFolderForm(true)}
+          >
+            <AiOutlinePlus />
+          </button>
+        </div>
+        <section className="rootList-folderSection">
+          {folderStore.folderInfoList.map((folderInfo: FolderInfo) => {
+            return (
+              <FolderItem
+                key={folderInfo.id}
+                folderStore={folderStore}
+                bookmarkStore={bookmarkStore}
+                content={folderInfo}
+                editing={editing}
+                setEditing={setEditing}
+              />
+            );
+          })}
+        </section>
+
+        <section className="rootList-bookmarkSection">
+          {bookmarkStore.rootBookmarks.map((content: Bookmark) => (
+            <BookmarkItem
+              key={content.id}
               bookmarkStore={bookmarkStore}
-              content={folderInfo}
+              content={content}
+              editing={editing}
+              setEditing={setEditing}
             />
-          );
-        })}
-        {bookmarkStore.rootBookmarks.map((content: Bookmark) => (
-          <BookmarkItem
-            key={content.id}
-            bookmarkStore={bookmarkStore}
-            content={content}
-          />
-        ))}
+          ))}
+        </section>
       </div>
       {showAddFolderForm && (
         <DarkModalSection>
