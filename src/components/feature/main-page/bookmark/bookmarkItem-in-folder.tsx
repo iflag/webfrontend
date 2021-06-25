@@ -13,11 +13,12 @@ type Props = {
   bookmarkStore: BookmarkStore;
   bookmark: Bookmark;
   contentId: number;
+  editing: boolean;
+  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const BookmarkItemInFolder = observer(
-  ({ bookmarkStore, bookmark, contentId }: Props) => {
-    const [editing, setEditing] = useState(false);
+  ({ bookmarkStore, bookmark, contentId, editing, setEditing }: Props) => {
     const [showeditSection, setShowEditSection] = useState(false);
     const [title, setTitle] = useState(bookmark.title);
     const [description, setDescription] = useState(bookmark.description);
@@ -124,40 +125,28 @@ const BookmarkItemInFolder = observer(
         }}
       >
         {!editing ? (
-          <div
-            className="insideFolder-icon"
-            onContextMenu={(
-              e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
-            ) => {
-              e.preventDefault();
-              setEditing(true);
-            }}
-          >
-            {
-              <Favicon
-                content={bookmark}
-                favicon={favicon}
-                setFavicon={setFavicon}
-              />
-            }
-            {title}
-          </div>
+          <>
+            <div className="insideFolder-icon">
+              {
+                <Favicon
+                  content={bookmark}
+                  favicon={favicon}
+                  setFavicon={setFavicon}
+                />
+              }
+            </div>
+            <p className="insideFolder-bookmark-title">{title}</p>
+          </>
         ) : (
-          <div className="insideFolder-setting">
-            <button
-              className="insideFolder-edit"
-              onClick={() => {
-                setShowEditSection(true);
-              }}
-            >
-              <IoMdSettings />
-            </button>
-            <button
-              className="insideFolder-delete"
-              onClick={handleClickDeleteBookmarkButton}
-            >
-              <AiOutlineClose />
-            </button>
+          <>
+            <div className="insideFolder-setting">
+              <button
+                className="insideFolder-delete"
+                onClick={handleClickDeleteBookmarkButton}
+              >
+                <AiOutlineClose />
+              </button>
+            </div>
             <form onSubmit={handleSubmitBookmarkEditForm}>
               <input
                 className="insideFolder-input"
@@ -167,7 +156,7 @@ const BookmarkItemInFolder = observer(
                 }}
               />
             </form>
-          </div>
+          </>
         )}
         {showeditSection && showBookmarkEditForm()}
       </div>

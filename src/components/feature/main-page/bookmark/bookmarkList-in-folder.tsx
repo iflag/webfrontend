@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "components/feature/main-page/bookmark/bookmarkList-in-folder.scss";
 import { Bookmark } from "components/feature/main-page/bookmark/bookmark-section";
 import { AiOutlineClose } from "react-icons/ai";
 import BookmarkItemInFolder from "components/feature/main-page/bookmark/bookmarkItem-in-folder";
 import BookmarkStore from "stores/bookmark-store";
 import { observer } from "mobx-react";
+import { IoMdSettings } from "react-icons/io";
 
 type Props = {
   title: string;
@@ -15,6 +16,8 @@ type Props = {
 
 const BookmarkListInFolder = observer(
   ({ title, bookmarkStore, contentId, setShowSelectedFolder }: Props) => {
+    const [editing, setEditing] = useState(false);
+
     useEffect(() => {
       return () => {
         bookmarkStore.setBookmarksInFolder([]);
@@ -36,6 +39,13 @@ const BookmarkListInFolder = observer(
           </button>
         </div>
         <section className="insideFolder-bookmarks">
+          <button
+            className="insideFolder-editButton"
+            onClick={() => setEditing((prev) => !prev)}
+          >
+            <IoMdSettings />
+          </button>
+
           {bookmarkStore.bookmarksInFolder &&
             bookmarkStore.bookmarksInFolder.map((bookmark: Bookmark) => (
               <BookmarkItemInFolder
@@ -43,6 +53,8 @@ const BookmarkListInFolder = observer(
                 bookmarkStore={bookmarkStore}
                 bookmark={bookmark}
                 contentId={contentId}
+                editing={editing}
+                setEditing={setEditing}
               />
             ))}
         </section>
