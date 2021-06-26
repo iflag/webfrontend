@@ -98,6 +98,8 @@
   background-color: transparent;
   color: white;
   border: none;
+  font-size: 0.75rem;
+  min-height: 12rem;
 }
 
 @media screen and (max-width: 768px) {
@@ -108,5 +110,10 @@
   }
   .note-main {
     min-height: 12rem;
+    max-height: 16rem;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }

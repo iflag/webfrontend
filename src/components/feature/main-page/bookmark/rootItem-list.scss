@@ -57,7 +57,7 @@
   flex-wrap: wrap;
   box-sizing: border-box;
   height: 100%;
-  min-height: 5rem;
+  min-height: 6rem;
   padding: 2rem 0 0 1rem;
   overflow-y: scroll;
   &::-webkit-scrollbar {
@@ -76,7 +76,7 @@
   align-items: center;
   border-radius: 12px;
   background-color: white;
-  border: 1px solid #8bb7ee;
+  border: 1px solid #555555;
 }
 
 .rootList-form-header {
@@ -92,7 +92,7 @@
 .rootList-form-title {
   margin: 0;
   font-weight: bold;
-  color: #8bb7ee;
+  color: #555555;
 }
 
 .rootList-form-close {
@@ -102,7 +102,7 @@
   background-color: white;
   font-size: 1.1rem;
   font-weight: bold;
-  color: #8bb7ee;
+  color: #555555;
   padding: 0;
 }
 
@@ -122,7 +122,7 @@
   padding: 0 1rem;
   outline: none;
   border: none;
-  border-bottom: 1px solid #8bb7ee;
+  border-bottom: 1px solid #555555;
 }
 
 .rootList-form-buttons {
@@ -136,20 +136,22 @@
 
 .rootList-form-submit {
   outline: none;
-  border: 1px solid #8bb7ee;
-  color: #8bb7ee;
+  border: 1px solid #555555;
+  color: #555555;
   background-color: white;
   width: 4.5rem;
   height: 2rem;
   transition: all 300ms ease;
   &:hover {
     color: white;
-    background-color: #8bb7ee;
+    background-color: #555555;
   }
 }
 
 @media screen and (max-width: 768px) {
   .rootList {
+    width: 100%;
+    max-width: calc(100vw - 1rem);
     padding: 0.2rem 0;
   }
   .rootList-title {
@@ -158,6 +160,20 @@
   }
 
   .rootList-content {
+    width: 100%;
     padding: 1.5rem 0.5rem;
+    max-height: 24rem;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  .rootList-folderSection,
+  .rootList-bookmarkSection {
+    width: 100%;
+  }
+
+  .rootList-bookmarkSection {
+    margin-top: 0.8rem;
   }
 }
