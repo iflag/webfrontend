@@ -47,6 +47,10 @@
   color: white;
   border: 1px solid white;
   border-radius: 8px;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .note-setting {
@@ -111,9 +115,5 @@
   .note-main {
     min-height: 12rem;
     max-height: 16rem;
-    overflow-y: scroll;
-    &::-webkit-scrollbar {
-      display: none;
-    }
   }
 }
