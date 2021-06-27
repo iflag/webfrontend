@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import "components/feature/main-page/bookmark/bookmark-item.scss";
 import { Bookmark } from "components/feature/main-page/bookmark/bookmark-section";
 import { AiOutlineClose } from "react-icons/ai";
-import { IoMdSettings } from "react-icons/io";
 import { DarkModalSection } from "components/feature/header/auth/auth";
 import Favicon from "./favicon";
 import BookmarkStore from "stores/bookmark-store";
@@ -64,7 +63,6 @@ const BookmarkItem = observer(
       try {
         await bookmarkStore.deleteBookmark(content.id);
         bookmarkStore.getAllRootBookmarks();
-        setEditing(false);
       } catch (error) {
         alert(error.request.response);
       }
@@ -175,6 +173,7 @@ const BookmarkItem = observer(
         </div>
       );
     };
+
     return (
       <div className="bookmarkItem">
         {showBookmarkItem()}

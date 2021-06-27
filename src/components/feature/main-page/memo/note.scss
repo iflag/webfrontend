@@ -7,6 +7,9 @@
   padding: 0.5rem 1rem;
   min-height: 12rem;
   background-color: #5dbbf4;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .note-header {
@@ -104,6 +107,9 @@
   border: none;
   font-size: 0.75rem;
   min-height: 12rem;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @media screen and (max-width: 768px) {

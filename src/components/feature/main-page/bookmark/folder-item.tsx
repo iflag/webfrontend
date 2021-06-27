@@ -31,7 +31,6 @@ const FolderItem = observer(
     const handleClickDeleteFolderButton = async () => {
       try {
         folderStore.deleteFolder(content.id);
-        setEditing(false);
       } catch (error) {
         alert(error.request.response);
       }
@@ -91,7 +90,6 @@ const FolderItem = observer(
           className="folderItem-container"
           onClick={() => {
             if (!editing) {
-              console.log("open");
               setShowSelectedFolder(true);
               bookmarkStore.refreshBookmarkListInFolder(content.id);
             }

@@ -51,7 +51,6 @@ const BookmarkItemInFolder = observer(
       try {
         await bookmarkStore.deleteBookmark(bookmark.id);
         bookmarkStore.refreshBookmarkListInFolder(contentId);
-        setEditing(false);
       } catch (error) {
         alert(error.request.response);
       }

@@ -1,13 +1,8 @@
 import MainPage from "pages/main-page/main-page";
 import { useEffect } from "react";
 import "App.scss";
-import NoteData from "utils/note-data";
-import TodoData from "utils/todo-data";
 import { useStoreContext } from "contexts/store-context";
 import { observer } from "mobx-react";
-
-const noteData = new NoteData();
-const todoData = new TodoData();
 
 const App = observer(() => {
   const { authStore } = useStoreContext();
@@ -18,7 +13,7 @@ const App = observer(() => {
 
   return (
     <div className="app">
-      <MainPage noteData={noteData} todoData={todoData} authStore={authStore} />
+      <MainPage authStore={authStore} />
     </div>
   );
 });
