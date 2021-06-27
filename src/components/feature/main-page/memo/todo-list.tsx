@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "components/feature/main-page/memo/todo-list.scss";
 import TodoItem from "./todo-item";
-import TodoData from "utils/todo-data";
 import AuthStore from "stores/auth-store";
 import { observer } from "mobx-react";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 import { IoMdSettings } from "react-icons/io";
-import TodoStore from "stores/todo-store";
 import { useStoreContext } from "contexts/store-context";
 
 type Props = {

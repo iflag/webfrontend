@@ -1,7 +1,6 @@
 import { action, makeObservable, observable, reaction } from "mobx";
 import AuthService from "utils/auth-service";
 import {
-  getStorageItem,
   setStorageItem,
   storageAccessKey,
   storageAccessTokenExp,

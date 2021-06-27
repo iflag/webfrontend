@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import "components/feature/main-page/memo/todo-item.scss";
 import { AiOutlineClose } from "react-icons/ai";
 import { Todo } from "components/feature/main-page/memo/todo-list";
-import TodoData from "utils/todo-data";
 import { observer } from "mobx-react";
 import TodoStore from "stores/todo-store";
 type Props = {
@@ -58,18 +57,11 @@ const TodoItem = observer(({ todo, todoStore, editing, setEditing }: Props) => {
             type="checkbox"
             className="todoItem-checkbox"
             checked={checked}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleChangeChecked(e)
-            }
+            onChange={handleChangeChecked}
           />
         </>
       ) : (
-        <form
-          className="todoItem-editForm"
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
-            handleSubmitEditTodo(e)
-          }
-        >
+        <form className="todoItem-editForm" onSubmit={handleSubmitEditTodo}>
           <button
             className="todoItem-deleteButton"
             type="button"

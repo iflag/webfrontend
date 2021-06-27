@@ -4,7 +4,6 @@ import { AiOutlineClear } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
 import AuthStore from "stores/auth-store";
 import { observer } from "mobx-react";
-import NoteStore from "stores/note-store";
 import { useStoreContext } from "contexts/store-context";
 
 type Props = {

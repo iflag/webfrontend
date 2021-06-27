@@ -15,6 +15,7 @@ class TodoStore {
     makeObservable(this, {
       todoList: observable,
 
+      setTodoList: action,
       refreshTodoList: action,
       addTodo: action,
       deleteTodo: action,
