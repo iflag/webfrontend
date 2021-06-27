@@ -1,5 +1,4 @@
 import AuthStore from "stores/auth-store";
-import AuthService, { IAuthService } from "utils/auth-service";
 import {
   Bookmark,
   BookmarkInfo,
@@ -13,11 +12,10 @@ import BookmarkForm from "./bookmark-form-store";
 class BookmarkStore {
   private rootStore: RootStore;
 
+  private bookmarkData: IBookmarkData;
+
   rootBookmarks: Bookmark[];
   bookmarksInFolder: Bookmark[];
-
-  private bookmarkData: IBookmarkData;
-  private authService: IAuthService;
 
   bookmarkForm: BookmarkForm;
 
@@ -45,7 +43,6 @@ class BookmarkStore {
     this.bookmarksInFolder = [];
 
     this.bookmarkData = new BookmarkData();
-    this.authService = new AuthService();
 
     this.bookmarkForm = new BookmarkForm(this);
   }
@@ -59,15 +56,16 @@ class BookmarkStore {
   }
 
   async getAllRootBookmarks() {
+    this.authStore.checkAccessToken();
+
     try {
       const response = await this.bookmarkData.getAllBookmarks();
       const newRootBookmarks = await response.data[0].bookmarks;
       this.setRootBookmarks(newRootBookmarks);
-      this.authStore.refreshToken();
     } catch (error) {
       this.setRootBookmarks([]);
       if (error.response.status === 403) {
-        this.authService.logout();
+        this.authStore.logout();
         return;
       }
       alert(error.request.response);
@@ -75,6 +73,8 @@ class BookmarkStore {
   }
 
   async searchBookmarks(searchInput: string) {
+    this.authStore.checkAccessToken();
+
     if (searchInput === "") {
       this.getAllRootBookmarks();
       this.folderStore.getAllFolders();
@@ -91,6 +91,8 @@ class BookmarkStore {
   }
 
   async addBookmark() {
+    this.authStore.checkAccessToken();
+
     const { title, description, categoryTitle } = this.bookmarkForm;
 
     const fixedUrl = this.bookmarkForm.checkUrl();
@@ -105,14 +107,20 @@ class BookmarkStore {
   }
 
   async editBookmarkInfo(id: number, info: BookmarkInfo) {
+    this.authStore.checkAccessToken();
+
     await this.bookmarkData.editBookmarkInfo(id, info);
   }
 
   async deleteBookmark(id: number) {
+    this.authStore.checkAccessToken();
+
     await this.bookmarkData.deleteBookmark(id);
   }
 
   async refreshBookmarkListInFolder(id: number) {
+    this.authStore.checkAccessToken();
+
     const response = await this.bookmarkData.getAllBookmarksInFolder(id);
     const result = await response.data;
     this.setBookmarksInFolder(result);

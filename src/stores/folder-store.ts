@@ -1,5 +1,4 @@
 import AuthStore from "stores/auth-store";
-import AuthService, { IAuthService } from "utils/auth-service";
 import { FolderInfo } from "components/feature/main-page/bookmark/bookmark-section";
 import { action, makeObservable, observable } from "mobx";
 import BookmarkData, { IFolderData } from "utils/bookmark-data";
@@ -8,11 +7,10 @@ import { RootStore } from "stores/root-store";
 class FolderStore {
   private rootStore: RootStore;
 
+  private bookmarkData: IFolderData;
+
   folderInfoList: FolderInfo[];
   folderNameList: string[];
-
-  private bookmarkData: IFolderData;
-  private authService: IAuthService;
 
   constructor(root: RootStore, private authStore: AuthStore) {
     makeObservable(this, {
@@ -32,7 +30,6 @@ class FolderStore {
     this.folderNameList = [];
 
     this.bookmarkData = new BookmarkData();
-    this.authService = new AuthService();
   }
 
   setFolderInfoList(folderInfoList: FolderInfo[]) {
@@ -43,6 +40,8 @@ class FolderStore {
   }
 
   async getAllFolders() {
+    this.authStore.checkAccessToken();
+
     try {
       const response = await this.bookmarkData.getAllFolderInfo();
       this.setFolderInfoList(response.data);
@@ -50,27 +49,32 @@ class FolderStore {
         (info: FolderInfo) => info.title
       );
       this.setFolderNameList(["", ...newFolderNameList]);
-      this.authStore.refreshToken();
     } catch (error) {
       this.setFolderInfoList([]);
       this.setFolderNameList([]);
       if (error.response.status === 403) {
-        this.authService.logout();
+        this.authStore.logout();
       }
     }
   }
 
   async addFolder(title: string) {
+    this.authStore.checkAccessToken();
+
     await this.bookmarkData.addFolder(title);
     this.getAllFolders();
   }
 
   async editFolderName(id: number, title: string) {
+    this.authStore.checkAccessToken();
+
     await this.bookmarkData.changeFolderName(id, title);
     this.getAllFolders();
   }
 
   async deleteFolder(id: number) {
+    this.authStore.checkAccessToken();
+
     await this.bookmarkData.deleteFolder(id);
     this.getAllFolders();
   }
