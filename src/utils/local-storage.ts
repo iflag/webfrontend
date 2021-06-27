@@ -1,5 +1,6 @@
 export const storageAccessKey = "IFLAG_STORAGE_ACCESS_KEY";
 export const storageRefreshKey = "IFLAG_STORAGE_REFRESH_KEY";
+export const storageAccessTokenExp = "IFLAG_STORAGE_ACCESS_TOKEN_EXP";
 
 export const getStorageItem = (key: string, initialValue: string) => {
   try {

@@ -4,6 +4,7 @@ import {
   getStorageItem,
   removeStorageItem,
   storageAccessKey,
+  storageAccessTokenExp,
   storageRefreshKey,
 } from "utils/local-storage";
 
@@ -69,9 +70,11 @@ class AuthService implements IAuthService {
   logout() {
     removeStorageItem(storageAccessKey);
     removeStorageItem(storageRefreshKey);
+    removeStorageItem(storageAccessTokenExp);
   }
 
   async refreshToken() {
+    console.log("token changed");
     const { refresh } = this.userUrl;
 
     const accessToken = getStorageItem(storageAccessKey, "");
@@ -85,6 +88,13 @@ class AuthService implements IAuthService {
     const response = await this.base.post(refresh, data);
     const result = await response.data;
     return result;
+  }
+
+  isTokenExpired() {
+    const accessTokenExp = getStorageItem(storageAccessTokenExp, "");
+    const currentTime = parseInt(Date.now().toString().slice(0, 10));
+
+    return accessTokenExp - 1000 < currentTime;
   }
 }
 

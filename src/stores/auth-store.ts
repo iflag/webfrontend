@@ -4,6 +4,7 @@ import {
   getStorageItem,
   setStorageItem,
   storageAccessKey,
+  storageAccessTokenExp,
   storageRefreshKey,
 } from "utils/local-storage";
 import LoginForm from "stores/login-form-store";
@@ -36,6 +37,7 @@ class AuthStore {
       checkLoginState: action,
       setRequireRefresh: action,
       refreshToken: action,
+      checkAccessToken: action,
     });
 
     this.rootStore = root;
@@ -53,8 +55,10 @@ class AuthStore {
           this.authService
             .refreshToken()
             .then((result) => {
+              console.log("token updated");
               setStorageItem(storageAccessKey, result.accessToken);
               setStorageItem(storageRefreshKey, result.refreshToken);
+              setStorageItem(storageAccessTokenExp, result.accessTokenExp);
             })
             .then(() => {
               this.setRequireRefresh(false);
@@ -71,6 +75,7 @@ class AuthStore {
     );
     setStorageItem(storageAccessKey, result.accessToken);
     setStorageItem(storageRefreshKey, result.refreshToken);
+    setStorageItem(storageAccessTokenExp, result.accessTokenExp);
     this.onLogin = true;
   }
 
@@ -108,10 +113,13 @@ class AuthStore {
   }
 
   checkLoginState() {
-    const token = getStorageItem(storageAccessKey, "");
-    if (token.length > 0) {
-      this.onLogin = true;
-    } else {
+    try {
+      if (this.authService.isTokenExpired()) {
+        this.logout();
+      } else {
+        this.onLogin = true;
+      }
+    } catch (e) {
       this.logout();
     }
   }
@@ -123,6 +131,14 @@ class AuthStore {
   refreshToken() {
     this.setRequireRefresh(true);
     // this.handleToken();
+  }
+
+  checkAccessToken() {
+    try {
+      if (this.authService.isTokenExpired()) this.refreshToken();
+    } catch (e) {
+      this.logout();
+    }
   }
 }
 
