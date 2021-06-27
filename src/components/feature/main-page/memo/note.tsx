@@ -1,35 +1,27 @@
 import React, { useEffect, useState } from "react";
 import "components/feature/main-page/memo/note.scss";
-import NoteData from "utils/note-data";
 import { AiOutlineClear } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
 import AuthStore from "stores/auth-store";
 import { observer } from "mobx-react";
+import NoteStore from "stores/note-store";
+import { useStoreContext } from "contexts/store-context";
 
 type Props = {
-  noteData: NoteData;
   authStore: AuthStore;
 };
 
-const Note = observer(({ noteData, authStore }: Props) => {
+const Note = observer(({ authStore }: Props) => {
+  const { noteStore } = useStoreContext();
   const [contents, setContents] = useState("");
 
   const [editing, setEditing] = useState(false);
 
-  const refreshNoteContents = async () => {
-    if (!authStore.onLogin) {
-      setContents("");
-      return;
-    }
-    try {
-      const result = await noteData.getNoteContents();
-      setContents(result.contents);
-      authStore.refreshToken();
-    } catch (error) {
-      alert(error.request.response);
-      setContents("");
-    }
-  };
+  useEffect(() => {
+    noteStore.refreshNoteContents();
+
+    setContents(noteStore.note);
+  }, [authStore.onLogin, editing]);
 
   const handleKeyPressEditButton = async (
     e: React.KeyboardEvent<HTMLTextAreaElement>
@@ -38,8 +30,7 @@ const Note = observer(({ noteData, authStore }: Props) => {
       if (!e.shiftKey) {
         e.preventDefault();
         try {
-          await noteData.editNote(contents);
-          refreshNoteContents();
+          noteStore.editNoteContents(contents);
           setEditing(false);
         } catch (error) {
           alert(error.request.response);
@@ -47,10 +38,6 @@ const Note = observer(({ noteData, authStore }: Props) => {
       }
     }
   };
-
-  useEffect(() => {
-    refreshNoteContents();
-  }, [authStore.onLogin]);
 
   return (
     <div className="note">
@@ -68,8 +55,7 @@ const Note = observer(({ noteData, authStore }: Props) => {
           <button
             className="note-clear"
             onClick={() => {
-              noteData.deleteAllNote();
-              refreshNoteContents();
+              noteStore.deleteNoteContents();
             }}
           >
             <AiOutlineClear />
@@ -79,7 +65,7 @@ const Note = observer(({ noteData, authStore }: Props) => {
       <div className="note-main">
         {!editing ? (
           <p className="note-contents" onClick={() => setEditing(true)}>
-            {contents}
+            {noteStore.note}
           </p>
         ) : (
           <div className="note-setting">

@@ -6,9 +6,10 @@ import AuthStore from "stores/auth-store";
 import { observer } from "mobx-react";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 import { IoMdSettings } from "react-icons/io";
+import TodoStore from "stores/todo-store";
+import { useStoreContext } from "contexts/store-context";
 
 type Props = {
-  todoData: TodoData;
   authStore: AuthStore;
 };
 
@@ -18,43 +19,26 @@ export type Todo = {
   id: number;
 };
 
-const TodoList = observer(({ todoData, authStore }: Props) => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+const TodoList = observer(({ authStore }: Props) => {
+  const { todoStore } = useStoreContext();
   const [contents, setContents] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    refreshTodos();
+    todoStore.refreshTodoList();
   }, [authStore.onLogin]);
-
-  const refreshTodos = async () => {
-    if (!authStore.onLogin) {
-      setTodos([]);
-      return;
-    }
-
-    try {
-      const result = await todoData.getAllTodoList();
-      setTodos(result.todos);
-    } catch (error) {
-      alert(error.request.response);
-    }
-  };
 
   const handleSubmitTodo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (contents === "") return;
 
     try {
-      await todoData.addTodo(contents);
-      refreshTodos();
+      todoStore.addTodo(contents);
       setContents("");
     } catch (error) {
       alert(error.request.response);
     }
-
-    authStore.refreshToken();
   };
 
   return (
@@ -97,24 +81,22 @@ const TodoList = observer(({ todoData, authStore }: Props) => {
         </form>
       )}
       <ul className="todoList-main">
-        {todos &&
-          todos.map(
-            (
-              todo: Todo
-            ): React.DetailedHTMLProps<
-              React.HTMLAttributes<HTMLParagraphElement>,
-              HTMLParagraphElement
-            > => (
-              <TodoItem
-                key={todo.id}
-                todo={todo}
-                todoData={todoData}
-                refreshTodos={refreshTodos}
-                editing={editing}
-                setEditing={setEditing}
-              />
-            )
-          )}
+        {todoStore.todoList?.map(
+          (
+            todo: Todo
+          ): React.DetailedHTMLProps<
+            React.HTMLAttributes<HTMLParagraphElement>,
+            HTMLParagraphElement
+          > => (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              todoStore={todoStore}
+              editing={editing}
+              setEditing={setEditing}
+            />
+          )
+        )}
       </ul>
     </div>
   );

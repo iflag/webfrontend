@@ -3,12 +3,8 @@ import { observer } from "mobx-react";
 import "pages/main-page/main-page.scss";
 import { lazy, Suspense } from "react";
 import AuthStore from "stores/auth-store";
-import NoteData from "utils/note-data";
-import TodoData from "utils/todo-data";
 
 type Props = {
-  noteData: NoteData;
-  todoData: TodoData;
   authStore: AuthStore;
 };
 
@@ -20,14 +16,14 @@ const LazyBookmarkSection = lazy(
 );
 const LazyNote = lazy(() => import("components/feature/main-page/memo/note"));
 
-const MainPage = observer(({ noteData, todoData, authStore }: Props) => {
+const MainPage = observer(({ authStore }: Props) => {
   return (
     <Layout>
       <div className="mainpage">
         <Suspense fallback={null}>
-          <LazyTodoList todoData={todoData} authStore={authStore} />
+          <LazyTodoList authStore={authStore} />
           <LazyBookmarkSection authStore={authStore} />
-          <LazyNote noteData={noteData} authStore={authStore} />
+          <LazyNote authStore={authStore} />
         </Suspense>
       </div>
     </Layout>
