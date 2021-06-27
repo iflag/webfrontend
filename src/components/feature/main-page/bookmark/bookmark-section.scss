@@ -95,7 +95,7 @@
   align-items: center;
   border-radius: 12px;
   background-color: white;
-  border: 1px solid #555555;
+  border: 1px solid #706f6f;
 }
 
 .bookmark-form-header {
@@ -111,7 +111,7 @@
 .bookmark-form-title {
   margin: 0;
   font-weight: bold;
-  color: #555555;
+  color: #706f6f;
 }
 
 .bookmark-form-close {
@@ -121,7 +121,7 @@
   background-color: white;
   font-size: 1.1rem;
   font-weight: bold;
-  color: #555555;
+  color: #706f6f;
   padding: 0;
 }
 
@@ -143,7 +143,7 @@
   padding: 0 1rem;
   outline: none;
   border: none;
-  border-bottom: 1px solid #555555;
+  border-bottom: 1px solid #706f6f;
 }
 
 .bookmark-form-categoryTitle {
@@ -164,15 +164,15 @@
 
 .bookmark-form-submit {
   outline: none;
-  border: 1px solid #555555;
-  color: #555555;
+  border: 1px solid #706f6f;
+  color: #706f6f;
   background-color: white;
   width: 4.5rem;
   height: 2rem;
   transition: all 300ms ease;
   &:hover {
     color: white;
-    background-color: #555555;
+    background-color: #706f6f;
   }
 }
 

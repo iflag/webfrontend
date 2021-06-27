@@ -22,7 +22,7 @@
 .todoList-title {
   margin: 0;
   font-size: 0.8rem;
-  color: #555555;
+  color: #706f6f;
 }
 
 .todoList-showAddForm {
@@ -33,7 +33,7 @@
   height: 0.9rem;
   padding: 0;
   margin-right: 0.1rem;
-  color: #555555;
+  color: #706f6f;
 }
 
 .todoList-main {
@@ -63,7 +63,7 @@
   max-width: calc(100% - 2.5rem);
   white-space: pre-line;
   border: none;
-  border-bottom: 0.1rem solid #7c7c7c;
+  border-bottom: 0.1rem solid #706f6f;
   outline: none;
   background-color: transparent;
   &::placeholder {
@@ -97,7 +97,7 @@
   padding: 0;
   font-size: 1rem;
   height: 1rem;
-  color: #555555;
+  color: #706f6f;
 }
 
 @media screen and (max-width: 768px) {
