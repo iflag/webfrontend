@@ -1,18 +1,15 @@
 import axios from "axios";
 import "components/feature/main-page/bookmark/favicon.scss";
-import React, { useEffect } from "react";
+import React, { memo, useEffect } from "react";
 import { cleanUrl } from "./bookmark-item";
-import { Bookmark } from "./bookmark-section";
 
 type Props = {
-  content: Bookmark;
+  url: string;
   favicon: string;
   setFavicon: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const Favicon = ({ content, favicon, setFavicon }: Props) => {
-  const { url } = content;
-
+const Favicon = ({ url, favicon, setFavicon }: Props) => {
   const getFavicon = async () => {
     const faviconUrl = cleanUrl(url);
 
@@ -41,4 +38,4 @@ const Favicon = ({ content, favicon, setFavicon }: Props) => {
   );
 };
 
-export default Favicon;
+export default memo(Favicon);

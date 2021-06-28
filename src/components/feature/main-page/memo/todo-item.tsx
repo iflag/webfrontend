@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import "components/feature/main-page/memo/todo-item.scss";
 import { AiOutlineClose } from "react-icons/ai";
 import { Todo } from "components/feature/main-page/memo/todo-list";
@@ -21,18 +21,16 @@ const TodoItem = observer(({ todo, todoStore, editing, setEditing }: Props) => {
     setContents(todo.contents);
   }, []);
 
-  const handleClickDeleteButton = async () => {
+  const handleClickDeleteButton = () => {
     todoStore.deleteTodo(todo.id);
   };
 
-  const handleChangeChecked = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChangeChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
-    await todoStore.completeTodo(todo.id);
+    todoStore.completeTodo(todo.id);
   };
 
-  const handleSubmitEditTodo = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitEditTodo = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     todoStore.editTodo(todo.id, contents);
     setEditing(false);
@@ -85,4 +83,4 @@ const TodoItem = observer(({ todo, todoStore, editing, setEditing }: Props) => {
   );
 });
 
-export default TodoItem;
+export default memo(TodoItem);

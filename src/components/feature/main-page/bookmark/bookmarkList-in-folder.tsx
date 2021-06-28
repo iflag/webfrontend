@@ -46,17 +46,16 @@ const BookmarkListInFolder = observer(
             <IoMdSettings />
           </button>
 
-          {bookmarkStore.bookmarksInFolder &&
-            bookmarkStore.bookmarksInFolder.map((bookmark: Bookmark) => (
-              <BookmarkItemInFolder
-                key={bookmark.id}
-                bookmarkStore={bookmarkStore}
-                bookmark={bookmark}
-                contentId={contentId}
-                editing={editing}
-                setEditing={setEditing}
-              />
-            ))}
+          {bookmarkStore.bookmarksInFolder?.map((bookmark: Bookmark) => (
+            <BookmarkItemInFolder
+              key={bookmark.id}
+              bookmarkStore={bookmarkStore}
+              bookmark={bookmark}
+              contentId={contentId}
+              editing={editing}
+              setEditing={setEditing}
+            />
+          ))}
         </section>
       </section>
     );

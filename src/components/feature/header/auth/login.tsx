@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { observer } from "mobx-react";
 import AuthStore from "stores/auth-store";
 
-const LoadingSpinner = styled.div`
+export const LoadingSpinner = styled.div`
   width: 1.2rem;
   height: 1.2rem;
   border-radius: 50%;
@@ -25,7 +25,7 @@ const Login = observer(({ authStore, setShowSelectedForm }: Props) => {
     return () => loginForm.resetInfo();
   }, []);
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     loginForm.setLoaded(false);
     try {
@@ -40,7 +40,7 @@ const Login = observer(({ authStore, setShowSelectedForm }: Props) => {
   return (
     <form
       className="login-form"
-      onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleLogin(e)}
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmitLogin(e)}
     >
       <div className="login-header">
         <p className="login-title">Login</p>

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { memo, useMemo, useState } from "react";
 import "components/feature/main-page/bookmark/bookmarkItem-in-folder.scss";
 import { Bookmark } from "components/feature/main-page/bookmark/bookmark-section";
 import { AiOutlineClose } from "react-icons/ai";
@@ -19,12 +19,9 @@ type Props = {
 
 const BookmarkItemInFolder = observer(
   ({ bookmarkStore, bookmark, contentId, editing, setEditing }: Props) => {
-    const [showeditSection, setShowEditSection] = useState(false);
     const [title, setTitle] = useState(bookmark.title);
-    const [description, setDescription] = useState(bookmark.description);
-    const [url, setUrl] = useState(bookmark.url);
 
-    const faviconUrl = useMemo(() => cleanUrl(url), [url]);
+    const faviconUrl = useMemo(() => cleanUrl(bookmark.url), [bookmark.url]);
 
     const [favicon, setFavicon] = useState(
       `http://www.google.com/s2/favicons?domain=${faviconUrl}`
@@ -37,10 +34,9 @@ const BookmarkItemInFolder = observer(
       try {
         bookmarkStore.editBookmarkInfo(bookmark.id, {
           title,
-          description,
-          url,
+          description: bookmark.description,
+          url: bookmark.url,
         });
-        setShowEditSection(false);
         setEditing(false);
       } catch (error) {
         alert(error.request.response);
@@ -54,64 +50,6 @@ const BookmarkItemInFolder = observer(
       } catch (error) {
         alert(error.request.response);
       }
-    };
-
-    const showBookmarkEditForm = () => {
-      return (
-        <DarkModalSection>
-          <form
-            className="bookmark-form"
-            onSubmit={handleSubmitBookmarkEditForm}
-          >
-            <div className="insideFolder-form-header">
-              <p className="insideFolder-form-title">Edit Bookmark</p>
-              <button
-                className="insideFolder-form-close"
-                onClick={() => {
-                  setShowEditSection(false);
-                }}
-                type="button"
-              >
-                <AiOutlineClose />
-              </button>
-            </div>
-            <section className="insideFolder-form-input">
-              <input
-                className="insideFolder-form-bookmarkTitle"
-                placeholder="Title"
-                value={title}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setTitle(e.target.value);
-                }}
-                required
-              />
-              <input
-                className="insideFolder-form-url"
-                placeholder="Url"
-                value={url}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setUrl(e.target.value);
-                }}
-                required
-              />
-              <input
-                className="insideFolder-form-description"
-                placeholder="Description"
-                value={description}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setDescription(e.target.value);
-                }}
-                required
-              />
-            </section>
-            <section className="insideFolder-form-buttons">
-              <button className="insideFolder-form-submit" type="submit">
-                Edit
-              </button>
-            </section>
-          </form>
-        </DarkModalSection>
-      );
     };
 
     return (
@@ -128,7 +66,7 @@ const BookmarkItemInFolder = observer(
             <div className="insideFolder-icon">
               {
                 <Favicon
-                  content={bookmark}
+                  url={bookmark.url}
                   favicon={favicon}
                   setFavicon={setFavicon}
                 />
@@ -157,10 +95,9 @@ const BookmarkItemInFolder = observer(
             </form>
           </>
         )}
-        {showeditSection && showBookmarkEditForm()}
       </div>
     );
   }
 );
 
-export default BookmarkItemInFolder;
+export default memo(BookmarkItemInFolder);

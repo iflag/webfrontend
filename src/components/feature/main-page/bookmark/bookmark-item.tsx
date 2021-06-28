@@ -31,12 +31,8 @@ export const cleanUrl = (url: string) => {
 const BookmarkItem = observer(
   ({ bookmarkStore, content, editing, setEditing }: Props) => {
     const [title, setTitle] = useState(content.title);
-    const [description, setDescription] = useState(content.description);
-    const [url, setUrl] = useState(content.url);
 
-    const [showEditSection, setShowEditSection] = useState(false);
-
-    const faviconUrl = useMemo(() => cleanUrl(url), [url]);
+    const faviconUrl = useMemo(() => cleanUrl(content.url), [content.url]);
 
     const [favicon, setFavicon] = useState(
       `http://www.google.com/s2/favicons?domain=${faviconUrl}`
@@ -49,10 +45,9 @@ const BookmarkItem = observer(
       try {
         bookmarkStore.editBookmarkInfo(content.id, {
           title,
-          description,
-          url,
+          description: content.description,
+          url: content.url,
         });
-        setShowEditSection(false);
         setEditing(false);
       } catch (error) {
         alert(error.request.response);
@@ -66,64 +61,6 @@ const BookmarkItem = observer(
       } catch (error) {
         alert(error.request.response);
       }
-    };
-
-    const showBookmarkEditForm = () => {
-      return (
-        <DarkModalSection>
-          <form
-            className="bookmarkItem-form"
-            onSubmit={handleSubmitBookmarkEditForm}
-          >
-            <div className="bookmarkItem-form-header">
-              <p className="bookmarkItem-form-title">Edit Bookmark</p>
-              <button
-                className="bookmarkItem-form-close"
-                onClick={() => {
-                  setShowEditSection(false);
-                }}
-                type="button"
-              >
-                <AiOutlineClose />
-              </button>
-            </div>
-            <section className="bookmarkItem-form-input">
-              <input
-                className="bookmarkItem-form-title"
-                placeholder="Title"
-                value={title}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setTitle(e.target.value);
-                }}
-                required
-              />
-              <input
-                className="bookmarkItem-form-url"
-                placeholder="Url"
-                value={url}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setUrl(e.target.value);
-                }}
-                required
-              />
-              <input
-                className="bookmarkItem-form-description"
-                placeholder="Description"
-                value={description}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setDescription(e.target.value);
-                }}
-                required
-              />
-            </section>
-            <section className="bookmarkItem-form-buttons">
-              <button className="bookmarkItem-form-submit" type="submit">
-                Edit
-              </button>
-            </section>
-          </form>
-        </DarkModalSection>
-      );
     };
 
     const showBookmarkItem = () => {
@@ -141,7 +78,7 @@ const BookmarkItem = observer(
               <div className="bookmarkItem-icon">
                 {
                   <Favicon
-                    content={content}
+                    url={content.url}
                     favicon={favicon}
                     setFavicon={setFavicon}
                   />
@@ -174,12 +111,7 @@ const BookmarkItem = observer(
       );
     };
 
-    return (
-      <div className="bookmarkItem">
-        {showBookmarkItem()}
-        {showEditSection && showBookmarkEditForm()}
-      </div>
-    );
+    return <div className="bookmarkItem">{showBookmarkItem()}</div>;
   }
 );
 

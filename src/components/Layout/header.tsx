@@ -157,8 +157,6 @@ const Header = observer(({ userData, authStore }: Props) => {
       `https://duckduckgo.com/?q=${searchQuery}${searchContent}`,
       "_blank"
     );
-
-    authStore.refreshToken();
   };
 
   return (

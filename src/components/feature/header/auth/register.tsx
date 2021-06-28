@@ -1,18 +1,9 @@
 import React, { useMemo, useEffect } from "react";
 import "components/feature/header/auth/register.scss";
 import { SelectedForm } from "components/Layout/header";
-import styled from "styled-components";
+import { LoadingSpinner } from "components/feature/header/auth/login";
 import AuthStore from "stores/auth-store";
 import { observer } from "mobx-react";
-
-const LoadingSpinner = styled.div`
-  width: 1.2rem;
-  height: 1.2rem;
-  border-radius: 50%;
-  border: solid 0.2rem #ebebeb;
-  border-top: solid 0.2rem #8bb7ee;
-  animation: spin 1s linear infinite;
-`;
 
 type Props = {
   authStore: AuthStore;
