@@ -62,7 +62,7 @@
 }
 
 .bookmark-searchButtonImage {
-  background-image: url("../../../../assets/images/bookmark-search.png");
+  background-image: url('../../../../assets/images/bookmark-search.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -192,5 +192,7 @@
 
   .bookmark-header {
     max-width: 100%;
+    box-sizing: border-box;
+    padding: 0 0.2rem;
   }
 }

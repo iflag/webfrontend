@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
-import "components/feature/main-page/bookmark/bookmark-section.scss";
+import React, { useCallback, useEffect, useState } from 'react';
+import 'components/feature/main-page/bookmark/bookmark-section.scss';
 import {
   AiOutlineSearch,
   AiFillPlusCircle,
   AiOutlineClose,
-} from "react-icons/ai";
-import RootItemList from "components/feature/main-page/bookmark/rootItem-list";
-import { DarkModalSection } from "components/feature/header/auth/auth";
-import { useStoreContext } from "contexts/store-context";
-import { observer } from "mobx-react";
-import AuthStore from "stores/auth-store";
+} from 'react-icons/ai';
+import RootItemList from 'components/feature/main-page/bookmark/rootItem-list';
+import { DarkModalSection } from 'components/feature/header/auth/auth';
+import { useStoreContext } from 'contexts/store-context';
+import { observer } from 'mobx-react';
+import AuthStore from 'stores/auth-store';
+import Modal from 'components/shared/modal';
 
 type Props = {
   authStore: AuthStore;
@@ -24,7 +25,7 @@ export type Bookmark = {
   url: string;
 };
 
-export type BookmarkInfo = Pick<Bookmark, "title" | "description" | "url">;
+export type BookmarkInfo = Pick<Bookmark, 'title' | 'description' | 'url'>;
 
 export type CommonInfo = {
   title: string;
@@ -33,7 +34,7 @@ export type CommonInfo = {
   category_title?: string;
 };
 
-export type FolderInfo = Pick<Bookmark, "author" | "id" | "title">;
+export type FolderInfo = Pick<Bookmark, 'author' | 'id' | 'title'>;
 
 const BookmarkSection = observer(({ authStore }: Props) => {
   const { bookmarkStore } = useStoreContext();
@@ -42,7 +43,7 @@ const BookmarkSection = observer(({ authStore }: Props) => {
 
   const [showAddBookmarkForm, setShowAddBookmarkForm] = useState(false);
 
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
     if (!authStore.onLogin) {
@@ -74,6 +75,11 @@ const BookmarkSection = observer(({ authStore }: Props) => {
     }
     bookmarkForm.resetInfo();
   };
+
+  const stopPropagation = useCallback((e) => {
+    e.stopPropagation();
+  }, []);
+
   return (
     <div className="bookmark">
       <div className="bookmark-header">
@@ -102,9 +108,10 @@ const BookmarkSection = observer(({ authStore }: Props) => {
         </button>
       </div>
       {showAddBookmarkForm && (
-        <DarkModalSection>
+        <Modal onCloseModal={() => setShowAddBookmarkForm(false)}>
           <form
             className="bookmark-form"
+            onClick={stopPropagation}
             onSubmit={handleSubmitAddBookmarkForm}
           >
             <div className="bookmark-form-header">
@@ -170,7 +177,7 @@ const BookmarkSection = observer(({ authStore }: Props) => {
               </button>
             </section>
           </form>
-        </DarkModalSection>
+        </Modal>
       )}
       <RootItemList folderStore={folderStore} bookmarkStore={bookmarkStore} />
     </div>

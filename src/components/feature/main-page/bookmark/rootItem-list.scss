@@ -18,6 +18,10 @@
   color: #706f6f;
 }
 
+.rootList-button-container {
+  width: 100%;
+}
+
 .rootList-container {
   width: 4rem;
   height: 2.6rem;
@@ -46,16 +50,18 @@
   }
 }
 
+.rootList-folderSection {
+  margin-bottom: 3rem;
+}
+
 .rootList-folderSection,
 .rootList-bookmarkSection {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 0.6rem;
+  min-width: calc(100% - 7rem);
 }
 
 .rootList-content {
-  display: flex;
-  flex-wrap: wrap;
   box-sizing: border-box;
   height: 100%;
   min-height: 6rem;
@@ -169,9 +175,9 @@
       display: none;
     }
   }
-  .rootList-folderSection,
-  .rootList-bookmarkSection {
-    width: 100%;
+
+  .rootList-folderSection {
+    margin-bottom: 2rem;
   }
 
   .rootList-bookmarkSection {

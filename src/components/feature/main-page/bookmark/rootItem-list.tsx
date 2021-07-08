@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import "components/feature/main-page/bookmark/rootItem-list.scss";
-import FolderItem from "components/feature/main-page/bookmark/folder-item";
-import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
-import { IoMdSettings } from "react-icons/io";
+import React, { useCallback, useState } from 'react';
+import 'components/feature/main-page/bookmark/rootItem-list.scss';
+import FolderItem from 'components/feature/main-page/bookmark/folder-item';
+import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
+import { IoMdSettings } from 'react-icons/io';
 import {
   Bookmark,
   FolderInfo,
-} from "components/feature/main-page/bookmark/bookmark-section";
-import { DarkModalSection } from "components/feature/header/auth/auth";
-import BookmarkStore from "stores/bookmark-store";
-import { observer } from "mobx-react";
-import FolderStore from "stores/folder-store";
-import BookmarkItem from "./bookmark-item";
+} from 'components/feature/main-page/bookmark/bookmark-section';
+import BookmarkStore from 'stores/bookmark-store';
+import { observer } from 'mobx-react';
+import FolderStore from 'stores/folder-store';
+import BookmarkItem from './bookmark-item';
+import Modal from 'components/shared/modal';
 
 type Props = {
   folderStore: FolderStore;
@@ -20,7 +20,7 @@ type Props = {
 
 const RootItemList = observer(({ folderStore, bookmarkStore }: Props) => {
   const [showAddFolderForm, setShowAddFolderForm] = useState(false);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState('');
 
   const [editing, setEditing] = useState(false);
 
@@ -32,8 +32,12 @@ const RootItemList = observer(({ folderStore, bookmarkStore }: Props) => {
     } catch (error) {
       alert(error.request.response);
     }
-    setTitle("");
+    setTitle('');
   };
+
+  const stopPropagation = useCallback((e) => {
+    e.stopPropagation();
+  }, []);
 
   return (
     <div className="rootList">
@@ -45,15 +49,18 @@ const RootItemList = observer(({ folderStore, bookmarkStore }: Props) => {
       </button>
 
       <div className="rootList-content">
-        <div className="rootList-container">
-          <button
-            className="rootList-addButton"
-            onClick={() => setShowAddFolderForm(true)}
-          >
-            <AiOutlinePlus />
-          </button>
+        <div className="rootList-button-container">
+          <div className="rootList-container">
+            <button
+              className="rootList-addButton"
+              onClick={() => setShowAddFolderForm(true)}
+            >
+              <AiOutlinePlus />
+            </button>
+          </div>
         </div>
-        <section className="rootList-folderSection">
+
+        <div className="rootList-folderSection">
           {folderStore.folderInfoList.map((folderInfo: FolderInfo) => {
             return (
               <FolderItem
@@ -66,9 +73,9 @@ const RootItemList = observer(({ folderStore, bookmarkStore }: Props) => {
               />
             );
           })}
-        </section>
+        </div>
 
-        <section className="rootList-bookmarkSection">
+        <div className="rootList-bookmarkSection">
           {bookmarkStore.rootBookmarks.map((content: Bookmark) => (
             <BookmarkItem
               key={content.id}
@@ -78,25 +85,29 @@ const RootItemList = observer(({ folderStore, bookmarkStore }: Props) => {
               setEditing={setEditing}
             />
           ))}
-        </section>
+        </div>
       </div>
       {showAddFolderForm && (
-        <DarkModalSection>
-          <form className="rootList-form" onSubmit={handleSubmitAddFolderForm}>
+        <Modal onCloseModal={() => setShowAddFolderForm(false)}>
+          <form
+            className="rootList-form"
+            onClick={stopPropagation}
+            onSubmit={handleSubmitAddFolderForm}
+          >
             <div className="rootList-form-header">
               <p className="rootList-form-title">Add Folder</p>
               <button
                 className="rootList-form-close"
                 onClick={() => {
                   setShowAddFolderForm(false);
-                  setTitle("");
+                  setTitle('');
                 }}
                 type="button"
               >
                 <AiOutlineClose />
               </button>
             </div>
-            <section className="rootList-form-input">
+            <div className="rootList-form-input">
               <input
                 className="rootList-form-foldertitle"
                 placeholder="Title"
@@ -106,14 +117,14 @@ const RootItemList = observer(({ folderStore, bookmarkStore }: Props) => {
                 }}
                 required
               />
-            </section>
-            <section className="rootList-form-buttons">
+            </div>
+            <div className="rootList-form-buttons">
               <button className="rootList-form-submit" type="submit">
                 Add
               </button>
-            </section>
+            </div>
           </form>
-        </DarkModalSection>
+        </Modal>
       )}
     </div>
   );

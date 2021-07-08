@@ -1,11 +1,10 @@
-import React, { useMemo, useState } from "react";
-import "components/feature/main-page/bookmark/bookmark-item.scss";
-import { Bookmark } from "components/feature/main-page/bookmark/bookmark-section";
-import { AiOutlineClose } from "react-icons/ai";
-import { DarkModalSection } from "components/feature/header/auth/auth";
-import Favicon from "./favicon";
-import BookmarkStore from "stores/bookmark-store";
-import { observer } from "mobx-react";
+import React, { useMemo, useState } from 'react';
+import 'components/feature/main-page/bookmark/bookmark-item.scss';
+import { Bookmark } from 'components/feature/main-page/bookmark/bookmark-section';
+import { AiOutlineClose } from 'react-icons/ai';
+import Favicon from './favicon';
+import BookmarkStore from 'stores/bookmark-store';
+import { observer } from 'mobx-react';
 
 type Props = {
   bookmarkStore: BookmarkStore;
@@ -15,14 +14,14 @@ type Props = {
 };
 
 export const cleanUrl = (url: string) => {
-  let cleanedUrl = url.includes("https")
+  let cleanedUrl = url.includes('https')
     ? url.slice(8)
-    : url.includes("http")
+    : url.includes('http')
     ? url.slice(7)
-    : "";
+    : '';
   if (cleanedUrl) {
-    cleanedUrl = cleanedUrl.includes("/")
-      ? cleanedUrl.split("/")[0]
+    cleanedUrl = cleanedUrl.includes('/')
+      ? cleanedUrl.split('/')[0]
       : cleanedUrl;
   }
   return cleanedUrl;
@@ -66,10 +65,10 @@ const BookmarkItem = observer(
     const showBookmarkItem = () => {
       return (
         <div
-          className={`bookmarkItem-main ${editing ? "editing" : ""}`}
+          className={`bookmarkItem-main ${editing ? 'editing' : ''}`}
           onClick={() => {
             if (!editing) {
-              window.open(`${content.url}`, "_blank");
+              window.open(`${content.url}`, '_blank');
             }
           }}
         >
@@ -78,7 +77,7 @@ const BookmarkItem = observer(
               <div className="bookmarkItem-icon">
                 {
                   <Favicon
-                    url={content.url}
+                    faviconUrl={faviconUrl}
                     favicon={favicon}
                     setFavicon={setFavicon}
                   />

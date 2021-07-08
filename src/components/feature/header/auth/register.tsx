@@ -1,16 +1,16 @@
-import React, { useMemo, useEffect } from "react";
-import "components/feature/header/auth/register.scss";
-import { SelectedForm } from "components/Layout/header";
-import { LoadingSpinner } from "components/feature/header/auth/login";
-import AuthStore from "stores/auth-store";
-import { observer } from "mobx-react";
+import React, { useMemo, useEffect } from 'react';
+import 'components/feature/header/auth/register.scss';
+import { SelectedForm } from 'components/layout/header';
+import { LoadingSpinner } from 'components/feature/header/auth/login';
+import AuthStore from 'stores/auth-store';
+import { observer } from 'mobx-react';
 
 type Props = {
   authStore: AuthStore;
   setShowSelectedForm: React.Dispatch<React.SetStateAction<SelectedForm>>;
 };
 
-export type Steps = "email" | "verification" | "password" | "success";
+export type Steps = 'email' | 'verification' | 'password' | 'success';
 
 const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
   const { registerForm } = authStore;
@@ -41,7 +41,7 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
       await authStore.verificateEmail();
     } catch (error) {
       alert(error.request.response);
-      registerForm.setStep("email");
+      registerForm.setStep('email');
     }
     registerForm.setLoaded(true);
   };
@@ -71,18 +71,18 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
         <section className="register-buttons">
           <button
             className={`register-submit ${
-              registerForm.loaded ? "" : "loading"
+              registerForm.loaded ? '' : 'loading'
             }`}
             type="submit"
           >
-            {registerForm.loaded ? "인증 요청하기" : <LoadingSpinner />}
+            {registerForm.loaded ? '인증 요청하기' : <LoadingSpinner />}
           </button>
           <button
             className="register-otherOption"
             type="button"
             onClick={() => {
-              registerForm.setStep("email");
-              setShowSelectedForm("login");
+              registerForm.setStep('email');
+              setShowSelectedForm('login');
             }}
           >
             Login
@@ -127,18 +127,18 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
         <section className="register-buttons">
           <button
             className={`register-submit ${
-              registerForm.loaded ? "" : "loading"
+              registerForm.loaded ? '' : 'loading'
             }`}
             type="submit"
           >
-            {registerForm.loaded ? "인증하기" : <LoadingSpinner />}
+            {registerForm.loaded ? '인증하기' : <LoadingSpinner />}
           </button>
           <button
             className="register-otherOption"
             type="button"
             onClick={() => {
-              registerForm.setStep("email");
-              setShowSelectedForm("login");
+              registerForm.setStep('email');
+              setShowSelectedForm('login');
             }}
           >
             Login
@@ -157,7 +157,7 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
       await authStore.register();
     } catch (error) {
       alert(error.request.response);
-      registerForm.setStep("email");
+      registerForm.setStep('email');
     }
     registerForm.setLoaded(true);
   };
@@ -185,27 +185,27 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
             }}
             required
           />
-          <p className={`register-alert ${checkPasswordLength ? "" : "alert"}`}>
+          <p className={`register-alert ${checkPasswordLength ? '' : 'alert'}`}>
             {checkPasswordLength
-              ? "사용 가능한 비밀번호 입니다"
-              : "비밀번호는 8글자 이상이어야 합니다."}
+              ? '사용 가능한 비밀번호 입니다'
+              : '비밀번호는 8글자 이상이어야 합니다.'}
           </p>
         </section>
         <section className="register-buttons">
           <button
             className={`register-submit ${
-              registerForm.loaded ? "" : "loading"
+              registerForm.loaded ? '' : 'loading'
             }`}
             type="submit"
           >
-            {registerForm.loaded ? "회원가입 하기" : <LoadingSpinner />}
+            {registerForm.loaded ? '회원가입 하기' : <LoadingSpinner />}
           </button>
           <button
             className="register-otherOption"
             type="button"
             onClick={() => {
-              registerForm.setStep("email");
-              setShowSelectedForm("login");
+              registerForm.setStep('email');
+              setShowSelectedForm('login');
             }}
           >
             Login
@@ -230,8 +230,8 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
             className="register-button"
             type="button"
             onClick={() => {
-              registerForm.setStep("email");
-              setShowSelectedForm("login");
+              registerForm.setStep('email');
+              setShowSelectedForm('login');
             }}
           >
             로그인 하러가기
@@ -256,7 +256,7 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
             className="register-button"
             type="button"
             onClick={() => {
-              registerForm.setStep("email");
+              registerForm.setStep('email');
             }}
           >
             다시 회원가입 하러가기
@@ -268,10 +268,10 @@ const Register = observer(({ authStore, setShowSelectedForm }: Props) => {
 
   return (
     <>
-      {registerForm.step === "email" && showEmailInput()}
-      {registerForm.step === "verification" && showVerificationCodeInput()}
-      {registerForm.step === "password" && showPasswordInput()}
-      {registerForm.step === "success" && showSuccessPage()}
+      {registerForm.step === 'email' && showEmailInput()}
+      {registerForm.step === 'verification' && showVerificationCodeInput()}
+      {registerForm.step === 'password' && showPasswordInput()}
+      {registerForm.step === 'success' && showSuccessPage()}
     </>
   );
 });

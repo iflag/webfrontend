@@ -1,13 +1,13 @@
-import React, { memo, useMemo, useState } from "react";
-import "components/feature/main-page/bookmark/bookmarkItem-in-folder.scss";
-import { Bookmark } from "components/feature/main-page/bookmark/bookmark-section";
-import { AiOutlineClose } from "react-icons/ai";
-import { DarkModalSection } from "components/feature/header/auth/auth";
-import { IoMdSettings } from "react-icons/io";
-import Favicon from "./favicon";
-import BookmarkStore from "stores/bookmark-store";
-import { observer } from "mobx-react";
-import { cleanUrl } from "components/feature/main-page/bookmark/bookmark-item";
+import React, { memo, useMemo, useState } from 'react';
+import 'components/feature/main-page/bookmark/bookmarkItem-in-folder.scss';
+import { Bookmark } from 'components/feature/main-page/bookmark/bookmark-section';
+import { AiOutlineClose } from 'react-icons/ai';
+import { DarkModalSection } from 'components/feature/header/auth/auth';
+import { IoMdSettings } from 'react-icons/io';
+import Favicon from './favicon';
+import BookmarkStore from 'stores/bookmark-store';
+import { observer } from 'mobx-react';
+import { cleanUrl } from 'components/feature/main-page/bookmark/bookmark-item';
 
 type Props = {
   bookmarkStore: BookmarkStore;
@@ -54,10 +54,10 @@ const BookmarkItemInFolder = observer(
 
     return (
       <div
-        className={`insideFolder-bookmark ${editing ? "editing" : ""}`}
+        className={`insideFolder-bookmark ${editing ? 'editing' : ''}`}
         onClick={() => {
           if (!editing) {
-            window.open(`${bookmark.url}`, "_blank");
+            window.open(`${bookmark.url}`, '_blank');
           }
         }}
       >
@@ -66,7 +66,7 @@ const BookmarkItemInFolder = observer(
             <div className="insideFolder-icon">
               {
                 <Favicon
-                  url={bookmark.url}
+                  faviconUrl={faviconUrl}
                   favicon={favicon}
                   setFavicon={setFavicon}
                 />

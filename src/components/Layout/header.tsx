@@ -1,43 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { HiOutlineArrowCircleRight } from "react-icons/hi";
-import "components/Layout/header.scss";
-import UserData from "utils/user-data";
-import Auth from "components/feature/header/auth/auth";
-import styled from "styled-components";
-import GithubIcon from "assets/images/github.svg";
-import DDGIcon from "assets/images/ddg.svg";
-import GoogleIcon from "assets/images/google.svg";
-import NaverIcon from "assets/images/naver.png";
-import WAIcon from "assets/images/wa.svg";
-import Logo from "assets/images/iflag-logo.svg";
-import AuthStore from "stores/auth-store";
-import { observer } from "mobx-react";
-
-type styleProps = {
-  imgUrl: string;
-};
-
-const SearchEngine = styled.figure`
-  position: absolute;
-  width: 1rem;
-  height: 1rem;
-  margin: 0;
-  background-image: url(${({ imgUrl }: styleProps) => imgUrl});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  @media screen and (max-width: 768px) {
-    width: 0.8rem;
-    height: 0.8rem;
-  }
-`;
+import React, { useEffect, useState } from 'react';
+import { HiOutlineArrowCircleRight } from 'react-icons/hi';
+import 'components/layout/header.scss';
+import UserData from 'utils/user-data';
+import Auth from 'components/feature/header/auth/auth';
+import GithubIcon from 'assets/images/github.svg';
+import DDGIcon from 'assets/images/ddg.svg';
+import GoogleIcon from 'assets/images/google.svg';
+import NaverIcon from 'assets/images/naver.png';
+import WAIcon from 'assets/images/wa.svg';
+import Logo from 'assets/images/iflag-logo.svg';
+import AuthStore from 'stores/auth-store';
+import { observer } from 'mobx-react';
 
 type Props = {
   userData: UserData;
   authStore: AuthStore;
 };
 
-export type SelectedForm = "close" | "login" | "register" | "findPassword";
+export type SelectedForm = 'close' | 'login' | 'register' | 'findPassword';
 
 type SearchEngineInfo = {
   key: number;
@@ -52,51 +32,51 @@ const Header = observer(({ userData, authStore }: Props) => {
   const [selectedSearchEngine, setSelectedSearchEngine] =
     useState<SearchEngineInfo>({
       key: 1,
-      name: "Google",
+      name: 'Google',
       image: GoogleIcon,
-      abbreviation: "G",
-      fullName: "google",
+      abbreviation: 'G',
+      fullName: 'google',
     });
   const [searchEngines, setSearchEngines] = useState<SearchEngineInfo[]>([
     {
       key: 1,
-      name: "Google",
+      name: 'Google',
       image: GoogleIcon,
-      abbreviation: "G",
-      fullName: "google",
+      abbreviation: 'G',
+      fullName: 'google',
     },
     {
       key: 2,
-      name: "Naver",
+      name: 'Naver',
       image: NaverIcon,
-      abbreviation: "N",
-      fullName: "naver",
+      abbreviation: 'N',
+      fullName: 'naver',
     },
     {
       key: 3,
-      name: "DDG",
+      name: 'DDG',
       image: DDGIcon,
-      abbreviation: "D",
-      fullName: "duckduckgo",
+      abbreviation: 'D',
+      fullName: 'duckduckgo',
     },
     {
       key: 4,
-      name: "Github",
+      name: 'Github',
       image: GithubIcon,
-      abbreviation: "GH",
-      fullName: "github",
+      abbreviation: 'GH',
+      fullName: 'github',
     },
     {
       key: 5,
-      name: "WA",
+      name: 'WA',
       image: WAIcon,
-      abbreviation: "WA",
-      fullName: "wolfram alpha",
+      abbreviation: 'WA',
+      fullName: 'wolfram alpha',
     },
   ]);
-  const [searchContent, setSearchContent] = useState("");
+  const [searchContent, setSearchContent] = useState('');
   const [showSelectedForm, setShowSelectedForm] =
-    useState<SelectedForm>("close");
+    useState<SelectedForm>('close');
 
   const saveSeletedSearchEngine = async () => {
     if (!authStore.onLogin) return;
@@ -142,20 +122,20 @@ const Header = observer(({ userData, authStore }: Props) => {
 
   useEffect(() => {
     if (authStore.onLogin) {
-      setShowSelectedForm("close");
+      setShowSelectedForm('close');
     } else {
-      setShowSelectedForm("login");
+      setShowSelectedForm('login');
     }
   }, [authStore.onLogin]);
 
   const browseInNewTab = () => {
     const searchQuery =
-      selectedSearchEngine.name === "DDG"
-        ? ""
+      selectedSearchEngine.name === 'DDG'
+        ? ''
         : `!${selectedSearchEngine.name.toLowerCase()}+`;
     window.open(
       `https://duckduckgo.com/?q=${searchQuery}${searchContent}`,
-      "_blank"
+      '_blank'
     );
   };
 
@@ -177,8 +157,8 @@ const Header = observer(({ userData, authStore }: Props) => {
                     className={`header-searchEngine ${
                       toggleButtonList ||
                       selectedSearchEngine.name === searchEngine.name
-                        ? "visible"
-                        : ""
+                        ? 'visible'
+                        : ''
                     }`}
                     onClick={() => {
                       setToggleButtonList((prev) => !prev);
@@ -186,7 +166,11 @@ const Header = observer(({ userData, authStore }: Props) => {
                       sortSearchEngineList(searchEngine);
                     }}
                   >
-                    <SearchEngine imgUrl={searchEngine.image} />
+                    <img
+                      className="header-searchEngine-img"
+                      src={searchEngine.image}
+                      alt="searchEngine-logo"
+                    />
                     {searchEngine.name}
                   </button>
                 </li>
@@ -226,7 +210,7 @@ const Header = observer(({ userData, authStore }: Props) => {
         ) : (
           <button
             className="header-loginButton"
-            onClick={() => setShowSelectedForm("login")}
+            onClick={() => setShowSelectedForm('login')}
           >
             Login
           </button>
@@ -238,7 +222,7 @@ const Header = observer(({ userData, authStore }: Props) => {
         최근 검색어는 배열을 받아와서 map으로 보이게하고 클릭하면 검색되도록
         <p>iflag</p>
       </div> */}
-      {showSelectedForm !== "close" && (
+      {showSelectedForm !== 'close' && (
         <Auth
           authStore={authStore}
           showSelectedForm={showSelectedForm}

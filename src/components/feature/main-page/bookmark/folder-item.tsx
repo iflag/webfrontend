@@ -1,11 +1,10 @@
-import React, { lazy, Suspense, useState } from "react";
-import "components/feature/main-page/bookmark/folder-item.scss";
-import { FolderInfo } from "components/feature/main-page/bookmark/bookmark-section";
-import { AiOutlineClose } from "react-icons/ai";
-import { DarkModalSection } from "components/feature/header/auth/auth";
-import BookmarkStore from "stores/bookmark-store";
-import { observer } from "mobx-react";
-import FolderStore from "stores/folder-store";
+import React, { lazy, Suspense, useState } from 'react';
+import 'components/feature/main-page/bookmark/folder-item.scss';
+import { FolderInfo } from 'components/feature/main-page/bookmark/bookmark-section';
+import { AiOutlineClose } from 'react-icons/ai';
+import BookmarkStore from 'stores/bookmark-store';
+import { observer } from 'mobx-react';
+import FolderStore from 'stores/folder-store';
 
 type Props = {
   folderStore: FolderStore;
@@ -16,7 +15,7 @@ type Props = {
 };
 
 const LazyBookmarkListInFolder = lazy(
-  () => import("components/feature/main-page/bookmark/bookmarkList-in-folder")
+  () => import('components/feature/main-page/bookmark/bookmarkList-in-folder')
 );
 
 const FolderItem = observer(
@@ -26,7 +25,7 @@ const FolderItem = observer(
     const [showSelectedFolder, setShowSelectedFolder] = useState(false);
 
     const handleMouseEnterLazyLoad = () =>
-      import("components/feature/main-page/bookmark/bookmarkList-in-folder");
+      import('components/feature/main-page/bookmark/bookmarkList-in-folder');
 
     const handleClickDeleteFolderButton = async () => {
       try {
@@ -50,7 +49,7 @@ const FolderItem = observer(
 
     const showFolderItem = () => {
       return (
-        <div className={`folderItem-main ${editing ? "editing" : ""}`}>
+        <div className={`folderItem-main ${editing ? 'editing' : ''}`}>
           {!editing ? (
             <>
               <div className="folderItem-icon"></div>
@@ -97,22 +96,18 @@ const FolderItem = observer(
         >
           <div className="folderItem" onMouseEnter={handleMouseEnterLazyLoad}>
             {showFolderItem()}
-            {showSelectedFolder && (
-              <DarkModalSection>
-                {
-                  <Suspense fallback={null}>
-                    <LazyBookmarkListInFolder
-                      title={title}
-                      bookmarkStore={bookmarkStore}
-                      contentId={content.id}
-                      setShowSelectedFolder={setShowSelectedFolder}
-                    />
-                  </Suspense>
-                }
-              </DarkModalSection>
-            )}
           </div>
         </div>
+        {showSelectedFolder && (
+          <Suspense fallback={null}>
+            <LazyBookmarkListInFolder
+              title={title}
+              bookmarkStore={bookmarkStore}
+              contentId={content.id}
+              setShowSelectedFolder={setShowSelectedFolder}
+            />
+          </Suspense>
+        )}
       </>
     );
   }

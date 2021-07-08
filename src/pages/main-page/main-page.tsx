@@ -1,20 +1,20 @@
-import Layout from "components/Layout";
-import { observer } from "mobx-react";
-import "pages/main-page/main-page.scss";
-import { lazy, Suspense } from "react";
-import AuthStore from "stores/auth-store";
+import Layout from 'components/layout';
+import { observer } from 'mobx-react';
+import 'pages/main-page/main-page.scss';
+import { lazy, Suspense } from 'react';
+import AuthStore from 'stores/auth-store';
 
 type Props = {
   authStore: AuthStore;
 };
 
 const LazyTodoList = lazy(
-  () => import("components/feature/main-page/memo/todo-list")
+  () => import('components/feature/main-page/memo/todo-list')
 );
 const LazyBookmarkSection = lazy(
-  () => import("components/feature/main-page/bookmark/bookmark-section")
+  () => import('components/feature/main-page/bookmark/bookmark-section')
 );
-const LazyNote = lazy(() => import("components/feature/main-page/memo/note"));
+const LazyNote = lazy(() => import('components/feature/main-page/memo/note'));
 
 const MainPage = observer(({ authStore }: Props) => {
   return (

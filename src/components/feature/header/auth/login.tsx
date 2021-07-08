@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import "components/feature/header/auth/login.scss";
-import { SelectedForm } from "components/Layout/header";
-import styled from "styled-components";
-import { observer } from "mobx-react";
-import AuthStore from "stores/auth-store";
+import React, { useEffect } from 'react';
+import 'components/feature/header/auth/login.scss';
+import { SelectedForm } from 'components/layout/header';
+import styled from 'styled-components';
+import { observer } from 'mobx-react';
+import AuthStore from 'stores/auth-store';
 
 export const LoadingSpinner = styled.div`
   width: 1.2rem;
@@ -30,7 +30,7 @@ const Login = observer(({ authStore, setShowSelectedForm }: Props) => {
     loginForm.setLoaded(false);
     try {
       await authStore.login();
-      if (authStore.onLogin) setShowSelectedForm("close");
+      if (authStore.onLogin) setShowSelectedForm('close');
     } catch (error) {
       alert(error.request.response);
     }
@@ -69,16 +69,16 @@ const Login = observer(({ authStore, setShowSelectedForm }: Props) => {
       </section>
       <section className="login-buttons">
         <button
-          className={`login-submit ${loginForm.loaded ? "" : "loading"}`}
+          className={`login-submit ${loginForm.loaded ? '' : 'loading'}`}
           type="submit"
         >
-          {loginForm.loaded ? "Login" : <LoadingSpinner />}
+          {loginForm.loaded ? 'Login' : <LoadingSpinner />}
         </button>
         <button
           className="login-otherOption"
           type="button"
           onClick={() => {
-            setShowSelectedForm("register");
+            setShowSelectedForm('register');
           }}
         >
           SignUp

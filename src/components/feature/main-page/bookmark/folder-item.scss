@@ -2,7 +2,7 @@
   width: 4rem;
   height: 2.6rem;
   background: #34b0e2;
-  margin: 1rem 1.4rem 0.5rem 1.4rem;
+  margin: 1rem 1.4rem 1.5rem 1.4rem;
   cursor: pointer;
 }
 
@@ -84,4 +84,7 @@
 }
 
 @media screen and (max-width: 768px) {
+  .folderItem-container {
+    margin-bottom: 1rem;
+  }
 }

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import "components/feature/main-page/memo/note.scss";
-import { AiOutlineClear } from "react-icons/ai";
-import { BiEdit } from "react-icons/bi";
-import AuthStore from "stores/auth-store";
-import { observer } from "mobx-react";
-import { useStoreContext } from "contexts/store-context";
+import React, { useEffect, useState } from 'react';
+import 'components/feature/main-page/memo/note.scss';
+import { AiOutlineClear } from 'react-icons/ai';
+import { BiEdit } from 'react-icons/bi';
+import AuthStore from 'stores/auth-store';
+import { observer } from 'mobx-react';
+import { useStoreContext } from 'contexts/store-context';
 
 type Props = {
   authStore: AuthStore;
@@ -12,20 +12,23 @@ type Props = {
 
 const Note = observer(({ authStore }: Props) => {
   const { noteStore } = useStoreContext();
-  const [contents, setContents] = useState("");
+  const [contents, setContents] = useState(noteStore.note);
 
   const [editing, setEditing] = useState(false);
 
-  useEffect(() => {
-    noteStore.refreshNoteContents();
-
+  const getNoteContents = async () => {
+    await noteStore.refreshNoteContents();
     setContents(noteStore.note);
-  }, [authStore.onLogin, editing]);
+  };
+
+  useEffect(() => {
+    getNoteContents();
+  }, [authStore.onLogin]);
 
   const handleKeyPressEditButton = async (
     e: React.KeyboardEvent<HTMLTextAreaElement>
   ) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       if (!e.shiftKey) {
         e.preventDefault();
         try {
@@ -64,7 +67,7 @@ const Note = observer(({ authStore }: Props) => {
       <div className="note-main">
         {!editing ? (
           <p className="note-contents" onClick={() => setEditing(true)}>
-            {noteStore.note}
+            {contents}
           </p>
         ) : (
           <div className="note-setting">

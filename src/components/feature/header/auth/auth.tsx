@@ -1,11 +1,11 @@
-import React from "react";
-import "components/feature/header/auth/auth.scss";
-import styled from "styled-components";
-import Login from "./login";
-import Register from "./register";
-import { SelectedForm } from "components/Layout/header";
-import AuthStore from "stores/auth-store";
-import { observer } from "mobx-react";
+import React from 'react';
+import 'components/feature/header/auth/auth.scss';
+import styled from 'styled-components';
+import Login from './login';
+import Register from './register';
+import { SelectedForm } from 'components/layout/header';
+import AuthStore from 'stores/auth-store';
+import { observer } from 'mobx-react';
 
 export const DarkModalSection = styled.div`
   position: fixed;
@@ -16,8 +16,9 @@ export const DarkModalSection = styled.div`
   align-items: center;
   width: 100vw;
   height: 100vh;
-  z-index: 2;
+  z-index: 10;
   background-color: rgba(0, 0, 0, 0.6);
+  cursor: auto;
 `;
 
 type Props = {
@@ -30,13 +31,13 @@ const Auth = observer(
   ({ authStore, showSelectedForm, setShowSelectedForm }: Props) => {
     return (
       <DarkModalSection>
-        {showSelectedForm === "login" && (
+        {showSelectedForm === 'login' && (
           <Login
             authStore={authStore}
             setShowSelectedForm={setShowSelectedForm}
           />
         )}
-        {showSelectedForm === "register" && (
+        {showSelectedForm === 'register' && (
           <Register
             authStore={authStore}
             setShowSelectedForm={setShowSelectedForm}
