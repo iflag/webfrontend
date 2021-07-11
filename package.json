@@ -2,7 +2,7 @@
   "name": "webfrontend",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://iflag.github.io/webfrontend/",
+  "homepage": "https://iflag.co",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -31,7 +31,7 @@
     "start-api": "cd ../backend && pip install -r requirements.txt && python manage.py migrate && python manage.py runserver",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "predeploy": "yarn build",
+    "predeploy": "rm -rf build && yarn build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
