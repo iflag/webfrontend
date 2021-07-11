@@ -51,7 +51,7 @@
 }
 
 .rootList-folderSection {
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
 }
 
 .rootList-folderSection,
@@ -155,7 +155,7 @@
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 930px) {
   .rootList {
     width: 100%;
     max-width: calc(100vw - 1rem);
